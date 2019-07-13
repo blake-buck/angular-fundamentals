@@ -19,7 +19,8 @@ import
   MatCheckboxModule,
   MatTabsModule,
   MatIconModule,
-  MatExpansionModule
+  MatExpansionModule,
+  MatToolbarModule
 } 
 from '@angular/material';
 
@@ -63,7 +64,8 @@ import { TaskComponent, TaskDialogComponent, DeleteDialogComponent, DatePickDial
     MatCheckboxModule,
     MatTabsModule,
     MatIconModule,
-    MatExpansionModule
+    MatExpansionModule,
+    MatToolbarModule
   ],
   providers: [
     {provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue:{hasBackdrop:false}}

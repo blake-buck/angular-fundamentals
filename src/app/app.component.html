@@ -1,4 +1,12 @@
 <!--The content below is only a placeholder and can be replaced.-->
+<mat-toolbar color='primary'>
+  <mat-toolbar-row>
+    <button mat-flat-button>Add Row</button>
+    <!-- <button mat-flat-button>Query Document</button>
+    <button mat-flat-button>Export Document</button> -->
+  </mat-toolbar-row>
+</mat-toolbar>
+<mat-accordion>
 <mat-expansion-panel class='row' *ngFor='let row of row$ | async' (dragover)='onDragOver($event)' (drop)='onDrop($event, row)'>
 
   <mat-expansion-panel-header>
@@ -24,5 +32,5 @@
 
 </mat-expansion-panel>
 
-
+</mat-accordion>
 
