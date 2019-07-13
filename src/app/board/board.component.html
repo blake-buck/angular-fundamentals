@@ -4,11 +4,11 @@
 <mat-card class='task-board' *ngIf='board$ | async ; let board'  draggable='true' (dragstart)='onDragStart($event, board)' (dragover)='onDragOver($event, board)' (drop)='onDrop($event, board)' (taskTransfer)='onTaskTransfer($event)'>
 
     <div class='card-title' >
-        <h3 (dblclick)='toggleEditBoardTitle()' *ngIf='!isEditingBoardTitle' >{{board.title}}</h3>
+        <h3 (click)='toggleEditBoardTitle(board)' *ngIf='!isEditingBoardTitle' >{{board.title}}</h3>
 
         
-        <mat-form-field (dblclick)='toggleEditBoardTitle()' *ngIf='isEditingBoardTitle' class='board-title-input'>
-            <input matInput (dblclick)='toggleEditBoardTitle()' *ngIf='isEditingBoardTitle' value={{board.title}} class='board-title-input-a' (keyup)=editBoardTitle($event)>
+        <mat-form-field *ngIf='isEditingBoardTitle' class='board-title-input'>
+            <input matInput (focusout)='toggleEditBoardTitle(board)' *ngIf='isEditingBoardTitle' value={{board.title}} class='board-title-input-a' (keyup)='editBoardTitle($event, board)'>
         </mat-form-field>
 
         <div>

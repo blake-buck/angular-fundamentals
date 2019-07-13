@@ -76,15 +76,15 @@ export class BoardComponent implements OnInit{
         }
     }
 
-    toggleEditBoardTitle(){
+    toggleEditBoardTitle(board){
         if(this.isEditingBoardTitle){
-            this.changeBoardTitle.emit(this.boardTitle);
+            this.store.dispatch({type:'EDIT_BOARD_TITLE', payload:{key:board.key, title:board.title}})
         }
         this.isEditingBoardTitle = !this.isEditingBoardTitle;
         
     }
-    editBoardTitle(e){
-        this.boardTitle = e.target.value;
+    editBoardTitle(e, board){
+        board.title = e.target.value;
     }
 
     ngOnInit(){

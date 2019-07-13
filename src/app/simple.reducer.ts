@@ -94,6 +94,11 @@ export function simpleReducer(state=initialState, action){
             
             return state;
 
+        case "EDIT_BOARD_TITLE":
+            modifiedBoard = state.boards.find(board => board.key === action.payload.key);
+            modifiedBoard.title = action.payload.title;
+            return state;
+
         case "ARCHIVE_BOARD":
             modifiedBoardIndex = state.boards.findIndex(board => board.key === action.payload.key);
             state.archivedBoards.push(state.boards.splice(modifiedBoardIndex, 1))
