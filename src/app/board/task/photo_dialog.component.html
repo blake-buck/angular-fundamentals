@@ -1,0 +1,12 @@
+<h3>Attach a photo</h3>
+
+<div class='photo-upload-content'>
+    <img *ngIf='imageToDisplay' src={{imageToDisplay}} />
+    <input type='file' id='attachment-upload-input' (change)='getFile($event)' accept='image/*'/>
+</div>
+
+<div mat-dialog-actions>
+    <button mat-button (click)='onCloseDialog()'>Cancel</button>
+    <button *ngIf='imageToDisplay' mat-button (click)='clearImage()'>Clear</button>
+    <button mat-button (click)='saveImage()'>Save</button>
+</div>

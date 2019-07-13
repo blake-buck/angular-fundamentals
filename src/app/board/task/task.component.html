@@ -1,0 +1,78 @@
+<mat-list-item role='listitem'
+    (dblclick)=toggleInput() 
+    *ngIf='task.isInput && (!board.hideCompleteTasks && !task.isComplete)'
+    class='task-list-item'
+    [style.background]='task.cardColor'
+    [style.color]='task.fontColor'
+    style='height:100%;padding-top:10px;padding-bottom:10px;min-height:47px;'
+    #elementWrapper
+>   
+    <div class='task-list-item-wrapper'>
+        <img *ngIf='task.displayImageUrl' src={{task.displayImageUrl}} />
+        <div class='task-list-item-div'>
+            <form class='task-list-form' >
+                <mat-form-field class='task-list-field' >
+                    <input   
+                        matInput
+                        value={{task.body}} 
+                        (keyup)='changeTaskBody($event)'
+                    />
+                </mat-form-field>
+            </form>
+
+            <div>
+                <i *ngIf='task.important' class="material-icons">visibility</i>
+                <i *ngIf='task.warning' class="material-icons">warning</i>
+                <i *ngIf='task.payment' class="material-icons">payment</i>
+                <i *ngIf='task.vacation' class='material-icons'>weekend</i>
+                <i *ngIf='task.attachment' class="material-icons">attach_file</i>
+            </div>
+        </div>
+    </div>
+
+</mat-list-item>
+
+<mat-list-item role='listitem'
+    (click)='openDialog()' 
+    *ngIf='!task.isInput && (board.hideCompleteTasks===false && task.isComplete===true || task.isComplete===false)' 
+    draggable="true" 
+    (dragstart)='onDragStart($event)'
+    (dragend)='onDragEnd($event)' 
+    (dragover)='onDragOver($event)' 
+    (drop)='onDrop($event)' 
+    class='task-list-item'
+    [style.background]='task.cardColor'
+    [style.color]='task.fontColor'
+    [style.opacity]='addCompletionStyling("opacity")'
+    [style.text-decoration]='addCompletionStyling("text-decoration")'
+    style='height:100%;padding-top:10px;padding-bottom:10px;'
+    #elementWrapper
+>   
+
+    <div class='task-list-item-wrapper'>
+        <img *ngIf='task.displayImageUrl' src={{task.displayImageUrl}} />
+
+        <div class='task-list-item-div'>
+            <div style='display:flex; align-items:center;'>
+                <div (click)='toggleInput()'>{{task.body}}</div>
+                <div class='task-due-date' *ngIf='task.dueDate'>
+                    <i class='material-icons'>alarm</i>
+                    <span >{{task.dueDate.format('MM/DD')}}</span>
+                </div>
+                
+            </div>
+            
+
+            <div>
+                <i class="material-icons" *ngIf='task.important'>visibility</i>
+                <i *ngIf='task.warning' class="material-icons">warning</i>
+                <i *ngIf='task.payment' class="material-icons">payment</i>
+                <i *ngIf='task.vacation' class='material-icons'>weekend</i>
+                <i *ngIf='task.attachment' class="material-icons">attach_file</i>
+            </div>
+
+        </div>
+    
+    </div>
+
+</mat-list-item>

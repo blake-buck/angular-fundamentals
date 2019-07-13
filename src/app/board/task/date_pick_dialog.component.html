@@ -1,0 +1,25 @@
+<button mat-icon-button style='float:right;' (click)='closeDialog()'><i class='material-icons'>cancel</i></button>
+<mat-tab-group [selectedIndex]='selectedMonthIndex' (selectedIndexChange)='tabChange($event)'>
+        
+    <mat-tab *ngFor='let month of months' label={{month}}>
+        <div class='date-pick-dialog-day-wrapper'>
+            <p class='date-pick-dialog-day-of-week'>S</p>
+            <p class='date-pick-dialog-day-of-week'>M</p>
+            <p class='date-pick-dialog-day-of-week'>T</p>
+            <p class='date-pick-dialog-day-of-week'>W</p>
+            <p class='date-pick-dialog-day-of-week'>T</p>
+            <p class='date-pick-dialog-day-of-week'>F</p>
+            <p class='date-pick-dialog-day-of-week'>S</p>
+            <p class ='date-pick-dialog-day' *ngIf='firstDayOfMonthIsoIndex > 0'> </p>
+            <p class ='date-pick-dialog-day' *ngIf='firstDayOfMonthIsoIndex > 1'> </p>
+            <p class ='date-pick-dialog-day' *ngIf='firstDayOfMonthIsoIndex > 2'> </p>
+            <p class ='date-pick-dialog-day' *ngIf='firstDayOfMonthIsoIndex > 3'> </p>
+            <p class ='date-pick-dialog-day' *ngIf='firstDayOfMonthIsoIndex > 4'> </p>
+            <p class ='date-pick-dialog-day' *ngIf='firstDayOfMonthIsoIndex > 5'> </p>
+            <p class='date-pick-dialog-day' *ngFor='let day of days; index as i' [style.background]='day' (click)='dateSelection(i)'>{{i + 1}}</p>
+        </div>
+    </mat-tab>
+    
+</mat-tab-group>
+
+<button mat-raised-button color='primary' (click)='removeDueDate()'>Remove Due Date</button>

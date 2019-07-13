@@ -1,0 +1,16 @@
+<h3>Attach a file</h3>
+
+
+<input type='file' id='attachment-upload-input' multiple (change)='getFile($event)'/>
+<div *ngFor='let dwnldLink of downloadLinks; index as i' class='attachment-download'>
+    <p>{{this.downloadNames[i]}}</p>
+    <span>
+        <a download={{this.downloadNames[i]}} [href]='dwnldLink' mat-icon-button><i class='material-icons'>get_app</i></a>
+        <button mat-icon-button (click)='removeFile(i)'><i class='material-icons'>clear</i></button>
+    </span>
+</div>
+
+<div mat-dialog-actions>
+    <button mat-button (click)='onCloseDialog()'>Cancel</button>
+    <button mat-button (click)='saveFiles()'>Save</button>
+</div>

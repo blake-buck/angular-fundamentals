@@ -1,0 +1,135 @@
+<div class='dialog-wrapper' >
+    <div class='dialog-title' *ngIf='!isEditingBody'>
+
+        <div>
+            <h1>{{data.body}}</h1>
+            <button mat-icon-button (click)='toggleEditBody()'>
+                <i class="material-icons">edit</i>
+            </button>
+        </div>
+
+        <div class='due-date' *ngIf='data.dueDate'>
+            <h4>Due {{data.dueDate.fromNow()}} on {{data.dueDate.format('dddd, MMMM Do YYYY')}} </h4>
+        </div>
+
+        <div>
+            <i *ngIf='data.important' class="material-icons">visibility</i>
+            <i *ngIf='data.warning' class="material-icons">warning</i>
+            <i *ngIf='data.payment' class="material-icons">payment</i>
+            <i *ngIf='data.vacation' class="material-icons">weekend</i>
+            <i *ngIf='data.attachment' class="material-icons">attach_file</i>
+        </div>
+        
+    </div>
+    <div class='dialog-title' *ngIf='isEditingBody'>
+        <mat-form-field>
+                <input #bodyInput matInput (hover)='onBodyInputLoad()' (focusout)='toggleEditBody()' value={{data.body}} (keyup)='changeTaskBody($event)'/>
+        </mat-form-field>
+    </div>
+
+    <div class='dialog-exit'>
+        <button mat-icon-button (click)='onCloseDialog()'>
+            <i class="material-icons">clear</i>
+        </button>
+    </div>
+    
+    <div class='dialog-description'>
+        <div class='dialog-description-title'>
+            <h3>Description</h3>
+            <button mat-icon-button (click)='toggleEditDescription()'>
+                <i class="material-icons">edit</i>
+            </button>
+        </div>
+        
+        <p *ngIf='!isEditingDescription'>{{data.description}}</p>
+        <mat-form-field *ngIf='isEditingDescription'>
+            <textarea matInput (focusout)='toggleEditDescription()' (keyup)='changeTaskDescription($event)' cdkTextareaAutosize #autosize="cdkTextareaAutosize" cdkAutosizeMinRows="4" value={{data.description}}></textarea>
+        </mat-form-field>
+    </div>
+
+
+
+    <div class='dialog-comments'>
+        <h3>Comments</h3>
+        <div *ngFor='let comment of data.comments' class='dialog-individual-comment'>
+            <h4>{{comment.content}}</h4>
+            <p>{{comment.date}}</p>
+        </div>
+    
+        <textarea rows='3' placeholder='Write a note here...' value={{commentContent}} (keyup)='changeCommentContent($event)'></textarea>
+        <button mat-raised-button (click)='addComment()'>Add</button>
+        
+    </div>
+    <div class='dialog-other'>
+        <h3>Other Stuff</h3>
+        <div *ngIf='data.displayImageUrl'>
+            <h4>Display Image</h4>
+            <img src={{data.displayImageUrl}} style='width:250px;height:250px;'/>
+        </div>
+
+        <div *ngFor='let checklist of data.checklists' class='dialog-checklist'>
+            <h4 *ngIf='!checklist.title.isEditing' (click)='toggleEditChecklistTitle(checklist.key)'>{{checklist.title.content}}</h4>
+            <input *ngIf='checklist.title.isEditing' autofocus placeholder='Checklist title...' (keyup)='changeChecklistTitle($event, checklist.key)' value={{checklist.title.content}} (focusout)='toggleEditChecklistTitle(checklist.key)' />
+            <div *ngFor='let item of checklist.content; index as i' class='dialog-checklist-item'>
+                <mat-checkbox *ngIf='!item.isEditing' [checked]='item.checked' (change)='toggleChecklistItem($event,checklist.key, item)'><span (click)='toggleEditChecklistItem($event, checklist.key, item)'>{{item.content}}</span></mat-checkbox>
+                <mat-checkbox *ngIf='item.isEditing' [checked]='item.checked' (change)='toggleChecklistItem($event, checklist.key, item)'><input (mouseenter)='focusChecklistInput($event)' class='dialog-checklist-item-input'  (focusout)='toggleEditChecklistItem($event, checklist.key, item)' (keyup)='changeChecklistItem($event, checklist.key, i)' value={{item.content}} /></mat-checkbox>
+            </div>
+            <button mat-flat-button *ngIf='checklist.title.content && !checklist.title.isEditing' (click)='addChecklistItem(checklist.key)'>Add Item</button>
+        </div>
+
+        <div *ngIf='data.downloadLinks.length > 0' class='dialog-attachments'>
+            <h4>Attached Files</h4>
+            <div *ngFor='let downloadLink of data.downloadLinks; index as i' class='task-dialog-attachment-download'>
+                <p>{{data.downloadNames[i]}}</p>
+            
+                <a download={{data.downloadNames[i]}} [href]='downloadLink' mat-icon-button><i class='material-icons'>get_app</i></a>
+                <!-- <a download={{data.downloadNames[i]}} [href]='downloadLink' target='_blank' mat-icon-button><i class='material-icons'>open_in_browser</i></a> -->
+                    
+                
+            </div>
+        </div>
+    </div>
+    
+    <div class='dialog-actions'>
+        <h3>Actions</h3>
+        <div class='dialog-actions-button-wrapper'>
+
+            <mat-menu #iconMenu='matMenu'>
+                <button mat-menu-item (click)='changeImportant()'><i class="material-icons">visibility</i>Important</button>
+                <button mat-menu-item (click)='changeWarning()'><i class="material-icons">warning</i>Warning</button>
+                <button mat-menu-item (click)='changePayment()'><i class="material-icons">payment</i>Payment</button>
+                <button mat-menu-item (click)='changeVacation()'><i class='material-icons'>weekend</i>Vacation</button>
+            </mat-menu>
+
+            <mat-menu #colorMenu='matMenu'>
+                <button mat-menu-item (click)='changeCardColor("red")'><i class="material-icons" style='color:red'>label</i>Red</button>
+                <button mat-menu-item (click)='changeCardColor("yellow")'><i class="material-icons" style='color:yellow'>label</i>Yellow</button>
+                <button mat-menu-item (click)='changeCardColor("blue")'><i class="material-icons" style='color:blue'>label</i>Blue</button>
+                <button mat-menu-item (click)='changeCardColor("green")'><i class="material-icons" style='color:green'>label</i>Green</button>
+                <button mat-menu-item (click)='changeCardColor("purple")'><i class="material-icons" style='color:purple'>label</i>Purple</button>
+                <button mat-menu-item (click)='changeCardColor("orange")'><i class="material-icons" style='color:orange'>label</i>Orange</button>
+                <button mat-menu-item (click)='changeCardColor("")'>NONE</button>
+            </mat-menu>
+
+            <mat-menu #fontColorMenu='matMenu'>
+                <button mat-menu-item (click)='changeFontColor("black")' style='color:black'>Black</button>
+                <button mat-menu-item (click)='changeFontColor("firebrick")' style='color:firebrick'>Firebrick</button>
+                <button mat-menu-item (click)='changeFontColor("goldenrod")' style='color:goldenrod'>Gold</button>
+                <button mat-menu-item (click)='changeFontColor("steelblue")' style='color:steelblue'>Steel Blue</button>
+                <button mat-menu-item (click)='changeFontColor("seagreen")' style='color:seagreen'>Sea Green</button>
+                <button mat-menu-item (click)='changeFontColor("plum")' style='color:plum'>Plum</button>
+            </mat-menu>
+            
+            <button mat-raised-button [matMenuTriggerFor]='iconMenu'><i class="material-icons">label</i>Tags</button>
+            <button mat-raised-button (click)='openDatePicker()'><i class='material-icons'>access_time</i>Due Date</button>
+            <button mat-raised-button (click)='addPhotos()'><i class='material-icons'>add_a_photo</i>Photo</button>
+            <button mat-raised-button (click)='attachItem()'><i class="material-icons">attach_file</i>Attachment</button>
+            <button mat-raised-button (click)='addChecklist()'><i class="material-icons">check_box</i>Checklist</button>
+            <button mat-raised-button (click)='changeIsComplete()'><i class="material-icons">check_circle</i>Complete</button>
+            <button mat-raised-button (click)='deleteTask()'><i class="material-icons">delete</i>Delete</button>
+            <button mat-raised-button [matMenuTriggerFor]='colorMenu'><i class="material-icons">format_color_fill</i>Card Color</button>
+            <button mat-raised-button [matMenuTriggerFor]='fontColorMenu'><i class='material-icons'>format_color_text</i>Font Color</button>
+            
+        </div>
+    </div>
+</div>
