@@ -37,7 +37,21 @@ export class AppComponent {
     this.boardTitle = e;
   }
 
-  
+  onDragOver(e){
+    e.preventDefault();
+  }
+
+  onDrop(e, row){
+    let eventDataTransfer = e.dataTransfer.getData('text');
+    if(eventDataTransfer.includes('BOARD')){
+      console.log(eventDataTransfer)
+      let unSanitizedKeys = eventDataTransfer.replace('BOARD', '');
+      let keyArray = unSanitizedKeys.split('-')
+      let droppedOnBoardKey = -1;
+      if(+keyArray[1] !== row.key)
+      this.store.dispatch({type:'TRANSFER_BOARD', payload:{draggedBoardKey:+keyArray[0], draggedBoardRowKey:+keyArray[1], droppedOnBoardKey, droppedOnRowKey:row.key}})
+    }
+  }
 
   ngOnInit(){
     this.store.dispatch({type:'GET_STATE', payload:''})

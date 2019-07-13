@@ -3,9 +3,11 @@ import {Action} from '@ngrx/store';
 const initialState = {
     currentTaskKey:3,
     currentBoardKey:3,
-    currentRowKey:2,
+    currentRowKey:3,
+    archivedRows:[],
     rows:[
-        {key: 1, title:'Test Row', description:'One small step for row, one big step for rowkind', boards:[1, 2]}
+        {key: 1, title:'Test Row', description:'One small step for row, one big step for rowkind', boards:[1,]},
+        {key: 2, title:'Financial Row', description:'All my financial Info', boards:[2]}
     ],
     archivedBoards:[],
     boards:[
@@ -39,7 +41,7 @@ const initialState = {
             ]
         },
         {
-            rowKey:1,
+            rowKey:2,
             key:2, 
             title:'12321', 
             hideCompleteTasks:false,
@@ -89,16 +91,29 @@ export function simpleReducer(state=initialState, action){
 
         case "TRANSFER_BOARD":
             console.log(action.payload)
+            let {draggedBoardKey,droppedOnBoardKey,draggedBoardRowKey,droppedOnRowKey} = action.payload;
             
-            modifiedBoardIndex = state.boards.findIndex(board => board.key === action.payload.draggedBoardKey);
-            secondModifiedBoardIndex = state.boards.findIndex(board => board.key == action.payload.droppedOnBoardKey)
-            console.log('DO WHAT YOU GOTTA DO', modifiedBoardIndex, secondModifiedBoardIndex)
-            
-            modifiedBoard = Object.create(state.boards[modifiedBoardIndex])
-            state.boards.splice(modifiedBoardIndex, 1);
-            state.boards.splice(secondModifiedBoardIndex,0, modifiedBoard)
+            if(draggedBoardRowKey === droppedOnRowKey){
+                modifiedBoardIndex = state.boards.findIndex(board => board.key === draggedBoardKey);
+                secondModifiedBoardIndex = state.boards.findIndex(board => board.key == droppedOnBoardKey)
+                console.log('DO WHAT YOU GOTTA DO', modifiedBoardIndex, secondModifiedBoardIndex)
+                
+                modifiedBoard = Object.create(state.boards[modifiedBoardIndex])
+                state.boards.splice(modifiedBoardIndex, 1);
+                state.boards.splice(secondModifiedBoardIndex,0, modifiedBoard)
+            }
+            else{
+                console.log('SOMETHING AINT RIGHT HERE')
+                modifiedBoardIndex = state.boards.findIndex(board => board.key == draggedBoardKey);
+                modifiedBoard = state.boards[modifiedBoardIndex];
+                modifiedBoard.rowKey = droppedOnRowKey
+            }
 
             
+            return state;
+
+        case "TRANSFER_BOARD_EMPTY":
+
             return state;
 
         case "EDIT_BOARD_TITLE":

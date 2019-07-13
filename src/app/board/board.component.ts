@@ -70,9 +70,10 @@ export class BoardComponent implements OnInit{
         }
         else if(eventDataTransfer.includes('BOARD')){
             console.log(eventDataTransfer)
-            let draggedBoardKey = +eventDataTransfer.replace('BOARD', '');
+            let unSanitizedKeys = eventDataTransfer.replace('BOARD', '');
+            let keyArray = unSanitizedKeys.split('-')
             let droppedOnBoardKey = board.key;
-            this.store.dispatch({type:'TRANSFER_BOARD', payload:{draggedBoardKey, droppedOnBoardKey}})
+            this.store.dispatch({type:'TRANSFER_BOARD', payload:{draggedBoardKey:+keyArray[0], draggedBoardRowKey:+keyArray[1], droppedOnBoardKey, droppedOnRowKey:board.rowKey}})
         }
     }
 
@@ -104,7 +105,7 @@ export class BoardComponent implements OnInit{
 
         }
         else{
-            e.dataTransfer.setData('text/plain', `BOARD${board.key}`);
+            e.dataTransfer.setData('text/plain', `BOARD${board.key}-${board.rowKey}`);
         }
         
     }

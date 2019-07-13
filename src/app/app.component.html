@@ -1,5 +1,5 @@
 <!--The content below is only a placeholder and can be replaced.-->
-<mat-expansion-panel class='row' *ngFor='let row of row$ | async'>
+<mat-expansion-panel class='row' *ngFor='let row of row$ | async' (dragover)='onDragOver($event)' (drop)='onDrop($event, row)'>
 
   <mat-expansion-panel-header>
     <mat-panel-title>
@@ -11,9 +11,9 @@
   </mat-expansion-panel-header>
 
   <button mat-flat-button (click)='addBoard(row)' color='primary'>New Board <mat-icon>add</mat-icon></button>
-  <button mat-flat-button>Delete Row</button>
-  <button mat-flat-button>Archive Row</button>
-  <button mat-flat-button>Export Row</button>
+  <button mat-flat-button color='primary'>Delete Row</button>
+  <button mat-flat-button color='primary'>Archive Row</button>
+  <button mat-flat-button color='primary'>Export Row</button>
   <div class='home_div'>
     
     <div *ngFor='let board of board$ | async'>
