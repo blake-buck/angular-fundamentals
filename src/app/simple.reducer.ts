@@ -3,9 +3,14 @@ import {Action} from '@ngrx/store';
 const initialState = {
     currentTaskKey:3,
     currentBoardKey:3,
+    currentRowKey:2,
+    rows:[
+        {key: 1, title:'Test Row', description:'One small step for row, one big step for rowkind', boards:[1, 2]}
+    ],
     archivedBoards:[],
     boards:[
         {
+            rowKey:1,
             key:1, 
             title:'Test Board', 
             hideCompleteTasks:false,
@@ -34,6 +39,7 @@ const initialState = {
             ]
         },
         {
+            rowKey:1,
             key:2, 
             title:'12321', 
             hideCompleteTasks:false,
@@ -71,6 +77,7 @@ export function simpleReducer(state=initialState, action){
 
         case "ADD_BOARD":  
             state.boards.push({
+                rowKey:action.payload,
                 key:state.currentBoardKey,
                 title:'New Board', 
                 hideCompleteTasks:false,

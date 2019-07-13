@@ -1,13 +1,28 @@
 <!--The content below is only a placeholder and can be replaced.-->
+<mat-expansion-panel class='row' *ngFor='let row of row$ | async'>
 
-<div id='home_div'>
+  <mat-expansion-panel-header>
+    <mat-panel-title>
+      {{row.title}}
+    </mat-panel-title>
+    <mat-panel-description>
+      {{row.description}}
+    </mat-panel-description>
+  </mat-expansion-panel-header>
 
-  
-  <!-- <board class='board' [boardKey]=1 [boardTitle]='boardTitle' (boardTitleChange)=changeBoardTitle($event) ></board>
-  
-  <board class='board' [boardKey]=2 [boardTitle]=12321 (boardTitleChange)=changeBoardTitle($event)></board> -->
-  <board *ngFor='let board of board$ | async' class='board' [boardKey]='board.key' [boardTitle]='board.title' (boardTitleChange)=changeBoardTitle($event) ></board>
-  <button mat-flat-button style='font-size:2.5em' (click)='addBoard()' color='primary'><mat-icon>add</mat-icon></button>
-</div>
+  <button mat-flat-button (click)='addBoard(row)' color='primary'>New Board <mat-icon>add</mat-icon></button>
+  <button mat-flat-button>Delete Row</button>
+  <button mat-flat-button>Archive Row</button>
+  <button mat-flat-button>Export Row</button>
+  <div class='home_div'>
+    
+    <div *ngFor='let board of board$ | async'>
+      <board  *ngIf='board.rowKey === row.key' class='board' [boardKey]='board.key' [boardTitle]='board.title' (boardTitleChange)=changeBoardTitle($event) ></board>
+    </div>
+    
+  </div>
+
+</mat-expansion-panel>
+
 
 
