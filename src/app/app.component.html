@@ -1,36 +1,15 @@
 <!--The content below is only a placeholder and can be replaced.-->
 <mat-toolbar color='primary'>
   <mat-toolbar-row>
-    <button mat-flat-button>Add Row</button>
+    <button mat-flat-button (click)='addRow()'>Add Row</button>
     <!-- <button mat-flat-button>Query Document</button>
     <button mat-flat-button>Export Document</button> -->
+    <button mat-flat-button (click)='accordion.closeAll()'>Close All</button>
+    <button mat-flat-button (click)='accordion.openAll()'>Open All</button>
   </mat-toolbar-row>
 </mat-toolbar>
-<mat-accordion>
-<mat-expansion-panel class='row' *ngFor='let row of row$ | async' (dragover)='onDragOver($event)' (drop)='onDrop($event, row)'>
 
-  <mat-expansion-panel-header>
-    <mat-panel-title>
-      {{row.title}}
-    </mat-panel-title>
-    <mat-panel-description>
-      {{row.description}}
-    </mat-panel-description>
-  </mat-expansion-panel-header>
 
-  <button mat-flat-button (click)='addBoard(row)' color='primary'>New Board <mat-icon>add</mat-icon></button>
-  <button mat-flat-button color='primary'>Delete Row</button>
-  <button mat-flat-button color='primary'>Archive Row</button>
-  <button mat-flat-button color='primary'>Export Row</button>
-  <div class='home_div'>
-    
-    <div *ngFor='let board of board$ | async'>
-      <board  *ngIf='board.rowKey === row.key' class='board' [boardKey]='board.key' [boardTitle]='board.title' (boardTitleChange)=changeBoardTitle($event) ></board>
-    </div>
-    
-  </div>
-
-</mat-expansion-panel>
-
+<mat-accordion #accordion='matAccordion'>
+  <row *ngFor='let row of row$ | async' [rowData]='row'></row>
 </mat-accordion>
-

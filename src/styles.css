@@ -5,6 +5,7 @@
 }
 .home_div{
     display: flex;
+    overflow:auto;
 }
 .board{
     margin-left:10px;

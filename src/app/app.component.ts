@@ -24,9 +24,23 @@ export class AppComponent {
   row$:Observable<any>
 
 
+
+
   constructor(private store:Store<AppState>){
     this.board$ = this.store.select(state => state.simpleReducer.boards)
     this.row$ = this.store.select(state => state.simpleReducer.rows)
+  }
+
+  addRow(){
+    this.store.dispatch({type:'ADD_ROW', payload:''})
+  }
+
+  toggleEditRowTitle(){
+    
+  }
+
+  changeRowTitle(){
+
   }
 
   addBoard(row){

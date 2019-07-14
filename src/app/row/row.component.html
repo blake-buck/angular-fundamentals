@@ -1,0 +1,26 @@
+
+<mat-expansion-panel (dragover)='onDragOver($event)' (drop)='onDrop($event, rowData)'>
+    <mat-expansion-panel-header>
+        <mat-panel-title>
+            {{rowData.title}}
+        </mat-panel-title>
+        <mat-panel-description>
+            {{rowData.description}}
+        </mat-panel-description>
+    </mat-expansion-panel-header>
+
+    <button mat-flat-button (click)='addBoard(rowData)' color='primary'>New Board <mat-icon>add</mat-icon></button>
+    <button mat-flat-button color='primary'>Delete Row</button>
+    <button mat-flat-button color='primary'>Archive Row</button>
+    <button mat-flat-button color='primary'>Export Row</button>
+
+    <div class='home_div'>
+
+        <div *ngFor='let board of board$ | async'>
+            <board *ngIf='board.rowKey === rowData.key' class='board' [boardKey]='board.key' [boardTitle]='board.title' (boardTitleChange)=changeBoardTitle($event) ></board>
+        </div>
+          
+    </div>
+
+</mat-expansion-panel>
+<!-- class='row' *ngFor='let row of row$ | async' (dragover)='onDragOver($event)' (drop)='onDrop($event, row)' -->

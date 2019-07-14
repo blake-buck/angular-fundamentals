@@ -73,6 +73,18 @@ export function simpleReducer(state=initialState, action){
         case "GET_STATE":
             console.log(state);
             return state;
+
+        case "ADD_ROW":
+            state.rows.push({key:state.currentRowKey, title:'New Row', description:'this is a new row', boards:[]})
+            state.currentRowKey++;
+            return state; 
+
+        
+
+        case "CHANGE_ROW_TITLE":
+
+            return state;
+
         case "GET_BOARD":
             
             return state

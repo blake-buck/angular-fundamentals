@@ -28,7 +28,7 @@ import { NgModule } from '@angular/core';
 
 import { AppComponent } from './app.component';
 
-
+import { RowComponent } from './row/row.component';
 import { BoardComponent, DeleteBoardDialogComponent } from './board/board.component';
 import { TaskComponent, TaskDialogComponent, DeleteDialogComponent, DatePickDialogComponent, PhotoDialogComponent, AttachmentDialogComponent } from './board/task/task.component';
 
@@ -36,6 +36,8 @@ import { TaskComponent, TaskDialogComponent, DeleteDialogComponent, DatePickDial
 @NgModule({
   declarations: [
     AppComponent,
+
+    RowComponent,
 
     BoardComponent,
     DeleteBoardDialogComponent,
