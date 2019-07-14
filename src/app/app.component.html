@@ -10,6 +10,6 @@
 </mat-toolbar>
 
 
-<mat-accordion #accordion='matAccordion'>
-  <row *ngFor='let row of row$ | async' [rowData]='row'></row>
+<mat-accordion #accordion='matAccordion' multi='true'>
+  <row *ngFor='let row of row$ | async' [rowData]='row' [accordion]='accordion'></row>
 </mat-accordion>

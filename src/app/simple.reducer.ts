@@ -62,6 +62,8 @@ const initialState = {
     ]
 }
 export function simpleReducer(state=initialState, action){
+    let modifiedRow;
+    let modifiedRowIndex;
     let modifiedBoard;
     let modifiedBoardIndex;
     let modifiedTaskIndex;
@@ -79,10 +81,16 @@ export function simpleReducer(state=initialState, action){
             state.currentRowKey++;
             return state; 
 
-        
+        case "ARCHIVE_ROW":
+            modifiedRowIndex = state.rows.findIndex(row => row.key === action.payload);
+            modifiedRow = state.rows.splice(modifiedRowIndex, 1);
+            state.archivedRows.push(modifiedRow)
+            return state;
 
-        case "CHANGE_ROW_TITLE":
-
+        case "EDIT_ROW_TITLE":
+            modifiedRow = state.rows.find(row => row.key === action.payload.key);
+            console.log(modifiedRow)
+            modifiedRow.title = action.payload.title;
             return state;
 
         case "GET_BOARD":
