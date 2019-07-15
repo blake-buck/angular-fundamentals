@@ -1,0 +1,4 @@
+.transfer_tasks_select_wrapper{
+    display:flex;
+    flex-direction:column;
+}

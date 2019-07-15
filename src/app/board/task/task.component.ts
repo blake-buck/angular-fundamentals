@@ -11,6 +11,7 @@ export interface AppState{
 
 import * as moment from 'moment';
 import { ReadVarExpr } from '@angular/compiler';
+import { Observable } from 'rxjs';
 
 
 @Component({
@@ -358,6 +359,51 @@ export class TaskDialogComponent {
         this.store.dispatch({type:'EDIT_TASKS', payload:this.data})
     }
 
+    transferTask(){
+        const dialogRef = this.dialog.open(TransferTaskDialogComponent, 
+            {
+                id:'transfer-task-dialog',
+                data:this.data
+            }
+        )
+    }
+
+}
+
+@Component({
+    templateUrl:'./transfer_task_dialog.component.html',
+    selector:'transfer-task-dialog',
+    styleUrls:['./transfer_task_dialog.component.css']
+})
+
+export class TransferTaskDialogComponent{
+    
+    rows$: Observable<any>
+    boards$: Observable<any>
+
+    selectedRow=null;
+    selectedBoard=null;
+
+    constructor(
+        private store:Store<AppState>,
+        public dialogRef: MatDialogRef<DeleteDialogComponent>, 
+        @Inject(MAT_DIALOG_DATA) public data:any,
+        public dialog:MatDialog
+    ){
+        this.rows$ = this.store.select(state => state.simpleReducer.rows)
+        this.boards$ = this.store.select(state => state.simpleReducer.boards)
+    }
+
+    transferTask(){
+        if(this.selectedBoard){
+            this.store.dispatch({type:"TRANSFER_TASK_EMPTY", payload:{droppedTaskId:this.data.key, droppedTaskBoard:this.data.boardKey, droppedOnTaskBoard:this.selectedBoard.key}})
+            this.dialogRef.close()
+        }
+    }
+
+    onCloseDialog(){
+        this.dialogRef.close();
+    }
 }
 
 @Component({

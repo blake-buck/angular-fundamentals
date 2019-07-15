@@ -1,0 +1,32 @@
+<h2>Transfer Task</h2>
+<mat-dialog-content class='transfer_tasks_select_wrapper'>
+    <mat-form-field>
+        <mat-label>Row</mat-label>
+
+        <mat-select [(value)]="selectedRow">
+            <mat-option *ngFor='let row of rows$ | async' [value]='row'>
+                {{row.title}}
+            </mat-option>
+        </mat-select>
+
+    </mat-form-field>
+
+    <mat-form-field>
+        <mat-label>Board</mat-label>
+        
+        <mat-select [(value)]="selectedBoard">
+            <div *ngFor='let board of boards$ | async'>
+                <mat-option *ngIf='selectedRow && (board.rowKey === selectedRow.key && board.key !== data.boardKey)' [value]='board'>
+                <!-- <mat-option [value]='board.key'> -->
+                    {{board.title}}
+                </mat-option>
+            </div>
+        </mat-select>
+        
+    </mat-form-field>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+    <button mat-button (click)='onCloseDialog()'>Cancel</button>
+    <button mat-button (click)='transferTask()'>Transfer</button>
+</mat-dialog-actions>
