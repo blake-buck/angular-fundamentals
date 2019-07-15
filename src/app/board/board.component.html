@@ -16,13 +16,20 @@
                 <i class="material-icons">more_vert</i>
                 <mat-menu #boardOptions>
                     <button mat-menu-item ><mat-checkbox (change)='toggleHideCompleteTasks(board.key, !board.hideCompleteTasks)' [checked]='board.hideCompleteTasks'>Hide completed tasks</mat-checkbox></button>
+                    
                     <button mat-menu-item (click)='archiveBoard(board)'>
                         <mat-icon>archive</mat-icon>
                         <span>Archive Board</span>
                     </button>
+                    
                     <button mat-menu-item (click)='deleteBoard(board.key)'>
                         <mat-icon>delete</mat-icon>
                         <span>Delete Board</span>
+                    </button>
+
+                    <button mat-menu-item>
+                        <mat-icon>screen_share</mat-icon>
+                        <span>Transfer Board</span>
                     </button>
                 </mat-menu>
             </button>
