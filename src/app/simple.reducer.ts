@@ -76,6 +76,11 @@ export function simpleReducer(state=initialState, action){
             console.log(state);
             return state;
 
+        case "GET_ROW":
+            modifiedRow= state.rows.find(row => row.key === action.payload)
+            console.log('HURRRR')
+            break;
+
         case "ADD_ROW":
             state.rows.push({key:state.currentRowKey, title:'New Row', description:'this is a new row', boards:[]})
             state.currentRowKey++;

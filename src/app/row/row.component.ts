@@ -20,6 +20,8 @@ export class RowComponent{
 
     board$:Observable<any>
 
+    
+
     isEditingTitle = false;
     isEditingDescription = false;
 

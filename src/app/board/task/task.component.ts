@@ -28,6 +28,7 @@ export class TaskComponent{
 
     @Output() taskTransfer = new EventEmitter();
     @Output() taskChange   = new EventEmitter();
+    
 
 
     constructor(private store:Store<AppState>, public dialog:MatDialog){
@@ -123,6 +124,8 @@ export class TaskDialogComponent {
 
     commentContent = ''
 
+    row = null;
+
     constructor(
         private store:Store<AppState>,
         public dialogRef: MatDialogRef<TaskDialogComponent>, 
@@ -135,7 +138,9 @@ export class TaskDialogComponent {
         }
 
         ngOnInit(){
+            
             this.store.dispatch({type:'GET_STATE', payload:''})
+            
         }
 
         ngAfterViewChecked(){

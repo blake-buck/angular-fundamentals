@@ -10,6 +10,8 @@
         </mat-panel-description>
     </mat-expansion-panel-header>
 
+    <mat-divider style='margin-bottom:10px;'></mat-divider>
+
     <span *ngIf='isEditingTitle'>
         <mat-form-field>
             <input matInput (change)='editTitle($event, rowData)' value={{rowData.title}}/>

@@ -3,6 +3,7 @@
 
         <div>
             <h1>{{data.body}}</h1>
+            
             <button mat-icon-button (click)='toggleEditBody()'>
                 <i class="material-icons">edit</i>
             </button>
@@ -119,6 +120,10 @@
                 <button mat-menu-item (click)='changeFontColor("seagreen")' style='color:seagreen'>Sea Green</button>
                 <button mat-menu-item (click)='changeFontColor("plum")' style='color:plum'>Plum</button>
             </mat-menu>
+
+            <mat-menu #transferTaskMenu='matMenu'>
+                <p></p>
+            </mat-menu>
             
             <button mat-raised-button [matMenuTriggerFor]='iconMenu'><i class="material-icons">label</i>Tags</button>
             <button mat-raised-button (click)='openDatePicker()'><i class='material-icons'>access_time</i>Due Date</button>
@@ -129,7 +134,7 @@
             <button mat-raised-button (click)='deleteTask()'><i class="material-icons">delete</i>Delete</button>
             <button mat-raised-button [matMenuTriggerFor]='colorMenu'><i class="material-icons">format_color_fill</i>Card Color</button>
             <button mat-raised-button [matMenuTriggerFor]='fontColorMenu'><i class='material-icons'>format_color_text</i>Font Color</button>
-            
+            <button mat-raised-button><mat-icon>screen_share</mat-icon>Transfer Task</button>
         </div>
     </div>
 </div>
