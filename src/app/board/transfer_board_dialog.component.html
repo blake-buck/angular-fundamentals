@@ -1,0 +1,19 @@
+<h2>Transfer Board</h2>
+
+<mat-form-field>
+    <mat-label>Row</mat-label>
+
+    <mat-select [(value)]="selectedRow">
+        <div *ngFor='let row of rows$ | async'>
+            <mat-option *ngIf='data.rowKey !== row.key' [value]='row'>
+                {{row.title}}
+            </mat-option>
+        </div>
+    </mat-select>
+
+</mat-form-field>
+
+<mat-dialog-actions>
+    <button mat-button (click)='onCloseDialog()'>Cancel</button>
+    <button mat-button (click)='transferBoard(data)'>Transfer</button>
+</mat-dialog-actions>

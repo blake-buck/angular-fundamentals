@@ -29,7 +29,7 @@ import { NgModule } from '@angular/core';
 import { AppComponent } from './app.component';
 
 import { RowComponent } from './row/row.component';
-import { BoardComponent, DeleteBoardDialogComponent } from './board/board.component';
+import { BoardComponent, DeleteBoardDialogComponent, TransferBoardDialogComponent } from './board/board.component';
 import { TaskComponent, TaskDialogComponent, DeleteDialogComponent, DatePickDialogComponent, PhotoDialogComponent, AttachmentDialogComponent, TransferTaskDialogComponent } from './board/task/task.component';
 
 
@@ -41,6 +41,7 @@ import { TaskComponent, TaskDialogComponent, DeleteDialogComponent, DatePickDial
 
     BoardComponent,
     DeleteBoardDialogComponent,
+    TransferBoardDialogComponent,
 
     TaskComponent,
     TaskDialogComponent,
@@ -74,6 +75,6 @@ import { TaskComponent, TaskDialogComponent, DeleteDialogComponent, DatePickDial
     {provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue:{hasBackdrop:false}}
   ],
   bootstrap: [AppComponent],
-  entryComponents : [TaskDialogComponent, DeleteDialogComponent, DatePickDialogComponent, PhotoDialogComponent, AttachmentDialogComponent, DeleteBoardDialogComponent, TransferTaskDialogComponent]
+  entryComponents : [TaskDialogComponent, DeleteDialogComponent, DatePickDialogComponent, PhotoDialogComponent, AttachmentDialogComponent, DeleteBoardDialogComponent, TransferTaskDialogComponent, TransferBoardDialogComponent]
 })
 export class AppModule { }

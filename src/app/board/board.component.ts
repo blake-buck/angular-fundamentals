@@ -123,6 +123,16 @@ export class BoardComponent implements OnInit{
         )
     }
 
+    transferBoard(data){
+        const dialogRef = this.dialog.open(TransferBoardDialogComponent, 
+            {
+
+                id:'transfer-board-dialog',
+                data:data
+            }
+        )
+    }
+
 }
 
 @Component({
@@ -148,4 +158,35 @@ export class DeleteBoardDialogComponent{
         this.store.dispatch({type:'DELETE_BOARD', payload:this.data})
         this.dialogRef.close();
     }
+}
+
+@Component({
+    templateUrl:'./transfer_board_dialog.component.html',
+    selector:'transfer-board-dialog'
+})
+
+export class TransferBoardDialogComponent{
+
+    rows$:Observable<any>
+    selectedRow = null;
+
+    constructor(
+        private store:Store<AppState>,
+        public dialogRef: MatDialogRef<TransferBoardDialogComponent>, 
+        @Inject(MAT_DIALOG_DATA) public data:any,
+        public dialog:MatDialog
+    ){
+        this.rows$ = this.store.select(state => state.simpleReducer.rows)
+    }
+
+    onCloseDialog(){
+        this.dialogRef.close();
+    }
+
+    transferBoard(data){
+        // {draggedBoardKey,droppedOnBoardKey,draggedBoardRowKey,droppedOnRowKey
+        this.store.dispatch({type:'TRANSFER_BOARD', payload:{draggedBoardKey:data.key, draggedBoardRowKey:data.rowKey, droppedOnRowKey:this.selectedRow.key}})
+        this.dialogRef.close();
+    }
+
 }
