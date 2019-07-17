@@ -243,6 +243,12 @@ export class TaskDialogComponent {
         this.store.dispatch({type:'EDIT_TASK', payload:this.data});
     }
 
+    deleteChecklist(checklist){
+        let deletedChecklistIndex = this.data.checklists.findIndex(val => val.key === checklist.key)
+        this.data.checklists.splice(deletedChecklistIndex, 1);
+        this.store.dispatch({type:'EDIT_TASK', payload:this.data})
+    }
+
     toggleEditChecklistTitle(checklistKey){
         let modifiedChecklist = this.data.checklists.find(checklist => checklist.key === checklistKey)
         modifiedChecklist.title.isEditing = !modifiedChecklist.title.isEditing;

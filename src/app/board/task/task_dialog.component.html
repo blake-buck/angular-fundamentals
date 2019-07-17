@@ -72,8 +72,9 @@
             <div class='dialog-checklist-title-wrapper'>
                 <mat-icon [style.color]='checklist.color'>check_box</mat-icon>
                 <input *ngIf='checklist.title.isEditing' autofocus placeholder='Checklist title...' (keyup)='changeChecklistTitle($event, checklist.key)' value={{checklist.title.content}} (focusout)='toggleEditChecklistTitle(checklist.key)' />
+                <button *ngIf='checklist.title.isEditing' mat-icon-button (click)='deleteChecklist(checklist)'><mat-icon>delete</mat-icon></button>
                 <h4 *ngIf='!checklist.title.isEditing' (click)='toggleEditChecklistTitle(checklist.key)'>{{checklist.title.content}}</h4>
-                <h6>{{checklist.completedTasks}} / {{checklist.content.length}}</h6>
+                <h6 *ngIf='!checklist.title.isEditing'>{{checklist.completedTasks}} / {{checklist.content.length}}</h6>
                 
             </div>
             
