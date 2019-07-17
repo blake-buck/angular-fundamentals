@@ -51,24 +51,25 @@ div.card-title{
 .task-list-item{
     margin-top:10px;
     margin-bottom:10px;
-    
+    font-size:1.2em;
     
     border-radius:5px;
     background-color:#ffffff;
     width:100%;
-
+    padding-left:5px;
+    padding-right:5px;
 }
 
 .task-list-item-wrapper{
     width:100%;
     height:100%;
-    display:flex;
-    flex-direction: column;
-    align-items: center;
+
 }
 .task-list-item-wrapper img{
     width:200px;
     height:200px;
+    margin-left:25%;
+    /* margin-right:auto; */
 }
 
 .task-list-item-div{
@@ -77,6 +78,19 @@ div.card-title{
     align-items:center;
     width:100%;
     height:100%;
+}
+.task-list-checklist-icon-wrapper{
+    display:flex;
+    margin:0px;
+    padding:0px;
+    line-height: 0px;
+}
+.task-list-checklist-icon{
+    margin:0px;
+    margin-top:2px;
+    padding:0px;
+    font-size:.9em;
+    line-height: 0px;
 }
 
 .task-list-form, .task-list-field{
@@ -227,8 +241,21 @@ div.card-title{
     font-size:.6em;
 }
 
+.dialog-checklist-title-wrapper{
+    display:flex;
+    align-items:center;
+}
+.dialog-checklist-title-wrapper input{
+    font-size:1em;
+    font-weight:bold;
+}
 .dialog-checklist h4{
-    margin-top:0;
+    margin-top:0; 
+    margin-bottom:0;
+}
+.dialog-checklist h6{
+    margin-left:15px;
+    margin-top:0; 
     margin-bottom:0;
 }
 

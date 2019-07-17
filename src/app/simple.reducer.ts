@@ -23,8 +23,10 @@ const initialState = {
                 currentChecklistKey:2,
                 checklists:[{
                     title:{content:'Checklist', isEditing:false},
+                    color:'black',
                     key:1,
                     currentKey:4,
+                    completedTasks:1,
                     content:[
                         {key:1, content:'Buy drugs', checked:false, isEditing:false},
                         {key:2, content:'Do drugs', checked:true, isEditing:false},

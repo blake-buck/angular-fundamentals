@@ -32,7 +32,7 @@
 
 </mat-list-item>
 
-<mat-list-item role='listitem'
+<div role='listitem'
     (click)='openDialog()' 
     *ngIf='!task.isInput && (board.hideCompleteTasks===false && task.isComplete===true || task.isComplete===false)' 
     draggable="true" 
@@ -45,19 +45,23 @@
     [style.color]='task.fontColor'
     [style.opacity]='addCompletionStyling("opacity")'
     [style.text-decoration]='addCompletionStyling("text-decoration")'
-    style='height:100%;padding-top:10px;padding-bottom:10px;'
+    style='height:100%;padding-top:10px;padding-bottom:10px; '
     #elementWrapper
 >   
 
     <div class='task-list-item-wrapper'>
-        <img *ngIf='task.displayImageUrl' src={{task.displayImageUrl}} />
+        <div style='width:100%;'>
+            <img *ngIf='task.displayImageUrl' src={{task.displayImageUrl}} />
+        </div>
 
         <div class='task-list-item-div'>
-            <div style='display:flex; align-items:center;'>
-                <div (click)='toggleInput()'>{{task.body}}</div>
-                <div class='task-due-date' *ngIf='task.dueDate'>
-                    <i class='material-icons'>alarm</i>
-                    <span >{{task.dueDate.format('MM/DD')}}</span>
+            <div>
+                <div style='display:flex; align-items:center;'>
+                    <div (click)='toggleInput()'>{{task.body}}</div>
+                    <div class='task-due-date' *ngIf='task.dueDate'>
+                        <i class='material-icons'>alarm</i>
+                        <span >{{task.dueDate.format('MM/DD')}}</span>
+                    </div>
                 </div>
                 
             </div>
@@ -75,4 +79,12 @@
     
     </div>
 
-</mat-list-item>
+    <span class='task-list-checklist-icon-wrapper'>
+        <i class='task-list-checklist-icon material-icons' *ngFor='let checklist of task.checklists' [style.color]='checklist.color'>check_box</i>
+    </span>
+        
+    
+
+    
+
+</div>

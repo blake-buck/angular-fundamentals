@@ -234,7 +234,9 @@ export class TaskDialogComponent {
         this.data.checklists.push({
             title:{content:'New Checklist', isEditing:true},
             key:this.data.currentChecklistKey,
+            color:'black',
             currentKey:1,
+            completedTasks:0,
             content:[]
         })
         this.data.currentChecklistKey ++;
@@ -256,8 +258,21 @@ export class TaskDialogComponent {
         let changedItemIndex  = modifiedChecklist.content.findIndex((val) => val.key === item.key)
         if(modifiedChecklist.content[changedItemIndex].content && !modifiedChecklist.content[changedItemIndex].isEditing){
             console.log(modifiedChecklist.content[changedItemIndex])
+
             modifiedChecklist.content[changedItemIndex].checked = !item.checked
-            
+            if(modifiedChecklist.content[changedItemIndex].checked){
+                modifiedChecklist.completedTasks++;
+            }
+            else{
+                modifiedChecklist.completedTasks--;
+            }
+
+            if(modifiedChecklist.completedTasks === modifiedChecklist.content.length){
+                modifiedChecklist.color = 'green'
+            }
+            else{
+                modifiedChecklist.color = 'black'
+            }
 
             this.store.dispatch({type:'EDIT_TASK', payload:this.data})
         }   
