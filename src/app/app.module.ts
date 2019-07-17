@@ -31,6 +31,7 @@ import { AppComponent } from './app.component';
 import { RowComponent } from './row/row.component';
 import { BoardComponent, DeleteBoardDialogComponent, TransferBoardDialogComponent } from './board/board.component';
 import { TaskComponent, TaskDialogComponent, DeleteDialogComponent, DatePickDialogComponent, PhotoDialogComponent, AttachmentDialogComponent, TransferTaskDialogComponent } from './board/task/task.component';
+import { ExportButtonComponent } from './board/export-button/export-button.component';
 
 
 @NgModule({
@@ -40,6 +41,7 @@ import { TaskComponent, TaskDialogComponent, DeleteDialogComponent, DatePickDial
     RowComponent,
 
     BoardComponent,
+    ExportButtonComponent,
     DeleteBoardDialogComponent,
     TransferBoardDialogComponent,
 

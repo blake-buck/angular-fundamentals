@@ -2,6 +2,8 @@
 
 
 <mat-card class='task-board' *ngIf='board$ | async ; let board'  draggable='true' (dragstart)='onDragStart($event, board)' (dragover)='onDragOver($event, board)' (drop)='onDrop($event, board)' (taskTransfer)='onTaskTransfer($event)'>
+    
+    <export-button *ngIf='displayExportLink' [exportLink]='exportLink' [title]='board.title' (linkHasBegunDownload)='downloadLinkLoads()'></export-button>
 
     <div class='card-title' >
         <h3 (click)='toggleEditBoardTitle(board)' *ngIf='!isEditingBoardTitle' >{{board.title}}</h3>
@@ -30,6 +32,11 @@
                     <button mat-menu-item (click)='transferBoard(board)'>
                         <mat-icon>screen_share</mat-icon>
                         <span>Transfer Board</span>
+                    </button>
+
+                    <button mat-menu-item (click)='exportBoard(board)'>
+                        <mat-icon>cloud_download</mat-icon>
+                        <span>Export Board</span>
                     </button>
                 </mat-menu>
             </button>

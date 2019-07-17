@@ -3,6 +3,7 @@ import { MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatTabChangeEvent} from '@ang
 import {Store, select} from '@ngrx/store';
 import {addTask} from './board.actions'
 import {Observable} from 'rxjs';
+import { DomSanitizer } from '@angular/platform-browser';
 
 export interface AppState{
     simpleReducer:any
@@ -22,11 +23,14 @@ export class BoardComponent implements OnInit{
     @Output() changeBoardTitle = new EventEmitter();
 
     isEditingBoardTitle = false;
+    exportLink = null;
+    displayExportLink = false;
+    
 
     tasks$:Observable<any>
     board$:Observable<any>
 
-    constructor(private store:Store<AppState>, public dialog:MatDialog){
+    constructor(private store:Store<AppState>, public dialog:MatDialog, private sanitization:DomSanitizer,){
         this.tasks$ = this.store.select(state => state.simpleReducer.tasks)
         this.board$ = this.store.select(state => state.simpleReducer.boards.find((board) => board.key === this.boardKey))
     }
@@ -132,6 +136,34 @@ export class BoardComponent implements OnInit{
             }
         )
     }
+
+    
+    exportBoard(board){
+        let file = new File([JSON.stringify(board)], board.title)
+        
+        let fileReader = new FileReader();
+
+        fileReader.onloadend = (e) => {
+            let untrustedLink:any = fileReader.result
+            this.exportLink = this.sanitization.bypassSecurityTrustUrl(untrustedLink);
+            this.displayExportLink = true;
+        }
+        // console.log(e.target.files[0])
+        // let file = e.target.files[e.target.files.length-1];
+        if(file){
+            fileReader.readAsDataURL(file)
+        }
+    }
+
+    downloadLinkLoads(){
+        console.log('MY NAME IS JEFF')
+        // this seems very hacky, should probably find another way to prevent ExpressionChangedAfter error message
+        setTimeout(() => {
+            this.displayExportLink = false
+        }, 0)
+        
+    }
+    
 
 }
 
