@@ -379,6 +379,15 @@ export class TaskDialogComponent {
         this.data.downloadNames.splice(index, 1);
         this.store.dispatch({type:'EDIT_TASKS', payload:this.data})
     }
+    previewAttachment(downloadLink){
+        console.log(downloadLink)
+        const dialogRef = this.dialog.open(PreviewAttachmentDialogComponent, 
+            {
+                id:'preview-attachment-dialog',
+                data:downloadLink
+            }
+        )
+    }
 
     transferTask(){
         const dialogRef = this.dialog.open(TransferTaskDialogComponent, 
@@ -389,6 +398,35 @@ export class TaskDialogComponent {
         )
     }
 
+}
+
+@Component({
+    template:`
+    <img *ngIf='isImage' src={{imgSrc}} />
+    `,
+    selector:'preview-attachment-dialog'
+})
+
+export class PreviewAttachmentDialogComponent{
+    constructor(
+        private store:Store<AppState>,
+        private sanitization:DomSanitizer,
+        public dialogRef: MatDialogRef<PreviewAttachmentDialogComponent>, 
+        @Inject(MAT_DIALOG_DATA) public data:any,
+        public dialog:MatDialog
+    ){}
+
+    isImage = false;
+    imgSrc;
+    isText  = false;
+
+    ngOnInit(){
+        console.log(this.data)
+        if(this.data.changingThisBreaksApplicationSecurity.includes('image')){
+            this.isImage = true;
+            this.imgSrc = this.sanitization.bypassSecurityTrustUrl(this.data);
+        }
+    }
 }
 
 @Component({

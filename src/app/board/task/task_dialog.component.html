@@ -71,7 +71,7 @@
         <div *ngFor='let checklist of data.checklists' class='dialog-checklist'>
             <div class='dialog-checklist-title-wrapper'>
                 <mat-icon [style.color]='checklist.color'>check_box</mat-icon>
-                <input *ngIf='checklist.title.isEditing' autofocus placeholder='Checklist title...' (keyup)='changeChecklistTitle($event, checklist.key)' value={{checklist.title.content}} (focusout)='toggleEditChecklistTitle(checklist.key)' />
+                <input *ngIf='checklist.title.isEditing' placeholder='Checklist title...' (keyup)='changeChecklistTitle($event, checklist.key)' value={{checklist.title.content}} (focusout)='toggleEditChecklistTitle(checklist.key)' />
                 <button *ngIf='checklist.title.isEditing' mat-icon-button (click)='deleteChecklist(checklist)'><mat-icon>delete</mat-icon></button>
                 <h4 *ngIf='!checklist.title.isEditing' (click)='toggleEditChecklistTitle(checklist.key)'>{{checklist.title.content}}</h4>
                 <h6 *ngIf='!checklist.title.isEditing'>{{checklist.completedTasks}} / {{checklist.content.length}}</h6>
@@ -91,6 +91,7 @@
                 <p>{{data.downloadNames[i]}}</p>
             
                 <a download={{data.downloadNames[i]}} [href]='downloadLink' mat-icon-button><i class='material-icons'>get_app</i></a>
+                <button mat-icon-button (click)='previewAttachment(downloadLink)'><i class='material-icons'>airplay</i></button>
                 <!-- <a download={{data.downloadNames[i]}} [href]='downloadLink' target='_blank' mat-icon-button><i class='material-icons'>open_in_browser</i></a> -->
                     
                 
