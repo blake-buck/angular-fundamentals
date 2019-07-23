@@ -10,7 +10,7 @@
 
         
         <mat-form-field *ngIf='isEditingBoardTitle' class='board-title-input'>
-            <input matInput (focusout)='toggleEditBoardTitle(board)' *ngIf='isEditingBoardTitle' value={{board.title}} class='board-title-input-a' (keyup)='editBoardTitle($event, board)'>
+            <input #boardTitleInput matInput (focusout)='toggleEditBoardTitle(board)' *ngIf='isEditingBoardTitle' value={{board.title}} class='board-title-input-a' (keyup)='editBoardTitle($event, board)'>
         </mat-form-field>
 
         <div>

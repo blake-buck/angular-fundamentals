@@ -1,4 +1,4 @@
-import {Component, Input, Output, EventEmitter, Injectable, Inject, OnInit} from '@angular/core';
+import {Component, Input, Output, EventEmitter, Injectable, Inject, OnInit, ViewChild, ElementRef} from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatTabChangeEvent} from '@angular/material';
 import {Store, select} from '@ngrx/store';
 import {addTask} from './board.actions'
@@ -17,12 +17,15 @@ export interface AppState{
 @Injectable()
 
 export class BoardComponent implements OnInit{
+    @ViewChild('boardTitleInput', {read: ElementRef, static:false}) boardTitleInput: ElementRef;
+    
     @Input() boardTitle:string;
     @Input() boardKey:any;
 
     @Output() changeBoardTitle = new EventEmitter();
 
     isEditingBoardTitle = false;
+    isEditingBoardTitleFocused = false;
     exportLink = null;
     displayExportLink = false;
     
@@ -33,6 +36,15 @@ export class BoardComponent implements OnInit{
     constructor(private store:Store<AppState>, public dialog:MatDialog, private sanitization:DomSanitizer,){
         this.tasks$ = this.store.select(state => state.simpleReducer.tasks)
         this.board$ = this.store.select(state => state.simpleReducer.boards.find((board) => board.key === this.boardKey))
+    }
+
+    ngAfterViewChecked(){
+        if(this.isEditingBoardTitle && !this.isEditingBoardTitleFocused){
+            this.isEditingBoardTitleFocused = true;
+            setTimeout(() => {
+                this.boardTitleInput.nativeElement.focus();
+            }, 0)
+        }
     }
 
     
@@ -86,10 +98,17 @@ export class BoardComponent implements OnInit{
             this.store.dispatch({type:'EDIT_BOARD_TITLE', payload:{key:board.key, title:board.title}})
         }
         this.isEditingBoardTitle = !this.isEditingBoardTitle;
-        
+        if(this.isEditingBoardTitleFocused){
+            this.isEditingBoardTitleFocused = false;
+        }
     }
-    editBoardTitle(e, board){
-        board.title = e.target.value;
+    editBoardTitle(e, board){  
+        if(e.code === 'Enter'){
+            this.toggleEditBoardTitle(board)
+        }
+        else{
+            board.title = e.target.value;
+        }
     }
 
     ngOnInit(){

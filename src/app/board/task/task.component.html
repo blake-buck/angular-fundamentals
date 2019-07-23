@@ -1,4 +1,4 @@
-<mat-list-item role='listitem'
+<div role='listitem'
     (dblclick)=toggleInput() 
     *ngIf='task.isInput && (!board.hideCompleteTasks && !task.isComplete)'
     class='task-list-item'
@@ -10,12 +10,14 @@
     <div class='task-list-item-wrapper'>
         <img *ngIf='task.displayImageUrl' src={{task.displayImageUrl}} />
         <div class='task-list-item-div'>
-            <form class='task-list-form' >
-                <mat-form-field class='task-list-field' >
+            <form class='task-list-form' (submit)='toggleInput($event)'>
+                <mat-form-field class='task-list-field' style='margin-bottom:-0.5em; margin-top:-0.5em; ' >
                     <input   
                         matInput
+                        #taskBodyInput
                         value={{task.body}} 
                         (keyup)='changeTaskBody($event)'
+                        (focusout)='toggleInput()'
                     />
                 </mat-form-field>
             </form>
@@ -30,7 +32,11 @@
         </div>
     </div>
 
-</mat-list-item>
+    <span class='task-list-checklist-icon-wrapper'>
+            <i class='task-list-checklist-icon material-icons' *ngFor='let checklist of task.checklists' [style.color]='checklist.color'>check_box</i>
+    </span>
+
+</div>
 
 <div role='listitem'
     (click)='openDialog()' 

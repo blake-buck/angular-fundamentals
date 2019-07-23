@@ -1,12 +1,10 @@
 <div class='dialog-wrapper' >
     <div class='dialog-title' *ngIf='!isEditingBody'>
 
-        <div>
+        <div (click)='toggleEditBody()'>
             <h1>{{data.body}}</h1>
             
-            <button mat-icon-button (click)='toggleEditBody()'>
-                <i class="material-icons">edit</i>
-            </button>
+            <h1 *ngIf='!data.body' style='opacity:.7;'>Card Title...</h1>
         </div>
 
         <div class='due-date' *ngIf='data.dueDate'>
@@ -23,9 +21,23 @@
         
     </div>
     <div class='dialog-title' *ngIf='isEditingBody'>
-        <mat-form-field>
-                <input #bodyInput matInput (hover)='onBodyInputLoad()' (focusout)='toggleEditBody()' value={{data.body}} (keyup)='changeTaskBody($event)'/>
-        </mat-form-field>
+        <form (submit)='toggleEditBody($event)'>
+            <mat-form-field>
+                    <input #bodyInput matInput (hover)='onBodyInputLoad()' (focusout)='toggleEditBody()' value={{data.body}} (keyup)='changeTaskBody($event)'/>
+            </mat-form-field>
+        </form>
+
+        <div class='due-date' *ngIf='data.dueDate'>
+            <h4>Due {{data.dueDate.fromNow()}} on {{data.dueDate.format('dddd, MMMM Do YYYY')}} </h4>
+        </div>
+
+        <div>
+            <i *ngIf='data.important' class="material-icons">visibility</i>
+            <i *ngIf='data.warning' class="material-icons">warning</i>
+            <i *ngIf='data.payment' class="material-icons">payment</i>
+            <i *ngIf='data.vacation' class="material-icons">weekend</i>
+            <i *ngIf='data.attachment' class="material-icons">attach_file</i>
+        </div>
     </div>
 
     <div class='dialog-exit'>
@@ -44,7 +56,7 @@
         
         <p *ngIf='!isEditingDescription'>{{data.description}}</p>
         <mat-form-field *ngIf='isEditingDescription'>
-            <textarea matInput (focusout)='toggleEditDescription()' (keyup)='changeTaskDescription($event)' cdkTextareaAutosize #autosize="cdkTextareaAutosize" cdkAutosizeMinRows="4" value={{data.description}}></textarea>
+            <textarea matInput (focusout)='toggleEditDescription()' (keyup)='changeTaskDescription($event)' cdkTextareaAutosize #autosize="cdkTextareaAutosize" #descriptionInput cdkAutosizeMinRows="4" value={{data.description}}></textarea>
         </mat-form-field>
     </div>
 

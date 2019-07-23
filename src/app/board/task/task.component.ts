@@ -23,6 +23,7 @@ import { Observable } from 'rxjs';
 
 export class TaskComponent{
     @ViewChild('elementWrapper', {read: ElementRef, static:false}) elementWrapper: ElementRef;
+    @ViewChild('taskBodyInput', {read: ElementRef, static:false}) taskBodyInput: ElementRef;
 
     @Input() task:any;
     @Input() board:any;
@@ -34,6 +35,18 @@ export class TaskComponent{
 
     constructor(private store:Store<AppState>, public dialog:MatDialog){
         
+    }
+
+    isTaskTitleInputFocused = false;
+
+    ngAfterViewChecked(){
+        if(this.task.isInput && !this.isTaskTitleInputFocused){
+            this.isTaskTitleInputFocused = true;
+            setTimeout(() => {
+                this.taskBodyInput.nativeElement.focus()
+            }, 0)
+            
+        }
     }
 
     classAddedToList = false
@@ -49,16 +62,26 @@ export class TaskComponent{
         )
     }
 
-    toggleInput(){
+    toggleInput(e?){
+        if(e){
+            e.preventDefault();
+        }
         if(!this.task.isComplete){
+            if(this.task.isInput){
+                this.isTaskTitleInputFocused = false;
+            }
             this.task.isInput = !this.task.isInput;
             this.taskChange.emit(this.task);
+            
         }
         
     }
 
     changeTaskBody(e){
+        
         this.task.body = e.target.value;
+        
+        
     }
 
     onDrop(e){
@@ -118,10 +141,14 @@ export class TaskComponent{
 // implements AfterContentChecked, AfterViewChecked, AfterViewInit
 export class TaskDialogComponent {
     @ViewChild('bodyInput', {read: ElementRef, static:false}) bodyInput: ElementRef;
+    @ViewChild('descriptionInput', {read: ElementRef, static:false}) descriptionInput: ElementRef;
     @ViewChild('autosize', {static:false}) autosize:CdkTextareaAutosize;
 
-    isEditingBody           = false;
-    isEditingDescription    = false;
+    isEditingBody                   = false;
+    isEditingBodyFocused            = false;
+
+    isEditingDescription            = false;
+    isEditingDescriptionFocused     = false;
 
     commentContent = ''
 
@@ -145,17 +172,33 @@ export class TaskDialogComponent {
         }
 
         ngAfterViewChecked(){
-            if(this.isEditingBody){
+            if( this.isEditingBody && !this.isEditingBodyFocused){
+                this.isEditingBodyFocused = true;
+                setTimeout((bodyInput = this.bodyInput) => {
+                    bodyInput.nativeElement.focus();
+                }, 0)
                 
-                this.bodyInput.nativeElement.focus();
+            }
+
+            if( this.isEditingDescription && !this.isEditingDescriptionFocused){
+                this.isEditingDescriptionFocused = true;
+                setTimeout((descriptionInput = this.descriptionInput) => {
+                    descriptionInput.nativeElement.focus();
+                }, 0)
+                
             }
         }
        
 
-    toggleEditBody(){
+    toggleEditBody(e?){
+        if(e){
+            console.log('ayyy')
+            e.preventDefault();
+        }
         if(this.isEditingBody){
             this.store.dispatch({type:'EDIT_TASK', payload:this.data})
             this.isEditingBody = false
+            this.isEditingBodyFocused = false;
         }
         else{
             this.isEditingBody = true;
@@ -168,6 +211,7 @@ export class TaskDialogComponent {
         if(this.isEditingDescription){
             this.store.dispatch({type:'EDIT_TASK', payload:this.data})
             this.isEditingDescription = false
+            this.isEditingDescriptionFocused = false;
         }
         else{
             this.isEditingDescription = true;
