@@ -132,8 +132,10 @@ export function simpleReducer(state=initialState, action){
             else{
                 console.log('SOMETHING AINT RIGHT HERE')
                 modifiedBoardIndex = state.boards.findIndex(board => board.key == draggedBoardKey);
-                modifiedBoard = state.boards[modifiedBoardIndex];
-                modifiedBoard.rowKey = droppedOnRowKey
+                modifiedBoard = state.boards.splice(modifiedBoardIndex, 1)
+                console.log(modifiedBoard)
+                modifiedBoard[0].rowKey = droppedOnRowKey
+                state.boards.push(modifiedBoard[0])
             }
 
             
