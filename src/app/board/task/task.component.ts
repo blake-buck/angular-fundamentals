@@ -308,7 +308,13 @@ export class TaskDialogComponent {
     changeChecklistItem(e, checklistKey, index){
         let modifiedChecklist = this.data.checklists.find(checklist => checklist.key === checklistKey)
         if(e.code === 'Delete'){
-            modifiedChecklist.content.splice(index, 1);
+            let deletedTask = modifiedChecklist.content.splice(index, 1);
+            console.log('DELETED TASK', deletedTask)
+            if(deletedTask[0].checked){
+                console.log('BROO')
+                modifiedChecklist.completedTasks -= 1;
+            }
+            
             this.store.dispatch({type:'EDIT_TASK', payload:this.data})
         }
         else if(e.code === 'Enter'){

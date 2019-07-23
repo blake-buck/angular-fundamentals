@@ -281,6 +281,9 @@ div.card-title{
     top:6px
 }
 
+.dialog-checklist-item{
+    margin-left: 2%;
+}
 
 .dialog-checklist-item-input{
     /* background-color:rgb(0,0,0,0); */
