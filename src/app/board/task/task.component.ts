@@ -261,6 +261,21 @@ export class TaskDialogComponent {
         this.store.dispatch({type:'EDIT_TASK', payload:this.data})
     }
 
+    changeSocial(){
+        this.data.social = !this.data.social;
+        this.store.dispatch({type:'EDIT_TASK', payload:this.data})
+    }
+
+    changeTravel(){
+        this.data.travel = !this.data.travel;
+        this.store.dispatch({type:'EDIT_TASK', payload:this.data})
+    }
+
+    changeWork(){
+        this.data.work = !this.data.work;
+        this.store.dispatch({type:'EDIT_TASK', payload:this.data})
+    }
+
     changeCommentContent(e){
         this.commentContent = e.target.value;
     }

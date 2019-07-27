@@ -19,7 +19,9 @@ const initialState = {
             isArchived:false,
             tasks:[
                 {
-                key:1, boardKey:1, body:'abc123', isEditing:false, isComplete:false, description:'easy as 1-2-3 a-b-c', important:false, warning:false, payment:true, vacation:true, attachment:false, comments:[], 
+                key:1, boardKey:1, body:'abc123', isEditing:false, isComplete:false, description:'easy as 1-2-3 a-b-c', 
+                important:false, warning:false, payment:true, vacation:true, attachment:false, social:false, work:false,travel:false,
+                comments:[], 
                 currentChecklistKey:2,
                 checklists:[{
                     title:{content:'Checklist', isEditing:false},
@@ -49,7 +51,9 @@ const initialState = {
             hideCompleteTasks:false,
             isArchived:false,
             tasks:[
-                {key:2, boardKey:2, body:'cash money', isEditing:false, isComplete:true, description:'lets make some cash money', important:true, warning:false, payment:false, vacation:false, attachment:false, comments:[{content:'I GOT ALL THIS CASH', date:'7-4-2019 8:00am'}, {content:'I GOT ALL THIS CASH', date:'7-4-2019 8:00am'}, {content:'I GOT ALL THIS CASH', date:'7-4-2019 8:00am'}], 
+                {key:2, boardKey:2, body:'cash money', isEditing:false, isComplete:true, description:'lets make some cash money', 
+                important:true, warning:false, payment:false, vacation:false, attachment:false, social:false,work:false,travel:false,
+                comments:[{content:'I GOT ALL THIS CASH', date:'7-4-2019 8:00am'}, {content:'I GOT ALL THIS CASH', date:'7-4-2019 8:00am'}, {content:'I GOT ALL THIS CASH', date:'7-4-2019 8:00am'}], 
                 currentChecklistKey:1,
                 checklists:[],
                 cardColor:'green',
@@ -171,7 +175,9 @@ export function simpleReducer(state=initialState, action){
             return state;
         case "ADD_TASK":
             modifiedBoard = state.boards.find((board) => board.key === action.payload.boardKey);
-            modifiedBoard.tasks = [...modifiedBoard.tasks, {key:state.currentTaskKey++, boardKey:action.payload.boardKey, body:'', isEditing:false, isComplete:false, description:'', important:false, warning:false, payment:false, vacation:false, comments:[],
+            modifiedBoard.tasks = [...modifiedBoard.tasks, {key:state.currentTaskKey++, boardKey:action.payload.boardKey, body:'', 
+            isEditing:false, isComplete:false, description:'', important:false, warning:false, payment:false, vacation:false, social:false,work:false,travel:false,
+            comments:[],
             currentChecklistKey:1,
             checklists:[],
             cardColor:'',

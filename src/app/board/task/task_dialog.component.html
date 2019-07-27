@@ -17,6 +17,9 @@
             <i *ngIf='data.payment' class="material-icons">payment</i>
             <i *ngIf='data.vacation' class="material-icons">weekend</i>
             <i *ngIf='data.attachment' class="material-icons">attach_file</i>
+            <mat-icon *ngIf='data.social'>group</mat-icon>
+            <mat-icon *ngIf='data.work'>work</mat-icon>
+            <mat-icon *ngIf='data.travel'>local_airport</mat-icon>
         </div>
         
     </div>
@@ -37,6 +40,9 @@
             <i *ngIf='data.payment' class="material-icons">payment</i>
             <i *ngIf='data.vacation' class="material-icons">weekend</i>
             <i *ngIf='data.attachment' class="material-icons">attach_file</i>
+            <mat-icon *ngIf='data.social'>group</mat-icon>
+            <mat-icon *ngIf='data.work'>work</mat-icon>
+            <mat-icon *ngIf='data.travel'>local_airport</mat-icon>
         </div>
     </div>
 
@@ -120,6 +126,9 @@
                 <button mat-menu-item (click)='changeWarning()'><i class="material-icons">warning</i>Warning</button>
                 <button mat-menu-item (click)='changePayment()'><i class="material-icons">payment</i>Payment</button>
                 <button mat-menu-item (click)='changeVacation()'><i class='material-icons'>weekend</i>Vacation</button>
+                <button mat-menu-item (click)='changeSocial()'><mat-icon aria-hidden="false">group</mat-icon>Social</button>
+                <button mat-menu-item (click)='changeWork()'><mat-icon aria-hidden='false'>work</mat-icon>Work</button>
+                <button mat-menu-item (click)='changeTravel()'><mat-icon aria-hidden='false'>local_airport</mat-icon>Travel</button>
             </mat-menu>
 
             <mat-menu #colorMenu='matMenu'>

@@ -132,6 +132,11 @@ export class BoardComponent implements OnInit{
         }
         
     }
+
+    onDrag(e){
+        console.log(e.pageX)
+    }
+
     onDragOver(e, board){
         e.preventDefault()
     }
