@@ -65,6 +65,11 @@ export class RowComponent{
         this.store.dispatch({type:'ARCHIVE_ROW', payload:key})
     }
 
+    onDragStart(e, rowKey){
+        e.dataTransfer.setData('text/plain', `ROW${rowKey}`);
+        console.log(`ROW${rowKey}`)
+    }
+
     onDragOver(e){
         e.preventDefault();
     }
@@ -78,6 +83,13 @@ export class RowComponent{
           let droppedOnBoardKey = -1;
           if(+keyArray[1] !== row.key)
           this.store.dispatch({type:'TRANSFER_BOARD', payload:{draggedBoardKey:+keyArray[0], draggedBoardRowKey:+keyArray[1], droppedOnBoardKey, droppedOnRowKey:row.key}})
+        }
+        else if(eventDataTransfer.includes('ROW')){
+            let droppedRowKey = +eventDataTransfer.replace('ROW', '')
+            console.log(droppedRowKey, 'Dropped Row Key')
+            console.log(row.key, 'Dropped On Row Key')
+
+            this.store.dispatch({type:'TRANSFER_ROW', payload:{droppedRowKey, droppedOnRowKey:row.key}})
         }
     }
 }

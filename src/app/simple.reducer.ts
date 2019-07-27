@@ -92,6 +92,17 @@ export function simpleReducer(state=initialState, action){
             state.currentRowKey++;
             return state; 
 
+        case "TRANSFER_ROW":
+            if(true){
+                let {droppedOnRowKey, droppedRowKey} = action.payload;
+                let droppedRowIndex = state.rows.findIndex(row => row.key === droppedRowKey);
+                let droppedRow = state.rows.splice(droppedRowIndex, 1);
+
+                let droppedOnRowIndex = state.rows.findIndex(row => row.key === droppedOnRowKey);
+                state.rows.splice(droppedOnRowIndex, 0, droppedRow[0]);
+            }
+            return state;
+
         case "ARCHIVE_ROW":
             modifiedRowIndex = state.rows.findIndex(row => row.key === action.payload);
             modifiedRow = state.rows.splice(modifiedRowIndex, 1);
