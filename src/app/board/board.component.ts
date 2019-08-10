@@ -11,7 +11,8 @@ export interface AppState{
 
 @Component({
     selector:'board',
-    templateUrl:'board.component.html'
+    templateUrl:'board.component.html',
+    styleUrls:['./board.component.css']
 })
 
 @Injectable()

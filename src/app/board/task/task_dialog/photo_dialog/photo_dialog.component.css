@@ -1,0 +1,8 @@
+.photo-upload-content{
+    display:flex;
+    flex-direction: column;
+}
+.photo-upload-content img{
+    width: 250px;
+    height: 250px;
+}

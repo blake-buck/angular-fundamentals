@@ -1,0 +1,27 @@
+
+
+.task-board{
+    width:100vw;
+    max-width: 400px;
+    background-color: rgb(0, 0, 0, .1);
+    text-align:left;    
+}
+.task-board h3{
+    margin:0px;
+}
+
+.board-title-input{
+    padding:0px;
+    margin:0px;
+    /* margin-bottom:-3em;
+    margin-top:-3em; */
+    
+    font-weight:700;
+    font-size:1.17em;
+    width:80%;
+}
+div.card-title{
+    display:flex;
+    justify-content: space-between;
+    align-items: center;
+}

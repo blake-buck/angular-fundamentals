@@ -1,0 +1,27 @@
+.date-pick-dialog-day-wrapper{
+    display:grid;
+    grid-template-columns:auto auto auto auto auto auto auto;
+    grid-gap:0px;
+}
+.date-pick-dialog-day{
+    padding:10px;
+    border:1px solid black;
+}
+.date-pick-dialog-day:active{
+    background:#adff2f;
+}
+.date-pick-dialog-day-of-week{
+    padding:10px;
+    background-color:gray;
+    font-weight:bold;
+    text-align:center;
+    border-left:1px solid black;
+    border-right:1px solid black;
+
+}
+.date-pick-dialog-day-of-week:first-of-type{
+    border-left:none;
+}
+.date-pick-dialog-day-of-week:last-child{
+    border-right:none;
+}

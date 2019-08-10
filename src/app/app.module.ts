@@ -30,8 +30,16 @@ import { AppComponent } from './app.component';
 
 import { RowComponent } from './row/row.component';
 import { BoardComponent, DeleteBoardDialogComponent, TransferBoardDialogComponent } from './board/board.component';
-import { TaskComponent, TaskDialogComponent, DeleteDialogComponent, DatePickDialogComponent, PhotoDialogComponent, AttachmentDialogComponent, TransferTaskDialogComponent, PreviewAttachmentDialogComponent } from './board/task/task.component';
+import { TaskComponent } from './board/task/task.component';
 import { ExportButtonComponent } from './board/export-button/export-button.component';
+
+import {TaskDialogComponent} from './board/task/task_dialog/task_dialog.component';
+import {AttachmentDialogComponent} from './board/task/task_dialog/attachment_dialog/attachment_dialog.component';
+import {DatePickDialogComponent} from './board/task/task_dialog/date_pick_dialog/date_pick_dialog.component';
+import {PhotoDialogComponent} from './board/task/task_dialog/photo_dialog/photo_dialog.component';
+import { DeleteDialogComponent} from './board/task/task_dialog/delete_dialog/delete_dialog.component';
+import {TransferTaskDialogComponent} from './board/task/task_dialog/transfer_task_dialog/transfer_task_dialog.component';
+import {PreviewAttachmentDialogComponent} from './board/task/task_dialog/preview_attachment_dialog/preview_attachment_dialog.component';
 
 
 @NgModule({
