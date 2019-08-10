@@ -384,3 +384,36 @@ div.card-title{
     line-height:10%;
     margin-bottom:10px;
 }
+
+.label-row{
+    display:flex;
+    
+}
+
+.label-row p{
+    padding:1px;
+    margin-top:0px;
+    margin-bottom:0px;
+    min-height: 5px;
+    min-width: 43px;
+    margin-right:5px;
+    border-radius:5px;
+}
+
+.label-row input{
+    font-weight:bold;
+    color:white;
+    border:none;
+    outline:none;
+    border-radius: 5px;
+    padding-left:10px;
+    padding-right:10px;
+}
+
+p.label{
+    border-radius:10px;
+    padding-left:10px;
+    padding-right:10px;
+    padding-top:2px;
+    padding-bottom:2px
+}

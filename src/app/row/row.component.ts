@@ -74,22 +74,26 @@ export class RowComponent{
         e.preventDefault();
     }
     
-    onDrop(e, row){
-        let eventDataTransfer = e.dataTransfer.getData('text');
-        if(eventDataTransfer.includes('BOARD')){
-          console.log(eventDataTransfer)
-          let unSanitizedKeys = eventDataTransfer.replace('BOARD', '');
-          let keyArray = unSanitizedKeys.split('-')
-          let droppedOnBoardKey = -1;
-          if(+keyArray[1] !== row.key)
-          this.store.dispatch({type:'TRANSFER_BOARD', payload:{draggedBoardKey:+keyArray[0], draggedBoardRowKey:+keyArray[1], droppedOnBoardKey, droppedOnRowKey:row.key}})
-        }
-        else if(eventDataTransfer.includes('ROW')){
-            let droppedRowKey = +eventDataTransfer.replace('ROW', '')
-            console.log(droppedRowKey, 'Dropped Row Key')
-            console.log(row.key, 'Dropped On Row Key')
+    // onDrop(e, row){
+    //     console.log('ROW DROP')
+    //     let eventDataTransfer = e.dataTransfer.getData('text');
+    //     if(eventDataTransfer.includes('BOARD')){
+    //       console.log(eventDataTransfer)
+    //       let unSanitizedKeys = eventDataTransfer.replace('BOARD', '');
+    //       let keyArray = unSanitizedKeys.split('-')
+    //       let droppedOnBoardKey = -1;
+    //       if(+keyArray[1] !== row.key)
+    //       this.store.dispatch({type:'TRANSFER_BOARD', payload:{draggedBoardKey:+keyArray[0], draggedBoardRowKey:+keyArray[1], droppedOnBoardKey, droppedOnRowKey:row.key}})
+    //     }
+    //     else if(eventDataTransfer.includes('ROW')){
+    //         let droppedRowKey = +eventDataTransfer.replace('ROW', '')
+    //         console.log(droppedRowKey, 'Dropped Row Key')
+    //         console.log(row.key, 'Dropped On Row Key')
 
-            this.store.dispatch({type:'TRANSFER_ROW', payload:{droppedRowKey, droppedOnRowKey:row.key}})
-        }
-    }
+    //         this.store.dispatch({type:'TRANSFER_ROW', payload:{droppedRowKey, droppedOnRowKey:row.key}})
+    //     }
+    //     else{
+
+    //     }
+    // }
 }

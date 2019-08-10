@@ -40,7 +40,8 @@ const initialState = {
                 dueDate:null,
                 displayImageUrl:'',
                 downloadNames:[],
-                downloadLinks:[]
+                downloadLinks:[],
+                labels:[]
                 }
             ]
         },
@@ -61,7 +62,8 @@ const initialState = {
                 dueDate:null,
                 displayImageUrl:'',
                 downloadNames:[],
-                downloadLinks:[]
+                downloadLinks:[],
+                labels:[]
                 }
             ]
         }
@@ -196,7 +198,8 @@ export function simpleReducer(state=initialState, action){
             dueDate:null,
             displayImageUrl:'',
             downloadNames:[],
-            downloadLinks:[]
+            downloadLinks:[],
+            labels:[]
             }]
             return{
                 ...state,
@@ -211,6 +214,7 @@ export function simpleReducer(state=initialState, action){
             
             modifiedBoard.tasks[modifiedTaskIndex] = action.payload;
             console.log('EDITING TASK')
+        
             return{
                 ...state,
                 boards:[
@@ -295,6 +299,8 @@ export function simpleReducer(state=initialState, action){
                     ]
                 };
             }
+
+       
             
 
             

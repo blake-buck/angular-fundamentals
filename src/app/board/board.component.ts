@@ -74,6 +74,7 @@ export class BoardComponent implements OnInit{
     }
 
     onDrop(e, board){
+        console.log('BOARD DROP')
         let eventDataTransfer = e.dataTransfer.getData('text')
         if((board.tasks.length === 0 || board.tasks.filter(task => !task.isComplete).length === 0) && eventDataTransfer.includes('+')){
             e.preventDefault()
@@ -133,9 +134,9 @@ export class BoardComponent implements OnInit{
         
     }
 
-    onDrag(e){
-        console.log(e.pageX)
-    }
+    // onDrag(e){
+    //     console.log(e.pageX)
+    // }
 
     onDragOver(e, board){
         e.preventDefault()

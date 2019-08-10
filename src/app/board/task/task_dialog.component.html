@@ -21,6 +21,10 @@
             <mat-icon *ngIf='data.work'>work</mat-icon>
             <mat-icon *ngIf='data.travel'>local_airport</mat-icon>
         </div>
+
+        <div>
+            <p class='label' *ngFor='let label of data.labels' style ='font-weight:bold; color:white' [style.background]='label.background'>{{label.text}}</p>
+        </div>
         
     </div>
     <div class='dialog-title' *ngIf='isEditingBody'>
@@ -150,6 +154,13 @@
                 <button mat-menu-item (click)='changeFontColor("plum")' style='color:plum'>Plum</button>
             </mat-menu>
 
+            <mat-menu #labelMenu='matMenu'>
+                <button mat-menu-item (click)='addLabel("red")'><mat-icon style='color:red'>view_day</mat-icon>Red</button>
+                <button mat-menu-item (click)='addLabel("yellow")'><mat-icon style='color:yellow'>view_day</mat-icon>Yellow</button>
+                <button mat-menu-item (click)='addLabel("blue")'><mat-icon style='color:blue'>view_day</mat-icon>Blue</button>
+                <button mat-menu-item (click)='addLabel("green")'><mat-icon style='color:green'>view_day</mat-icon>Green</button>
+            </mat-menu>
+
             <mat-menu #transferTaskMenu='matMenu'>
                 <p></p>
             </mat-menu>
@@ -163,6 +174,7 @@
             <button mat-raised-button (click)='deleteTask()'><i class="material-icons">delete</i>Delete</button>
             <button mat-raised-button [matMenuTriggerFor]='colorMenu'><i class="material-icons">format_color_fill</i>Card Color</button>
             <button mat-raised-button [matMenuTriggerFor]='fontColorMenu'><i class='material-icons'>format_color_text</i>Font Color</button>
+            <button mat-raised-button [matMenuTriggerFor]='labelMenu'><mat-icon>view_day</mat-icon>Label</button>
             <button mat-raised-button (click)='transferTask()'><mat-icon>screen_share</mat-icon>Transfer Task</button>
         </div>
     </div>

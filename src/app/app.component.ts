@@ -56,6 +56,7 @@ export class AppComponent {
   }
 
   onDrop(e, row){
+    console.log('APP DROP')
     let eventDataTransfer = e.dataTransfer.getData('text');
     if(eventDataTransfer.includes('BOARD')){
       console.log(eventDataTransfer)

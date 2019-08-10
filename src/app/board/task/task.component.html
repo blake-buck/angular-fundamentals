@@ -54,10 +54,18 @@
     [style.color]='task.fontColor'
     [style.opacity]='addCompletionStyling("opacity")'
     [style.text-decoration]='addCompletionStyling("text-decoration")'
-    style='height:100%;padding-top:10px;padding-bottom:10px; '
+    style='height:100%;padding-top:10px;padding-bottom:10px; position:relative; '
     #elementWrapper
 >   
+    <div (click)='toggleDisplayLabelText()' *ngIf='!displayLabelText' class='label-row'>
+            
+        <p *ngFor='let label of task.labels' [style.background]='label.background'></p>
+    </div>
 
+    <div (dblclick)='toggleDisplayLabelText()' *ngIf='displayLabelText' class='label-row'>
+        <input (click)='focusLabel()' (keyup)='changeLabelText($event, i, task)' *ngFor='let label of task.labels; index as i' size={{labelLength(label.text.length)}} value={{label.text}} [style.background]='label.background' />
+    </div>
+    
     <div class='task-list-item-wrapper'>
         <div style='width:100%;'>
             <img *ngIf='task.displayImageUrl' src={{task.displayImageUrl}} />

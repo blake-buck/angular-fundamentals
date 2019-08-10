@@ -38,6 +38,8 @@ export class TaskComponent{
     }
 
     isTaskTitleInputFocused = false;
+    displayLabelText = false;
+    isOpeningDisplayLabel = false;
 
     ngAfterViewChecked(){
         if(this.task.isInput && !this.isTaskTitleInputFocused){
@@ -52,14 +54,18 @@ export class TaskComponent{
     classAddedToList = false
 
     openDialog(){
-        const dialogRef = this.dialog.open(TaskDialogComponent, 
-            {
-                width:'60%',
-                maxWidth:'800px',
-                id:'task-dialog',
-                data:this.task
-            }
-        )
+        console.log('OPEN DIALOG')
+        if(!this.isOpeningDisplayLabel){
+            const dialogRef = this.dialog.open(TaskDialogComponent, 
+                {
+                    width:'60%',
+                    maxWidth:'800px',
+                    id:'task-dialog',
+                    data:this.task
+                }
+            )
+        }
+        
     }
 
     toggleInput(e?){
@@ -84,7 +90,37 @@ export class TaskComponent{
         
     }
 
+    toggleDisplayLabelText(){
+        this.isOpeningDisplayLabel = true;
+        this.displayLabelText = !this.displayLabelText;
+        setTimeout(() => {
+            this.isOpeningDisplayLabel = false;
+        }, 500)
+    }
+
+    focusLabel(){
+        this.isOpeningDisplayLabel = true;
+        setTimeout(() => {
+            this.isOpeningDisplayLabel = false;
+        }, 500)
+    }
+
+    labelLength(labelLength){
+        if(labelLength < 4){
+            return 2
+        }
+        return labelLength -2;
+    }
+
+    changeLabelText(e, labelIndex, task){
+        this.labelLength(e.target.value.length)
+        task.labels[labelIndex].text = e.target.value;
+        console.log(task)
+        this.store.dispatch({type:'EDIT_TASK', payload:task})
+    }
+
     onDrop(e){
+        console.log('TASK DROP')
         e.preventDefault();
         
         let transferedData = e.dataTransfer.getData('text');
@@ -189,6 +225,11 @@ export class TaskDialogComponent {
             }
         }
        
+    addLabel(labelColor){
+        console.log('BALLSACK')
+        this.data.labels.push({background:labelColor, fontColor:'rgb(0,0,0)', text:''})
+        this.store.dispatch({type:'EDIT_TASK', payload:this.data})
+    }
 
     toggleEditBody(e?){
         if(e){
