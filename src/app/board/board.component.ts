@@ -23,7 +23,7 @@ export class BoardComponent implements OnInit{
     @Input() boardTitle:string;
     @Input() boardKey:any;
 
-    @Output() changeBoardTitle = new EventEmitter();
+    @Output() autoScroller = new EventEmitter();
 
     isEditingBoardTitle = false;
     isEditingBoardTitleFocused = false;
@@ -135,9 +135,19 @@ export class BoardComponent implements OnInit{
         
     }
 
-    // onDrag(e){
-    //     console.log(e.pageX)
-    // }
+    onDrag(e){
+        if(e.pageX > window.screenX -800){
+            this.autoScroller.emit({forward:true, offset:e.clientX})
+        }
+        else if(200 > e.pageX){
+            this.autoScroller.emit({forward:false, offset:e.clientX})
+        }
+
+    }
+
+    taskAutoScroll(e){
+        this.autoScroller.emit({forward:true, offset:e.clientX})
+    }
 
     onDragOver(e, board){
         e.preventDefault()

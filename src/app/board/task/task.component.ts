@@ -34,6 +34,7 @@ export class TaskComponent{
     @Output() taskTransfer = new EventEmitter();
     @Output() taskChange   = new EventEmitter();
     
+    @Output() autoScroller = new EventEmitter();
 
 
     constructor(private store:Store<AppState>, public dialog:MatDialog){
@@ -55,6 +56,15 @@ export class TaskComponent{
     }
 
     classAddedToList = false
+
+    onDrag(e){
+        if(e.pageX > window.screenX -800){
+            this.autoScroller.emit({forward:true, offset:e.clientX})
+        }
+        else if(200 > e.pageX){
+            this.autoScroller.emit({forward:false, offset:e.clientX})
+        }
+    }
 
     openDialog(){
         console.log('OPEN DIALOG')

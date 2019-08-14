@@ -2,7 +2,7 @@
 
 
     
-<mat-card class='task-board' *ngIf='board$ | async ; let board'  draggable='true' (dragstart)='onDragStart($event, board)'  (dragover)='onDragOver($event, board)' (drop)='onDrop($event, board)' (taskTransfer)='onTaskTransfer($event)'>
+<mat-card class='task-board' *ngIf='board$ | async ; let board'  draggable={{!isEditingBoardTitle}} (dragstart)='onDragStart($event, board)' (drag)='onDrag($event)'  (dragover)='onDragOver($event, board)' (drop)='onDrop($event, board)' (taskTransfer)='onTaskTransfer($event)'>
     
     <export-button *ngIf='displayExportLink' [exportLink]='exportLink' [title]='board.title' (linkHasBegunDownload)='downloadLinkLoads()'></export-button>
 
@@ -55,7 +55,7 @@
     
 
     <mat-list role='list'>
-        <task (taskTransfer)='onTaskTransfer($event)' (taskChange)='onTaskChange($event)' *ngFor='let task of board.tasks; index as i' [task]='task' [board]='board'></task>
+        <task (autoScroller)='taskAutoScroll($event)' (taskTransfer)='onTaskTransfer($event)' (taskChange)='onTaskChange($event)' *ngFor='let task of board.tasks; index as i' [task]='task' [board]='board'></task>
     </mat-list>
 
 </mat-card>

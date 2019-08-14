@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, ViewChild, ElementRef } from '@angular/core';
 
 import {Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
@@ -19,6 +19,8 @@ export class RowComponent{
     @Input() rowData:any;
     @Input() accordion:any;
 
+    @ViewChild('scrollRow', {read: ElementRef, static:false}) scrollRow: ElementRef;
+
     board$:Observable<any>
 
     
@@ -32,6 +34,7 @@ export class RowComponent{
 
     ngOnInit(){
         this.store.dispatch({type:'GET_STATE', payload:''})
+        console.log(window.innerWidth)
     }
 
     handleClose(e){
@@ -74,27 +77,17 @@ export class RowComponent{
     onDragOver(e){
         e.preventDefault();
     }
+
+    autoScroller(e){
+            
+        if(e.forward){          
+            this.scrollRow.nativeElement.scrollBy({left:10, top:0, behavior:'auto' })
+        }
+        else{
+            this.scrollRow.nativeElement.scrollBy({left:-10, top:0, behavior:'auto' })
+        }
+   
+    }
+
     
-    // onDrop(e, row){
-    //     console.log('ROW DROP')
-    //     let eventDataTransfer = e.dataTransfer.getData('text');
-    //     if(eventDataTransfer.includes('BOARD')){
-    //       console.log(eventDataTransfer)
-    //       let unSanitizedKeys = eventDataTransfer.replace('BOARD', '');
-    //       let keyArray = unSanitizedKeys.split('-')
-    //       let droppedOnBoardKey = -1;
-    //       if(+keyArray[1] !== row.key)
-    //       this.store.dispatch({type:'TRANSFER_BOARD', payload:{draggedBoardKey:+keyArray[0], draggedBoardRowKey:+keyArray[1], droppedOnBoardKey, droppedOnRowKey:row.key}})
-    //     }
-    //     else if(eventDataTransfer.includes('ROW')){
-    //         let droppedRowKey = +eventDataTransfer.replace('ROW', '')
-    //         console.log(droppedRowKey, 'Dropped Row Key')
-    //         console.log(row.key, 'Dropped On Row Key')
-
-    //         this.store.dispatch({type:'TRANSFER_ROW', payload:{droppedRowKey, droppedOnRowKey:row.key}})
-    //     }
-    //     else{
-
-    //     }
-    // }
 }

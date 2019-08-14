@@ -39,10 +39,10 @@
     </mat-menu>
     
 
-    <div class='home_div'>
+    <div #scrollRow class='home_div'>
 
-        <div *ngFor='let board of board$ | async'>
-            <board *ngIf='board.rowKey === rowData.key' class='board' [boardKey]='board.key' [boardTitle]='board.title' (boardTitleChange)=changeBoardTitle($event) ></board>
+        <div  *ngFor='let board of board$ | async'>
+            <board *ngIf='board.rowKey === rowData.key' class='board' [boardKey]='board.key' [boardTitle]='board.title' (autoScroller)='autoScroller($event)' ></board>
         </div>
           
     </div>
