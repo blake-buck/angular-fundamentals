@@ -9,7 +9,8 @@ export interface AppState{
 
 @Component({
     templateUrl:'./row.component.html',
-    selector:'row'
+    selector:'row',
+    styleUrls:['./row.component.css']
 })
 
 export class RowComponent{

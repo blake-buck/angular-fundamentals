@@ -15,10 +15,9 @@
 
 }
 .task-list-item-wrapper img{
-    width:200px;
-    height:200px;
-    margin-left:25%;
-    /* margin-right:auto; */
+    max-width:200px;
+    max-height:200px;
+
 }
 
 .task-list-item-div{
@@ -61,4 +60,29 @@
 .task-due-date i{
     font-size:1.4em;
     font-weight:bold;
+}
+
+.label-row{
+    display:flex;
+    
+}
+
+.label-row p{
+    padding:1px;
+    margin-top:0px;
+    margin-bottom:0px;
+    min-height: 5px;
+    min-width: 43px;
+    margin-right:5px;
+    border-radius:5px;
+}
+
+.label-row input{
+    font-weight:bold;
+    color:white;
+    border:none;
+    outline:none;
+    border-radius: 5px;
+    padding-left:10px;
+    padding-right:10px;
 }

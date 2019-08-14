@@ -16,6 +16,24 @@
     background-color:#E5E5E5;
     max-height:90vh;
     overflow:auto;
+    width:100vh;
+    max-width:800px;
 }
 
+#imageToDisplay{
+    max-width: 250px;
+    max-height: 250px;
+}
+
+@media only screen and (max-width: 450px) {
+    
+    #task-dialog{
+        max-height:100vh;
+    }
+
+    #date-pick-dialog{
+        max-height:100vh;
+        max-width:100vw;
+    }
+}  
 

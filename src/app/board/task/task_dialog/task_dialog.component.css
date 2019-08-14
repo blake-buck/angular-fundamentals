@@ -256,3 +256,69 @@ p.label{
     margin-top:0px;
     margin-bottom:0px
 }
+
+@media only screen and (max-width: 450px) {
+    .dialog-wrapper{
+        display: flex;
+        flex-direction: column;
+    }
+
+    .dialog-exit{
+        order:1;
+    }
+    .dialog-title{
+        order:2;
+    }
+
+
+
+    .dialog-actions{
+        order:3;
+        max-height:200px;
+        overflow:auto;
+    }
+    .dialog-actions h3{
+        display:none;
+    }
+    .dialog-actions .dialog-actions-button-wrapper{
+        display:flex;
+        flex-direction:row;
+        flex-wrap:wrap;
+    }
+    .dialog-actions .dialog-actions-button-wrapper button{
+        width:50%;
+        height:60px;
+    }
+
+
+
+    .dialog-description{
+        order:4;
+    }
+
+
+
+    .dialog-comments{
+        order:5;
+        max-height:200px;
+    }
+    .dialog-comments textarea{
+        width:90%;
+    }
+
+
+
+    .dialog-other{
+        order:6;
+    }
+
+    .dialog-other .dialog-checklist{
+        margin-bottom:20px;
+    }
+
+    
+    
+
+    
+    
+} 

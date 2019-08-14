@@ -25,3 +25,20 @@
 .date-pick-dialog-day-of-week:last-child{
     border-right:none;
 }
+
+@media only screen and (max-width: 450px) {
+    .date-pick-dialog-day-wrapper{
+        display:grid;
+        grid-template-columns:auto auto auto auto auto auto auto;
+        
+    }
+    
+    .date-pick-dialog-day-wrapper p{
+        /* width:6%; */
+        margin-top:0px;
+        margin-bottom:0px;
+    }
+    .exit-button{
+        position:absolute;
+    }
+}  

@@ -1,6 +1,7 @@
 
 
 .task-board{
+    
     width:100vw;
     max-width: 400px;
     background-color: rgb(0, 0, 0, .1);
@@ -25,3 +26,9 @@ div.card-title{
     justify-content: space-between;
     align-items: center;
 }
+
+@media only screen and (max-width: 450px) {
+    .task-board{
+        max-width:75vw;
+    }
+} 

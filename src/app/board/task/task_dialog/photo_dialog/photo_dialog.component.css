@@ -1,8 +1,13 @@
 .photo-upload-content{
     display:flex;
     flex-direction: column;
+    max-width:250px;
+    max-height:250px;
 }
 .photo-upload-content img{
     width: 250px;
     height: 250px;
 }
+@media only screen and (max-width: 450px) {
+    
+}  

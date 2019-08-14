@@ -1,4 +1,3 @@
-<button mat-icon-button style='float:right;' (click)='closeDialog()'><i class='material-icons'>cancel</i></button>
 <mat-tab-group [selectedIndex]='selectedMonthIndex' (selectedIndexChange)='tabChange($event)'>
         
     <mat-tab *ngFor='let month of months' label={{month}}>
@@ -22,4 +21,5 @@
     
 </mat-tab-group>
 
+<button mat-button (click)='closeDialog()'>Cancel </button>
 <button mat-raised-button color='primary' (click)='removeDueDate()'>Remove Due Date</button>

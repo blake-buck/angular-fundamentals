@@ -1,0 +1,9 @@
+.row-wrapper{
+    min-width:400px;
+}
+@media only screen and (max-width: 450px) {
+    .row-wrapper{
+        max-width: 100vw;
+        min-width: 100vw;
+    }
+} 

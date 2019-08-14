@@ -1,6 +1,7 @@
 
 
 
+    
 <mat-card class='task-board' *ngIf='board$ | async ; let board'  draggable='true' (dragstart)='onDragStart($event, board)'  (dragover)='onDragOver($event, board)' (drop)='onDrop($event, board)' (taskTransfer)='onTaskTransfer($event)'>
     
     <export-button *ngIf='displayExportLink' [exportLink]='exportLink' [title]='board.title' (linkHasBegunDownload)='downloadLinkLoads()'></export-button>

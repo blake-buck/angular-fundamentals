@@ -61,8 +61,7 @@ export class TaskComponent{
         if(!this.isOpeningDisplayLabel){
             const dialogRef = this.dialog.open(TaskDialogComponent, 
                 {
-                    width:'60%',
-                    maxWidth:'800px',
+                    
                     id:'task-dialog',
                     data:this.task
                 }
