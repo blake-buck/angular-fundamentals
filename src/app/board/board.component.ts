@@ -123,7 +123,7 @@ export class BoardComponent implements OnInit{
     }
    
     onDragStart(e, board){
-        console.log()
+        // console.log()
         
         
         if(e.dataTransfer.getData('text').includes('+')){
@@ -136,12 +136,12 @@ export class BoardComponent implements OnInit{
     }
 
     onDrag(e){
-        if(e.pageX > window.screenX -800){
-            this.autoScroller.emit({forward:true, offset:e.clientX})
-        }
-        else if(200 > e.pageX){
-            this.autoScroller.emit({forward:false, offset:e.clientX})
-        }
+        // if(e.pageX > window.screenX -800){
+        //     this.autoScroller.emit({forward:true, offset:e.clientX})
+        // }
+        // else if(200 > e.pageX){
+        //     this.autoScroller.emit({forward:false, offset:e.clientX})
+        // }
 
     }
 
@@ -198,6 +198,14 @@ export class BoardComponent implements OnInit{
             this.displayExportLink = false
         }, 0)
         
+    }
+
+    orderByAlphabet(tasks){
+        let orderedArray = tasks.slice(0, tasks.length);
+
+        for(let i=0; i< orderedArray.length; i++){
+            console.log(tasks[i].charAt(0))
+        }
     }
     
 

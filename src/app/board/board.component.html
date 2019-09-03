@@ -39,10 +39,22 @@
                         <mat-icon>cloud_download</mat-icon>
                         <span>Export Board</span>
                     </button>
+
+                    <button mat-menu-item [matMenuTriggerFor]='orderBy'>
+                        Order By
+                    </button>
+                    
                 </mat-menu>
+
+                <mat-menu #orderBy>
+                    <button mat-menu-item (click)='orderByAlphabet()'>A-Z</button>
+                    <button mat-menu-item>Date Created</button>
+                    <button mat-menu-item>Last Edited</button>
+                </mat-menu>
+
             </button>
 
-            <button mat-icon-button (click)='addTask()'>
+            <button mat-icon-button (click)='addTask(board.tasks)'>
                 <i class="material-icons">add</i>
             </button>
         </div>

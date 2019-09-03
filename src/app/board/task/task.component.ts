@@ -14,6 +14,7 @@ import { ReadVarExpr } from '@angular/compiler';
 import { Observable } from 'rxjs';
 
 import {TaskDialogComponent} from './task_dialog/task_dialog.component';
+import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 
 
 @Component({
@@ -41,10 +42,21 @@ export class TaskComponent{
         
     }
 
+    ngOnInit(){
+        if(this.task.isEditing){
+            this.task.isInput = true; 
+        }
+    }
+
     isTaskTitleInputFocused = false;
     displayLabelText = false;
     isOpeningDisplayLabel = false;
 
+
+    ngAfterViewInit(){
+        
+        
+    }
     ngAfterViewChecked(){
         if(this.task.isInput && !this.isTaskTitleInputFocused){
             this.isTaskTitleInputFocused = true;
@@ -87,8 +99,10 @@ export class TaskComponent{
         if(!this.task.isComplete){
             if(this.task.isInput){
                 this.isTaskTitleInputFocused = false;
+                this.task.isEditing= false;
             }
             this.task.isInput = !this.task.isInput;
+            
             this.taskChange.emit(this.task);
             
         }
@@ -97,9 +111,7 @@ export class TaskComponent{
 
     changeTaskBody(e){
         
-        this.task.body = e.target.value;
-        
-        
+        this.task.body = e.target.value; 
     }
 
     toggleDisplayLabelText(){
@@ -153,7 +165,7 @@ export class TaskComponent{
     }
 
     onDragOver(e){
-        e.preventDefault();
+        // e.preventDefault();
     }
 
     onDragStart(e){

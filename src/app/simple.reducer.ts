@@ -1,5 +1,7 @@
 import {Action} from '@ngrx/store';
 
+import * as moment from 'moment'
+
 const initialState = {
     currentTaskKey:3,
     currentBoardKey:3,
@@ -18,31 +20,7 @@ const initialState = {
             hideCompleteTasks:false,
             isArchived:false,
             tasks:[
-                {
-                key:1, boardKey:1, body:'abc123', isEditing:false, isComplete:false, description:'easy as 1-2-3 a-b-c', 
-                important:false, warning:false, payment:true, vacation:true, attachment:false, social:false, work:false,travel:false,
-                comments:[], 
-                currentChecklistKey:2,
-                checklists:[{
-                    title:{content:'Checklist', isEditing:false},
-                    color:'black',
-                    key:1,
-                    currentKey:4,
-                    completedTasks:1,
-                    content:[
-                        {key:1, content:'Buy drugs', checked:false, isEditing:false},
-                        {key:2, content:'Do drugs', checked:true, isEditing:false},
-                        {key:3, content:'Sell drugs', checked:false, isEditing:false}
-                    ]
-                }],
-                cardColor:'',
-                fontColor:'',
-                dueDate:null,
-                displayImageUrl:'',
-                downloadNames:[],
-                downloadLinks:[],
-                labels:[]
-                }
+                
             ]
         },
         {
@@ -52,19 +30,7 @@ const initialState = {
             hideCompleteTasks:false,
             isArchived:false,
             tasks:[
-                {key:2, boardKey:2, body:'cash money', isEditing:false, isComplete:true, description:'lets make some cash money', 
-                important:true, warning:false, payment:false, vacation:false, attachment:false, social:false,work:false,travel:false,
-                comments:[{content:'I GOT ALL THIS CASH', date:'7-4-2019 8:00am'}, {content:'I GOT ALL THIS CASH', date:'7-4-2019 8:00am'}, {content:'I GOT ALL THIS CASH', date:'7-4-2019 8:00am'}], 
-                currentChecklistKey:1,
-                checklists:[],
-                cardColor:'green',
-                fontColor:'',
-                dueDate:null,
-                displayImageUrl:'',
-                downloadNames:[],
-                downloadLinks:[],
-                labels:[]
-                }
+                
             ]
         }
     ]
@@ -189,7 +155,7 @@ export function simpleReducer(state=initialState, action){
         case "ADD_TASK":
             modifiedBoard = state.boards.find((board) => board.key === action.payload.boardKey);
             modifiedBoard.tasks = [...modifiedBoard.tasks, {key:state.currentTaskKey++, boardKey:action.payload.boardKey, body:'', 
-            isEditing:false, isComplete:false, description:'', important:false, warning:false, payment:false, vacation:false, social:false,work:false,travel:false,
+            isEditing:true, isComplete:false, description:'', important:false, warning:false, payment:false, vacation:false, social:false,work:false,travel:false,
             comments:[],
             currentChecklistKey:1,
             checklists:[],
@@ -199,7 +165,9 @@ export function simpleReducer(state=initialState, action){
             displayImageUrl:'',
             downloadNames:[],
             downloadLinks:[],
-            labels:[]
+            labels:[],
+            dateCreated:moment(),
+            lastEdited:moment()
             }]
             return{
                 ...state,
