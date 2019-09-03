@@ -46,12 +46,14 @@ export class TaskComponent{
         if(this.task.isEditing){
             this.task.isInput = true; 
         }
+        
     }
 
     isTaskTitleInputFocused = false;
     displayLabelText = false;
-    isOpeningDisplayLabel = false;
+    disableDialogOpening = false;
 
+    currentDisplayPhoto = 0;
 
     ngAfterViewInit(){
         
@@ -64,6 +66,13 @@ export class TaskComponent{
                 this.taskBodyInput.nativeElement.focus()
             }, 0)
             
+        }
+
+        if(this.task.displayImageUrl.length === 1){
+            
+            setTimeout(() => {
+                this.currentDisplayPhoto = 0;
+            }, 0)
         }
     }
 
@@ -80,7 +89,7 @@ export class TaskComponent{
 
     openDialog(){
         console.log('OPEN DIALOG')
-        if(!this.isOpeningDisplayLabel){
+        if(!this.disableDialogOpening){
             const dialogRef = this.dialog.open(TaskDialogComponent, 
                 {
                     
@@ -115,17 +124,36 @@ export class TaskComponent{
     }
 
     toggleDisplayLabelText(){
-        this.isOpeningDisplayLabel = true;
+        this.disableDialogOpening = true;
         this.displayLabelText = !this.displayLabelText;
         setTimeout(() => {
-            this.isOpeningDisplayLabel = false;
+            this.disableDialogOpening = false;
+        }, 500)
+    }
+
+    cyclePhoto(isForward, displayImageUrl){
+        this.disableDialogOpening = true;
+        if(isForward && this.currentDisplayPhoto < displayImageUrl.length -1){
+            this.currentDisplayPhoto ++;
+        }
+        else if(isForward && this.currentDisplayPhoto === displayImageUrl.length - 1){
+            this.currentDisplayPhoto = 0;
+        }
+        else if(!isForward && this.currentDisplayPhoto === 0){
+            this.currentDisplayPhoto = displayImageUrl.length - 1;
+        }
+        else{
+            this.currentDisplayPhoto --;
+        }
+        setTimeout(() => {
+            this.disableDialogOpening = false;
         }, 500)
     }
 
     focusLabel(){
-        this.isOpeningDisplayLabel = true;
+        this.disableDialogOpening = true;
         setTimeout(() => {
-            this.isOpeningDisplayLabel = false;
+            this.disableDialogOpening = false;
         }, 500)
     }
 

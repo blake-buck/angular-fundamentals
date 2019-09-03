@@ -8,7 +8,7 @@
     #elementWrapper
 >   
     <div class='task-list-item-wrapper'>
-        <img *ngIf='task.displayImageUrl' src={{task.displayImageUrl}} />
+        <img *ngIf='task.displayImageUrl' src={{task.displayImageUrl[0]}} />
         <div class='task-list-item-div'>
             <form class='task-list-form' (submit)='toggleInput($event)'>
                 <mat-form-field class='task-list-field' style='margin-bottom:-0.5em; margin-top:-0.5em; ' >
@@ -67,8 +67,10 @@
     </div>
     
     <div class='task-list-item-wrapper'>
-        <div style='display:flex; justify-content: center;'>
-            <img *ngIf='task.displayImageUrl' src={{task.displayImageUrl}} />
+        <div  style='display:flex; justify-content: center; align-items: center;'>
+            <button (click)='cyclePhoto(false, task.displayImageUrl)' *ngIf='task.displayImageUrl.length > 1' mat-icon-button><mat-icon>keyboard_arrow_left</mat-icon></button>
+            <img *ngIf='task.displayImageUrl' src={{task.displayImageUrl[currentDisplayPhoto]}} />
+            <button (click)='cyclePhoto(true, task.displayImageUrl)' *ngIf='task.displayImageUrl.length > 1' mat-icon-button><mat-icon>keyboard_arrow_right</mat-icon></button>
         </div>
 
         <div class='task-list-item-div'>

@@ -162,7 +162,7 @@ export function simpleReducer(state=initialState, action){
             cardColor:'',
             fontColor:'',
             dueDate:null,
-            displayImageUrl:'',
+            displayImageUrl:[],
             downloadNames:[],
             downloadLinks:[],
             labels:[],
