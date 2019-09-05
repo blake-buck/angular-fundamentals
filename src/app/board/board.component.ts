@@ -115,6 +115,7 @@ export class BoardComponent implements OnInit{
 
     ngOnInit(){
         this.store.dispatch({type:'GET_STATE', payload:''})
+        
     }
 
     toggleHideCompleteTasks(boardKey, hideCompleteTasks){
@@ -200,13 +201,8 @@ export class BoardComponent implements OnInit{
         
     }
 
-    orderByAlphabet(tasks){
-        let orderedArray = tasks.slice(0, tasks.length);
 
-        for(let i=0; i< orderedArray.length; i++){
-            console.log(tasks[i].charAt(0))
-        }
-    }
+    
 
     orderByDateCreated(tasks, boardKey){
         let orderedArray = tasks.slice(0, tasks.length+1)
@@ -248,6 +244,73 @@ export class BoardComponent implements OnInit{
             key:boardKey,
             tasks:orderedArray
         }})
+    }
+
+    // for now this system only goes out to 6 letters in a board body -- not perfect but good enough for now
+
+    orderByAlphabetical(tasks, boardKey){
+        console.time()
+        
+        let reorganizedBoard = [];
+        let orderedArray = tasks.slice(0, tasks.length + 1);
+
+        tasks.map(val => {
+            reorganizedBoard.push(this.turnStringIntoNumber(val.body));
+        })
+
+        
+        // for(let i=0; i< orderedArray.length; i++){
+            
+        //     for(let j=i; j<orderedArray.length; j++){
+        //         if(reorganizedBoard[j] < reorganizedBoard[i]){
+        //             let placeholder = orderedArray[i]
+        //             orderedArray[i]=orderedArray[j];
+        //             orderedArray[j] = placeholder;
+        //             orderedArray = orderedArray
+        //         }
+        //     }
+        // }
+
+        for(let i=0; i< orderedArray.length; i++){
+            
+            for(let j=i; j<orderedArray.length; j++){
+                if(reorganizedBoard[j] < reorganizedBoard[i]){
+                    let placeholder = orderedArray[i]
+                    orderedArray[i]=orderedArray[j];
+                    orderedArray[j] = placeholder;
+
+                    placeholder = reorganizedBoard[i]
+                    reorganizedBoard[i] = reorganizedBoard[j];
+                    reorganizedBoard[j] = placeholder;
+                    i=0;
+                    j=0;
+                }
+            }
+        }
+           
+
+        
+        console.timeEnd()
+
+        console.log(orderedArray)
+        this.store.dispatch({type:"REORDER_BOARD_TASKS", payload:{key:boardKey, tasks:orderedArray}})
+    }
+
+    turnStringIntoNumber(text){
+        let characterArray = text.split('');
+        let number = 0;
+        for(let i=0; i<6 && i<characterArray.length; i++){
+            number += this.turnCharacterIntoNumber(characterArray[i]) * (Math.pow(10, (-1*(i*2))))
+        }
+        return number
+    }
+
+    turnCharacterIntoNumber(character){
+        let char= character.toUpperCase().charCodeAt(0);
+        if(char <65 || char >92){
+            return 1
+        }
+        return char;
     }
     
 
