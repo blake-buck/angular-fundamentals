@@ -19,14 +19,9 @@ export interface AppState{
 export class AppComponent {
   title = 'angular-fundamentals';
   boardTitle = 'Test Board'
-
   
-
   board$:Observable<any>
   row$:Observable<any>
-
-
-
 
   constructor(private store:Store<AppState>, private http:HttpClient){
     this.board$ = this.store.select(state => state.simpleReducer.boards)
@@ -37,14 +32,6 @@ export class AppComponent {
     this.store.dispatch({type:'ADD_ROW', payload:''})
   }
 
-  toggleEditRowTitle(){
-    
-  }
-
-  changeRowTitle(){
-
-  }
-
   addBoard(row){
     this.store.dispatch({type:'ADD_BOARD', payload:row.key})
   }
@@ -53,30 +40,14 @@ export class AppComponent {
     this.boardTitle = e;
   }
 
-  onDragOver(e){
-    e.preventDefault();
-  }
-
-  onDrop(e, row){
-    console.log('APP DROP')
-    let eventDataTransfer = e.dataTransfer.getData('text');
-    if(eventDataTransfer.includes('BOARD')){
-      console.log(eventDataTransfer)
-      let unSanitizedKeys = eventDataTransfer.replace('BOARD', '');
-      let keyArray = unSanitizedKeys.split('-')
-      let droppedOnBoardKey = -1;
-      if(+keyArray[1] !== row.key)
-      this.store.dispatch({type:'TRANSFER_BOARD', payload:{draggedBoardKey:+keyArray[0], draggedBoardRowKey:+keyArray[1], droppedOnBoardKey, droppedOnRowKey:row.key}})
-    }
-  }
+  
 
   ngOnInit(){
     this.store.dispatch({type:'GET_STATE', payload:''})
   }
 
   getApi(){
-    console.log('GET')
-    
+    console.log('GET')   
     this.http.get('https://localhost:5001/api/board').subscribe(val => console.log(val))
   }
 
