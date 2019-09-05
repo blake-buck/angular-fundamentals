@@ -4,6 +4,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
 
 import {simpleReducer} from './simple.reducer'
 
+import { HttpClientModule } from '@angular/common/http';
+
 import 
 { MatCardModule, 
   MatListModule, 
@@ -80,7 +82,9 @@ import {PreviewAttachmentDialogComponent} from './board/task/task_dialog/preview
     MatTabsModule,
     MatIconModule,
     MatExpansionModule,
-    MatToolbarModule
+    MatToolbarModule,
+
+    HttpClientModule
   ],
   providers: [
     {provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue:{hasBackdrop:false}}

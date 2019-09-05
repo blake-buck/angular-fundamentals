@@ -13,3 +13,5 @@
 <mat-accordion #accordion='matAccordion' multi='true'>
   <row *ngFor='let row of row$ | async' [rowData]='row' [accordion]='accordion'></row>
 </mat-accordion>
+
+<button (click)='getApi()'>Get</button>

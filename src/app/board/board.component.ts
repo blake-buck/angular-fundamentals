@@ -35,7 +35,7 @@ export class BoardComponent implements OnInit{
     board$:Observable<any>
 
     constructor(private store:Store<AppState>, public dialog:MatDialog, private sanitization:DomSanitizer,){
-        this.tasks$ = this.store.select(state => state.simpleReducer.tasks)
+       
         this.board$ = this.store.select(state => state.simpleReducer.boards.find((board) => board.key === this.boardKey))
     }
 
@@ -206,6 +206,31 @@ export class BoardComponent implements OnInit{
         for(let i=0; i< orderedArray.length; i++){
             console.log(tasks[i].charAt(0))
         }
+    }
+
+    orderByDateCreated(tasks, boardKey){
+        let orderedArray = tasks.slice(0, tasks.length+1)
+       
+        for(let i=0; i< tasks.length; i++){
+            for(let j=i; j < tasks.length; j++){
+
+                if(orderedArray[j].dateCreated.isBefore(orderedArray[i].dateCreated)){
+                    
+                    let placeholder = orderedArray[i];
+
+                    orderedArray[i] = orderedArray[j];
+                    orderedArray[j] = placeholder;
+                }
+
+            }
+        }
+
+        this.store.dispatch({type:"REORDER_BOARD_TASKS", payload:{
+            key:boardKey,
+            tasks:orderedArray
+        }})
+        
+
     }
     
 

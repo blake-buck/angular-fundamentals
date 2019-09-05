@@ -4,6 +4,8 @@ import {Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
 import { simpleReducer } from './simple.reducer';
 
+import { HttpClient } from '@angular/common/http';
+
 export interface AppState{
   simpleReducer:any
 }
@@ -26,7 +28,7 @@ export class AppComponent {
 
 
 
-  constructor(private store:Store<AppState>){
+  constructor(private store:Store<AppState>, private http:HttpClient){
     this.board$ = this.store.select(state => state.simpleReducer.boards)
     this.row$ = this.store.select(state => state.simpleReducer.rows)
   }
@@ -70,6 +72,12 @@ export class AppComponent {
 
   ngOnInit(){
     this.store.dispatch({type:'GET_STATE', payload:''})
+  }
+
+  getApi(){
+    console.log('GET')
+    
+    this.http.get('https://localhost:5001/api/board').subscribe(val => console.log(val))
   }
 
 

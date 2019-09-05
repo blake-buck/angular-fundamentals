@@ -48,7 +48,7 @@
 
                 <mat-menu #orderBy>
                     <button mat-menu-item (click)='orderByAlphabet()'>A-Z</button>
-                    <button mat-menu-item>Date Created</button>
+                    <button mat-menu-item (click)='orderByDateCreated(board.tasks, board.key)'>Date Created</button>
                     <button mat-menu-item>Last Edited</button>
                 </mat-menu>
 

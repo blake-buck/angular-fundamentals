@@ -181,6 +181,7 @@ export function simpleReducer(state=initialState, action){
             modifiedTaskIndex = modifiedBoard.tasks.findIndex((task) => task.key === action.payload.key)
             
             modifiedBoard.tasks[modifiedTaskIndex] = action.payload;
+            modifiedBoard.tasks[modifiedTaskIndex].lastEdited = moment();
             console.log('EDITING TASK')
         
             return{
@@ -239,9 +240,11 @@ export function simpleReducer(state=initialState, action){
                 let draggedIndex = modifiedBoard.tasks.findIndex((task)=> task.key === droppedTaskId) 
                 let droppedIndex = modifiedBoard.tasks.findIndex((task)=> task.key === droppedOnTaskId);   
 
-                let addedItem = Object.create(modifiedBoard.tasks[draggedIndex])
+                let addedItem = {...modifiedBoard.tasks[draggedIndex]}
+                console.log(addedItem)
                 modifiedBoard.tasks.splice(draggedIndex, 1);
                 modifiedBoard.tasks.splice(droppedIndex, 0,  addedItem)
+                
                 return {
                     ...state,
                     boards:[
@@ -267,6 +270,11 @@ export function simpleReducer(state=initialState, action){
                     ]
                 };
             }
+
+        case "REORDER_BOARD_TASKS":
+            let changedBoard = state.boards.find(board => board.key === action.payload.key);
+            changedBoard.tasks= action.payload.tasks
+            return state;
 
        
             
