@@ -230,7 +230,24 @@ export class BoardComponent implements OnInit{
             tasks:orderedArray
         }})
         
+    }
 
+    orderByLastEdited(tasks, boardKey){
+        let orderedArray = tasks.slice(0, tasks.length + 1);
+
+        for(let i=0; i < orderedArray.length; i++){
+            for(let j=i; j<orderedArray.length; j++){
+                if(orderedArray[j].lastEdited.isAfter(orderedArray[i].lastEdited)){
+                    let placeholder = orderedArray[i];
+                    orderedArray[i] = orderedArray[j];
+                    orderedArray[j] = placeholder;
+                }
+            }
+        }
+        this.store.dispatch({type:"REORDER_BOARD_TASKS", payload:{
+            key:boardKey,
+            tasks:orderedArray
+        }})
     }
     
 
