@@ -3,6 +3,18 @@ import { Component, Input, ViewChild, ElementRef } from '@angular/core';
 import {Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
 
+import 
+{
+    autoScroller
+    ,editTitle
+    ,editDescription
+    ,onDragStart
+    ,onDragOver
+    ,onDrop
+} from './row.logic';
+
+import {getState, editRowTitle, editRowDescription, addBoard, archiveRow, transferBoard} from './row.actions';
+
 export interface AppState{
     simpleReducer:any
 }
@@ -23,8 +35,6 @@ export class RowComponent{
 
     board$:Observable<any>
 
-    
-
     isEditingTitle = false;
     isEditingDescription = false;
 
@@ -33,74 +43,41 @@ export class RowComponent{
     }
 
     ngOnInit(){
-        this.store.dispatch({type:'GET_STATE', payload:''})
-        console.log(window.innerWidth)
+        this.store.dispatch(getState())
     }
 
-    handleClose(e){
-        console.log(e)
+    editTitle = editTitle;
+    onDragStart = onDragStart
+    onDragOver = onDragOver
+    editDescription = editDescription
+
+    addBoard(row){
+        this.store.dispatch(addBoard({key:row.key}))
     }
 
-    toggleEditTitle(row){
-        this.isEditingTitle = !this.isEditingTitle;
-        if(this.isEditingTitle === false){
-            this.store.dispatch({type:'EDIT_ROW_TITLE', payload:{key:row.key, title:row.title}})
-        }
-    }
-    editTitle(e, row){
-        row.title = e.target.value;
+    archiveRow(key){
+        this.store.dispatch(archiveRow({key}))
     }
 
     toggleEditDescription(row){
         this.isEditingDescription = !this.isEditingDescription;
         if(this.isEditingDescription === false){
-            this.store.dispatch({type:'EDIT_ROW_TITLE', payload:{key:row.key, title:row.description}})
+            this.store.dispatch(editRowDescription({key:row.key, description:row.description}))
         }
     }
-    editDescription(e, row){
-        row.description = e.target.value;
-    }
 
-    addBoard(row){
-        this.store.dispatch({type:'ADD_BOARD', payload:row.key})
-    }
-
-    archiveRow(key){
-        this.store.dispatch({type:'ARCHIVE_ROW', payload:key})
-    }
-
-    onDragStart(e, rowKey){
-        e.dataTransfer.setData('text/plain', `ROW${rowKey}`);
-        console.log(`ROW${rowKey}`)
-    }
-
-    onDragOver(e){
-        e.preventDefault();
+    toggleEditTitle(row){
+        this.isEditingTitle = !this.isEditingTitle;
+        if(this.isEditingTitle === false){
+            this.store.dispatch(editRowTitle({key:row.key, title:row.title}))
+        }
     }
 
     onDrop(e, row){
-        console.log('APP DROP')
-        let eventDataTransfer = e.dataTransfer.getData('text');
-        if(eventDataTransfer.includes('BOARD')){
-          console.log(eventDataTransfer)
-          let unSanitizedKeys = eventDataTransfer.replace('BOARD', '');
-          let keyArray = unSanitizedKeys.split('-')
-          let droppedOnBoardKey = -1;
-          if(+keyArray[1] !== row.key)
-          this.store.dispatch({type:'TRANSFER_BOARD', payload:{draggedBoardKey:+keyArray[0], draggedBoardRowKey:+keyArray[1], droppedOnBoardKey, droppedOnRowKey:row.key}})
+        let payload = onDrop(e, row);
+        if(payload){
+          this.store.dispatch(transferBoard({payload}));
         }
-      }
-
-    autoScroller(e){
-            
-        if(e.forward){          
-            this.scrollRow.nativeElement.scrollBy({left:10, top:0, behavior:'auto' })
-        }
-        else{
-            this.scrollRow.nativeElement.scrollBy({left:-10, top:0, behavior:'auto' })
-        }
-   
     }
-
     
 }

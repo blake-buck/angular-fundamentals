@@ -45,7 +45,10 @@ export function simpleReducer(state=initialState, action){
     let secondModifiedBoardIndex;
 
     let task;
+
+    console.log(action);
     switch(action.type){
+        
         case "GET_STATE":
             console.log(state);
             return state;
@@ -72,16 +75,23 @@ export function simpleReducer(state=initialState, action){
             return state;
 
         case "ARCHIVE_ROW":
-            modifiedRowIndex = state.rows.findIndex(row => row.key === action.payload);
+            modifiedRowIndex = state.rows.findIndex(row => row.key === action.key);
             modifiedRow = state.rows.splice(modifiedRowIndex, 1);
             state.archivedRows.push(modifiedRow)
             return state;
 
         case "EDIT_ROW_TITLE":
-            modifiedRow = state.rows.find(row => row.key === action.payload.key);
-            console.log(modifiedRow)
-            modifiedRow.title = action.payload.title;
+            modifiedRow = state.rows.find(row => row.key === action.key);
+            
+            modifiedRow.title = action.title;
             return state;
+        
+        case "EDIT_ROW_DESCRIPTION":
+            modifiedRow = state.rows.find(row => row.key === action.key);
+            
+            modifiedRow.description = action.description;
+            return state;
+        
 
         case "GET_BOARD":
             
@@ -89,7 +99,7 @@ export function simpleReducer(state=initialState, action){
 
         case "ADD_BOARD":  
             state.boards.push({
-                rowKey:action.payload,
+                rowKey:action.key,
                 key:state.currentBoardKey,
                 title:'New Board', 
                 hideCompleteTasks:false,

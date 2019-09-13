@@ -16,10 +16,7 @@ export interface AppState{
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent {
-  title = 'angular-fundamentals';
-  boardTitle = 'Test Board'
-  
+export class AppComponent { 
   board$:Observable<any>
   row$:Observable<any>
 
@@ -28,22 +25,16 @@ export class AppComponent {
     this.row$ = this.store.select(state => state.simpleReducer.rows)
   }
 
+  ngOnInit(){
+    this.store.dispatch({type:'GET_STATE', payload:''})
+  }
+
   addRow(){
     this.store.dispatch({type:'ADD_ROW', payload:''})
   }
 
   addBoard(row){
     this.store.dispatch({type:'ADD_BOARD', payload:row.key})
-  }
-
-  changeBoardTitle(e){
-    this.boardTitle = e;
-  }
-
-  
-
-  ngOnInit(){
-    this.store.dispatch({type:'GET_STATE', payload:''})
   }
 
   getApi(){
