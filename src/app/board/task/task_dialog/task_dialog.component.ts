@@ -5,13 +5,13 @@ import { AppState } from 'src/app/app.component';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material';
 
 import { PreviewAttachmentDialogComponent} from './preview_attachment_dialog/preview_attachment_dialog.component';
-import * as moment from 'moment';
 import {AttachmentDialogComponent} from './attachment_dialog/attachment_dialog.component';
 import {DatePickDialogComponent} from './date_pick_dialog/date_pick_dialog.component';
 import {PhotoDialogComponent} from './photo_dialog/photo_dialog.component';
 import {DeleteDialogComponent} from './delete_dialog/delete_dialog.component';
 
 import {TransferTaskDialogComponent} from './transfer_task_dialog/transfer_task_dialog.component';
+import { addLabel, addComment, changeCardColor, changeFontColor, addChecklist, deleteChecklist, changeChecklistTitle, toggleEditChecklistTitle, toggleChecklistItem, toggleEditChecklistItem, addChecklistItem, deleteChecklistItem, changeChecklistItemText, removeFile } from './task_dialog.logic';
 
 
 @Component({
@@ -44,14 +44,8 @@ export class TaskDialogComponent {
         public dialog:MatDialog
         ){}
 
-        ngOnChanges(){
-            
-        }
-
         ngOnInit(){
-            
-            this.store.dispatch({type:'GET_STATE', payload:''})
-            
+            this.store.dispatch({type:'GET_STATE', payload:''}) 
         }
 
         ngAfterViewChecked(){
@@ -73,16 +67,14 @@ export class TaskDialogComponent {
         }
        
     addLabel(labelColor){
-        console.log('BALLSACK')
-        this.data.labels.push({background:labelColor, fontColor:'rgb(0,0,0)', text:''})
-        this.store.dispatch({type:'EDIT_TASK', payload:this.data})
+        this.store.dispatch({type:'EDIT_TASK', payload:addLabel(this.data, labelColor)})
     }
 
     toggleEditBody(e?){
         if(e){
-            console.log('ayyy')
             e.preventDefault();
         }
+
         if(this.isEditingBody){
             this.store.dispatch({type:'EDIT_TASK', payload:this.data})
             this.isEditingBody = false
@@ -90,8 +82,6 @@ export class TaskDialogComponent {
         }
         else{
             this.isEditingBody = true;
-            console.log(this.bodyInput)
-           
         }
     }
 
@@ -103,12 +93,10 @@ export class TaskDialogComponent {
         }
         else{
             this.isEditingDescription = true;
-            console.log(this.bodyInput)
         }
     }
 
     onBodyInputLoad(){
-        console.log('hrm')
         this.bodyInput.nativeElement.focus()
     }
     
@@ -167,78 +155,47 @@ export class TaskDialogComponent {
     changeCommentContent(e){
         this.commentContent = e.target.value;
     }
+    addComment(){
+        this.store.dispatch({type:'EDIT_TASK', payload:addComment(this.data, this.commentContent)})
+        this.commentContent = '';
+    }
 
     changeCardColor(color){
-        this.data.cardColor = color;
-        this.store.dispatch({type:'EDIT_TASK', payload:this.data})
+        this.store.dispatch({type:'EDIT_TASK', payload:changeCardColor(this.data, color)})
     }
     changeFontColor(color){
-        this.data.fontColor = color;
-        this.store.dispatch({type:'EDIT_TASK', payload:this.data})
+        this.store.dispatch({type:'EDIT_TASK', payload:changeFontColor(this.data, color)})
     }
 
     addChecklist(){
-        this.data.checklists.push({
-            title:{content:'New Checklist', isEditing:true},
-            key:this.data.currentChecklistKey,
-            color:'black',
-            currentKey:1,
-            completedTasks:0,
-            content:[]
-        })
-        this.data.currentChecklistKey ++;
-        this.store.dispatch({type:'EDIT_TASK', payload:this.data});
+        this.store.dispatch({type:'EDIT_TASK', payload:addChecklist(this.data)});
     }
 
     deleteChecklist(checklist){
-        let deletedChecklistIndex = this.data.checklists.findIndex(val => val.key === checklist.key)
-        this.data.checklists.splice(deletedChecklistIndex, 1);
-        this.store.dispatch({type:'EDIT_TASK', payload:this.data})
+        this.store.dispatch({type:'EDIT_TASK', payload:deleteChecklist(this.data, checklist)})
     }
 
     toggleEditChecklistTitle(checklistKey){
-        let modifiedChecklist = this.data.checklists.find(checklist => checklist.key === checklistKey)
-        modifiedChecklist.title.isEditing = !modifiedChecklist.title.isEditing;
-        if(modifiedChecklist.title.isEditing === false)this.store.dispatch({type:'EDIT_TASK', payload:this.data})
+        let result = toggleEditChecklistTitle(checklistKey, this.data)
+        if(!result.isEditing){
+            this.store.dispatch({type:'EDIT_TASK', payload:result.data})
+        }
     }
     changeChecklistTitle(e, checklistKey){
-        let modifiedChecklist = this.data.checklists.find(checklist => checklist.key === checklistKey)
-        modifiedChecklist.title.content = e.target.value;
+        changeChecklistTitle(e.target.value, this.data, checklistKey);
     }
 
     toggleChecklistItem(e, checklistKey, item){
-        let modifiedChecklist = this.data.checklists.find(checklist => checklist.key === checklistKey)
-        let changedItemIndex  = modifiedChecklist.content.findIndex((val) => val.key === item.key)
-        if(modifiedChecklist.content[changedItemIndex].content && !modifiedChecklist.content[changedItemIndex].isEditing){
-            console.log(modifiedChecklist.content[changedItemIndex])
-
-            modifiedChecklist.content[changedItemIndex].checked = !item.checked
-            if(modifiedChecklist.content[changedItemIndex].checked){
-                modifiedChecklist.completedTasks++;
-            }
-            else{
-                modifiedChecklist.completedTasks--;
-            }
-
-            if(modifiedChecklist.completedTasks === modifiedChecklist.content.length){
-                modifiedChecklist.color = 'green'
-            }
-            else{
-                modifiedChecklist.color = 'black'
-            }
-
-            this.store.dispatch({type:'EDIT_TASK', payload:this.data})
-        }   
-    }
-    toggleEditChecklistItem(e, checklistKey, item){
-        let modifiedChecklist = this.data.checklists.find(checklist => checklist.key === checklistKey)
-        let changedItemIndex  = modifiedChecklist.content.findIndex((val) => val.key === item.key);
-        if(modifiedChecklist.content[changedItemIndex].content){
-            modifiedChecklist.content[changedItemIndex].isEditing = !item.isEditing;
+        let result = toggleChecklistItem(checklistKey, item, this.data);
+        if(result){
+            this.store.dispatch({type:'EDIT_TASK', payload:result})
         }
-        
-        if(item.isEditing === false){
-            this.store.dispatch({type:'EDIT_TASK', payload:this.data})
+    }
+
+    toggleEditChecklistItem(e, checklistKey, item){
+        let result = toggleEditChecklistItem(checklistKey, item, this.data)
+        if(!result.isEditing){
+            this.store.dispatch({type:'EDIT_TASK', payload:result.data})
         }
     }
 
@@ -247,35 +204,19 @@ export class TaskDialogComponent {
     }
 
     addChecklistItem(checklistKey){
-        let modifiedChecklist = this.data.checklists.find(checklist => checklist.key === checklistKey)
-        let taskKey = modifiedChecklist.currentKey = modifiedChecklist.currentKey +1;
-        modifiedChecklist.content.push({key:taskKey, content:'', checked:false, isEditing:true})
-        this.store.dispatch({type:'EDIT_TASK', payload:this.data})
+        this.store.dispatch({type:'EDIT_TASK', payload:addChecklistItem(checklistKey, this.data)})
     }
+    
     changeChecklistItem(e, checklistKey, index){
-        let modifiedChecklist = this.data.checklists.find(checklist => checklist.key === checklistKey)
-        if(e.code === 'Delete'){
-            let deletedTask = modifiedChecklist.content.splice(index, 1);
-            console.log('DELETED TASK', deletedTask)
-            if(deletedTask[0].checked){
-                console.log('BROO')
-                modifiedChecklist.completedTasks -= 1;
-            }
-            
-            this.store.dispatch({type:'EDIT_TASK', payload:this.data})
+        if(e.code === 'Delete'){            
+            this.store.dispatch({type:'EDIT_TASK', payload:deleteChecklistItem(checklistKey, index, this.data)})
         }
         else if(e.code === 'Enter'){
             this.addChecklistItem(checklistKey)
         }
         else{
-            modifiedChecklist.content[index].content= e.target.value;
+            this.data = changeChecklistItemText(checklistKey, index, e.target.value, this.data)
         }
-    }
-
-    addComment(){
-        this.data.comments.push({content:this.commentContent, date: moment().format('dddd, MMMM Do YYYY, h:mm:ss a')})
-        this.store.dispatch({type:'EDIT_TASK', payload:this.data})
-        this.commentContent = '';
     }
 
     deleteTask(){
@@ -328,12 +269,9 @@ export class TaskDialogComponent {
     }
 
     removeFile(index){
-        this.data.downloadLinks.splice(index, 1);
-        this.data.downloadNames.splice(index, 1);
-        this.store.dispatch({type:'EDIT_TASKS', payload:this.data})
+        this.store.dispatch({type:'EDIT_TASKS', payload:removeFile(index, this.data)})
     }
     previewAttachment(downloadLink){
-        console.log(downloadLink)
         const dialogRef = this.dialog.open(PreviewAttachmentDialogComponent, 
             {
                 id:'preview-attachment-dialog',

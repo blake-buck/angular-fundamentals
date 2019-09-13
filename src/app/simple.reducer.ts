@@ -245,7 +245,6 @@ export function simpleReducer(state=initialState, action){
             console.log('TRANSFER_TASK', action.payload)
 
             if(droppedOnTaskBoard === droppedTaskBoard){
-                console.log('FUCK YOU')
                 modifiedBoard = state.boards.find((board) => board.key === droppedOnTaskBoard);
 
                 let draggedIndex = modifiedBoard.tasks.findIndex((task)=> task.key === droppedTaskId) 
@@ -261,7 +260,6 @@ export function simpleReducer(state=initialState, action){
                 };
             }
             else{
-                console.log("WHORE")
                 let droppedOnBoard = state.boards.find((board) => board.key === droppedOnTaskBoard);
                 let draggedBoard   = state.boards.find((board) => board.key === droppedTaskBoard);
 

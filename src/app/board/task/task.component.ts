@@ -107,10 +107,7 @@ export class TaskComponent{
                 this.task.isEditing= false;
             }
             this.task.isInput = !this.task.isInput;
-            
-            // Have this be done via ngrx
-            this.taskChange.emit(this.task);
-            
+            this.store.dispatch({type:'EDIT_TASK', payload:this.task})            
         }
         
     }
