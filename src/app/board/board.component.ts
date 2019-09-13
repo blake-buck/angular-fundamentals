@@ -5,9 +5,12 @@ import {addTask} from './board.actions'
 import {Observable} from 'rxjs';
 import { DomSanitizer } from '@angular/platform-browser';
 
+import {editBoardTitle, orderByLastEdited, orderByAlphabetical, orderByDateCreated, onDrop} from './board.logic';
+
 export interface AppState{
     simpleReducer:any
 }
+
 
 @Component({
     selector:'board',
@@ -34,9 +37,14 @@ export class BoardComponent implements OnInit{
     tasks$:Observable<any>
     board$:Observable<any>
 
+    titles:any=[]
+
     constructor(private store:Store<AppState>, public dialog:MatDialog, private sanitization:DomSanitizer,){
-       
         this.board$ = this.store.select(state => state.simpleReducer.boards.find((board) => board.key === this.boardKey))
+    }
+
+    ngOnInit(){
+        this.store.dispatch({type:'GET_STATE', payload:''})
     }
 
     ngAfterViewChecked(){
@@ -47,9 +55,6 @@ export class BoardComponent implements OnInit{
             }, 0)
         }
     }
-
-    
-    titles:any=[]
 
     archiveBoard(board){
         this.store.dispatch({type:'ARCHIVE_BOARD', payload:{key:board.key}})
@@ -63,36 +68,15 @@ export class BoardComponent implements OnInit{
         this.store.dispatch({type:'EDIT_TASK', payload:changedTask})
     }
     
-    onTaskTransfer(e){
-        console.log(e)
-        
-        // let draggedIndex = this.tasks.findIndex((task)=> task.key === e.droppedTaskId) 
-        // let droppedIndex = this.tasks.findIndex((task)=> task.key === e.droppedOnTaskId);
-
-        // let addedItem = Object.create(this.tasks[draggedIndex])
-        // this.tasks.splice(draggedIndex, 1);
-        // this.tasks.splice(droppedIndex, 0,  addedItem)
-    }
-
     onDrop(e, board){
-        console.log('BOARD DROP')
         let eventDataTransfer = e.dataTransfer.getData('text')
-        if((board.tasks.length === 0 || board.tasks.filter(task => !task.isComplete).length === 0) && eventDataTransfer.includes('+')){
-            e.preventDefault()
-            let transferedData = eventDataTransfer.split('+')
-            let droppedTaskId    = +transferedData[0];
-            let droppedTaskBoard = +transferedData[1];
-
-            this.store.dispatch({type:'TRANSFER_TASK_EMPTY', payload:{droppedTaskId, droppedTaskBoard, droppedOnTaskBoard:this.boardKey}})
-           
+        e.preventDefault()
+        let state = onDrop(eventDataTransfer, board, this.boardKey);
+        console.log("STATE" ,state)
+        if(state){
+            this.store.dispatch({type:state.type, payload:state.payload})
         }
-        else if(eventDataTransfer.includes('BOARD')){
-            console.log(eventDataTransfer)
-            let unSanitizedKeys = eventDataTransfer.replace('BOARD', '');
-            let keyArray = unSanitizedKeys.split('-')
-            let droppedOnBoardKey = board.key;
-            this.store.dispatch({type:'TRANSFER_BOARD', payload:{draggedBoardKey:+keyArray[0], draggedBoardRowKey:+keyArray[1], droppedOnBoardKey, droppedOnRowKey:board.rowKey}})
-        }
+        
     }
 
     toggleEditBoardTitle(board){
@@ -113,23 +97,12 @@ export class BoardComponent implements OnInit{
         }
     }
 
-    ngOnInit(){
-        this.store.dispatch({type:'GET_STATE', payload:''})
-        
-    }
-
     toggleHideCompleteTasks(boardKey, hideCompleteTasks){
-        console.log(`BOARDKEY:${boardKey}`)
         this.store.dispatch({type:'TOGGLE_HIDE_COMPLETE_TASKS', payload:{boardKey, hideCompleteTasks}})
     }
    
     onDragStart(e, board){
-        // console.log()
-        
-        
-        if(e.dataTransfer.getData('text').includes('+')){
-
-        }
+        if(e.dataTransfer.getData('text').includes('+')){}
         else{
             e.dataTransfer.setData('text/plain', `BOARD${board.key}-${board.rowKey}`);
         }
@@ -143,7 +116,6 @@ export class BoardComponent implements OnInit{
         // else if(200 > e.pageX){
         //     this.autoScroller.emit({forward:false, offset:e.clientX})
         // }
-
     }
 
     taskAutoScroll(e){
@@ -157,7 +129,6 @@ export class BoardComponent implements OnInit{
     deleteBoard(boardKey){
         const dialogRef = this.dialog.open(DeleteBoardDialogComponent, 
             {
-
                 id:'delete-board-dialog',
                 data:boardKey
             }
@@ -167,7 +138,6 @@ export class BoardComponent implements OnInit{
     transferBoard(data){
         const dialogRef = this.dialog.open(TransferBoardDialogComponent, 
             {
-
                 id:'transfer-board-dialog',
                 data:data
             }
@@ -185,15 +155,12 @@ export class BoardComponent implements OnInit{
             this.exportLink = this.sanitization.bypassSecurityTrustUrl(untrustedLink);
             this.displayExportLink = true;
         }
-        // console.log(e.target.files[0])
-        // let file = e.target.files[e.target.files.length-1];
         if(file){
             fileReader.readAsDataURL(file)
         }
     }
 
     downloadLinkLoads(){
-        console.log('MY NAME IS JEFF')
         // this seems very hacky, should probably find another way to prevent ExpressionChangedAfter error message
         setTimeout(() => {
             this.displayExportLink = false
@@ -201,118 +168,25 @@ export class BoardComponent implements OnInit{
         
     }
 
-
-    
-
     orderByDateCreated(tasks, boardKey){
-        let orderedArray = tasks.slice(0, tasks.length+1)
-       
-        for(let i=0; i< tasks.length; i++){
-            for(let j=i; j < tasks.length; j++){
-
-                if(orderedArray[j].dateCreated.isBefore(orderedArray[i].dateCreated)){
-                    
-                    let placeholder = orderedArray[i];
-
-                    orderedArray[i] = orderedArray[j];
-                    orderedArray[j] = placeholder;
-                }
-
-            }
-        }
-
         this.store.dispatch({type:"REORDER_BOARD_TASKS", payload:{
             key:boardKey,
-            tasks:orderedArray
-        }})
-        
+            tasks:orderByDateCreated(tasks)
+        }})      
     }
 
     orderByLastEdited(tasks, boardKey){
-        let orderedArray = tasks.slice(0, tasks.length + 1);
-
-        for(let i=0; i < orderedArray.length; i++){
-            for(let j=i; j<orderedArray.length; j++){
-                if(orderedArray[j].lastEdited.isAfter(orderedArray[i].lastEdited)){
-                    let placeholder = orderedArray[i];
-                    orderedArray[i] = orderedArray[j];
-                    orderedArray[j] = placeholder;
-                }
-            }
-        }
         this.store.dispatch({type:"REORDER_BOARD_TASKS", payload:{
             key:boardKey,
-            tasks:orderedArray
+            tasks:orderByLastEdited(tasks)
         }})
     }
 
     // for now this system only goes out to 6 letters in a board body -- not perfect but good enough for now
 
     orderByAlphabetical(tasks, boardKey){
-        console.time()
-        
-        let reorganizedBoard = [];
-        let orderedArray = tasks.slice(0, tasks.length + 1);
-
-        tasks.map(val => {
-            reorganizedBoard.push(this.turnStringIntoNumber(val.body));
-        })
-
-        
-        // for(let i=0; i< orderedArray.length; i++){
-            
-        //     for(let j=i; j<orderedArray.length; j++){
-        //         if(reorganizedBoard[j] < reorganizedBoard[i]){
-        //             let placeholder = orderedArray[i]
-        //             orderedArray[i]=orderedArray[j];
-        //             orderedArray[j] = placeholder;
-        //             orderedArray = orderedArray
-        //         }
-        //     }
-        // }
-
-        for(let i=0; i< orderedArray.length; i++){
-            
-            for(let j=i; j<orderedArray.length; j++){
-                if(reorganizedBoard[j] < reorganizedBoard[i]){
-                    let placeholder = orderedArray[i]
-                    orderedArray[i]=orderedArray[j];
-                    orderedArray[j] = placeholder;
-
-                    placeholder = reorganizedBoard[i]
-                    reorganizedBoard[i] = reorganizedBoard[j];
-                    reorganizedBoard[j] = placeholder;
-                    i=0;
-                    j=0;
-                }
-            }
-        }
-           
-
-        
-        console.timeEnd()
-
-        console.log(orderedArray)
-        this.store.dispatch({type:"REORDER_BOARD_TASKS", payload:{key:boardKey, tasks:orderedArray}})
+        this.store.dispatch({type:"REORDER_BOARD_TASKS", payload:{key:boardKey, tasks:orderByAlphabetical(tasks)}})
     }
-
-    turnStringIntoNumber(text){
-        let characterArray = text.split('');
-        let number = 0;
-        for(let i=0; i<6 && i<characterArray.length; i++){
-            number += this.turnCharacterIntoNumber(characterArray[i]) * (Math.pow(10, (-1*(i*2))))
-        }
-        return number
-    }
-
-    turnCharacterIntoNumber(character){
-        let char= character.toUpperCase().charCodeAt(0);
-        if(char <65 || char >92){
-            return 1
-        }
-        return char;
-    }
-    
 
 }
 
@@ -365,7 +239,6 @@ export class TransferBoardDialogComponent{
     }
 
     transferBoard(data){
-        // {draggedBoardKey,droppedOnBoardKey,draggedBoardRowKey,droppedOnRowKey
         this.store.dispatch({type:'TRANSFER_BOARD', payload:{draggedBoardKey:data.key, draggedBoardRowKey:data.rowKey, droppedOnRowKey:this.selectedRow.key}})
         this.dialogRef.close();
     }

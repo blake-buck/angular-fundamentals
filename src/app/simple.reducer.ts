@@ -46,7 +46,7 @@ export function simpleReducer(state=initialState, action){
 
     let task;
 
-    console.log(action);
+    console.log(state.boards[0].tasks, action);
     switch(action.type){
         
         case "GET_STATE":
@@ -172,7 +172,7 @@ export function simpleReducer(state=initialState, action){
             cardColor:'',
             fontColor:'',
             dueDate:null,
-            displayImageUrl:[],
+            displayImageUrls:[],
             downloadNames:[],
             downloadLinks:[],
             labels:[],
@@ -242,9 +242,10 @@ export function simpleReducer(state=initialState, action){
         
         case "TRANSFER_TASK":
             let {droppedOnTaskId, droppedOnTaskBoard, droppedTaskId, droppedTaskBoard} = action.payload;
-            console.log('TRANSFER_TASK')
+            console.log('TRANSFER_TASK', action.payload)
 
             if(droppedOnTaskBoard === droppedTaskBoard){
+                console.log('FUCK YOU')
                 modifiedBoard = state.boards.find((board) => board.key === droppedOnTaskBoard);
 
                 let draggedIndex = modifiedBoard.tasks.findIndex((task)=> task.key === droppedTaskId) 
@@ -254,30 +255,25 @@ export function simpleReducer(state=initialState, action){
                 console.log(addedItem)
                 modifiedBoard.tasks.splice(draggedIndex, 1);
                 modifiedBoard.tasks.splice(droppedIndex, 0,  addedItem)
-                
+                console.log(state.boards[0].tasks)
                 return {
-                    ...state,
-                    boards:[
-                        ...state.boards
-                    ]
+                    ...state
                 };
             }
             else{
+                console.log("WHORE")
                 let droppedOnBoard = state.boards.find((board) => board.key === droppedOnTaskBoard);
                 let draggedBoard   = state.boards.find((board) => board.key === droppedTaskBoard);
 
                 let draggedIndex = draggedBoard.tasks.findIndex((task)=> task.key === droppedTaskId) 
                 let droppedIndex = droppedOnBoard.tasks.findIndex((task)=> task.key === droppedOnTaskId);   
                 
-                let addedItem = Object.create(draggedBoard.tasks[draggedIndex])
+                let addedItem =  {...draggedBoard.tasks[draggedIndex]}//Object.create(draggedBoard.tasks[draggedIndex])
                 addedItem.boardKey = droppedOnTaskBoard;
                 draggedBoard.tasks.splice(draggedIndex, 1);
                 droppedOnBoard.tasks.splice(droppedIndex+1, 0, addedItem);
                 return {
                     ...state,
-                    boards:[
-                        ...state.boards,
-                    ]
                 };
             }
 

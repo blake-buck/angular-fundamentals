@@ -16,7 +16,7 @@ export class PhotoDialogComponent{
         public dialog:MatDialog
     ){}
 
-    imagesToDisplay = this.data.displayImageUrl;
+    imagesToDisplay = this.data.displayImageUrls;
 
     getFile(e){
         console.log(e.target.files);
@@ -45,7 +45,7 @@ export class PhotoDialogComponent{
     }
 
     saveImage(){
-        this.data.displayImageUrl=this.imagesToDisplay;
+        this.data.displayImageUrls=this.imagesToDisplay;
         this.dialogRef.close();
         this.dialogRef.afterClosed().subscribe(result => {
             this.store.dispatch({type:'EDIT_TASK', payload:this.data})

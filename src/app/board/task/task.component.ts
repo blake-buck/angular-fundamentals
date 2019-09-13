@@ -5,16 +5,16 @@ import { CdkTextColumn } from '@angular/cdk/table';
 import {CdkTextareaAutosize} from '@angular/cdk/text-field';
 import {Store} from '@ngrx/store';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatTabChangeEvent} from '@angular/material';
+
+import {addCompletionStyling, onDrop, labelLength, cyclePhoto} from './task.logic';
 export interface AppState{
     simpleReducer:any
 }
 
-import * as moment from 'moment';
-import { ReadVarExpr } from '@angular/compiler';
-import { Observable } from 'rxjs';
+
 
 import {TaskDialogComponent} from './task_dialog/task_dialog.component';
-import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
+
 
 
 @Component({
@@ -37,6 +37,12 @@ export class TaskComponent{
     
     @Output() autoScroller = new EventEmitter();
 
+    isTaskTitleInputFocused = false;
+    displayLabelText = false;
+    disableDialogOpening = false;
+
+    currentDisplayPhoto = 0;
+    classAddedToList = false
 
     constructor(private store:Store<AppState>, public dialog:MatDialog){
         
@@ -46,19 +52,8 @@ export class TaskComponent{
         if(this.task.isEditing){
             this.task.isInput = true; 
         }
-        
     }
 
-    isTaskTitleInputFocused = false;
-    displayLabelText = false;
-    disableDialogOpening = false;
-
-    currentDisplayPhoto = 0;
-
-    ngAfterViewInit(){
-        
-        
-    }
     ngAfterViewChecked(){
         if(this.task.isInput && !this.isTaskTitleInputFocused){
             this.isTaskTitleInputFocused = true;
@@ -68,37 +63,38 @@ export class TaskComponent{
             
         }
 
-        if(this.task.displayImageUrl.length === 1){
-            
+        if(this.task.displayImageUrls.length === 1){   
             setTimeout(() => {
                 this.currentDisplayPhoto = 0;
             }, 0)
         }
     }
 
-    classAddedToList = false
+    disableDialogOpen(){
+        this.disableDialogOpening = true;
+        setTimeout(() => {
+            this.disableDialogOpening = false;
+        }, 500)
+    }
 
     onDrag(e){
-        if(e.pageX > window.screenX -800){
-            this.autoScroller.emit({forward:true, offset:e.clientX})
-        }
-        else if(200 > e.pageX){
-            this.autoScroller.emit({forward:false, offset:e.clientX})
-        }
+        // if(e.pageX > window.screenX -800){
+        //     this.autoScroller.emit({forward:true, offset:e.clientX})
+        // }
+        // else if(200 > e.pageX){
+        //     this.autoScroller.emit({forward:false, offset:e.clientX})
+        // }
     }
 
     openDialog(){
-        console.log('OPEN DIALOG')
         if(!this.disableDialogOpening){
             const dialogRef = this.dialog.open(TaskDialogComponent, 
                 {
-                    
                     id:'task-dialog',
                     data:this.task
                 }
             )
         }
-        
     }
 
     toggleInput(e?){
@@ -112,6 +108,7 @@ export class TaskComponent{
             }
             this.task.isInput = !this.task.isInput;
             
+            // Have this be done via ngrx
             this.taskChange.emit(this.task);
             
         }
@@ -119,77 +116,40 @@ export class TaskComponent{
     }
 
     changeTaskBody(e){
-        
         this.task.body = e.target.value; 
     }
 
     toggleDisplayLabelText(){
-        this.disableDialogOpening = true;
-        this.displayLabelText = !this.displayLabelText;
-        setTimeout(() => {
-            this.disableDialogOpening = false;
-        }, 500)
+        this.disableDialogOpen()
+        this.displayLabelText = !this.displayLabelText;  
     }
 
-    cyclePhoto(isForward, displayImageUrl){
-        this.disableDialogOpening = true;
-        if(isForward && this.currentDisplayPhoto < displayImageUrl.length -1){
-            this.currentDisplayPhoto ++;
-        }
-        else if(isForward && this.currentDisplayPhoto === displayImageUrl.length - 1){
-            this.currentDisplayPhoto = 0;
-        }
-        else if(!isForward && this.currentDisplayPhoto === 0){
-            this.currentDisplayPhoto = displayImageUrl.length - 1;
-        }
-        else{
-            this.currentDisplayPhoto --;
-        }
-        setTimeout(() => {
-            this.disableDialogOpening = false;
-        }, 500)
+    cyclePhoto(isForward, displayImageUrls){
+        this.disableDialogOpen()
+        this.currentDisplayPhoto = cyclePhoto(isForward, displayImageUrls, this.currentDisplayPhoto)
     }
 
     focusLabel(){
-        this.disableDialogOpening = true;
-        setTimeout(() => {
-            this.disableDialogOpening = false;
-        }, 500)
+        this.disableDialogOpen()
     }
 
-    labelLength(labelLength){
-        if(labelLength < 4){
-            return 2
-        }
-        return labelLength -2;
-    }
+    labelLength = labelLength;
 
     changeLabelText(e, labelIndex, task){
         this.labelLength(e.target.value.length)
         task.labels[labelIndex].text = e.target.value;
-        console.log(task)
+
         this.store.dispatch({type:'EDIT_TASK', payload:task})
     }
 
     onDrop(e){
-        console.log('TASK DROP')
         e.preventDefault();
-        
         let transferedData = e.dataTransfer.getData('text');
-        if(transferedData.includes('+')){
-            transferedData = transferedData.split('+')
-            let droppedTaskId = +transferedData[0];
-            let droppedTaskBoard = +transferedData[1];
-
-            let droppedOnTaskId = this.task.key;
-            let droppedOnTaskBoard = this.task.boardKey;
-
-            console.log({droppedOnTaskId, droppedOnTaskBoard, droppedTaskId, droppedTaskBoard})
-            this.taskTransfer.emit({droppedOnTaskId, droppedOnTaskBoard, droppedTaskId, droppedTaskBoard});
-            this.store.dispatch({type:'TRANSFER_TASK', payload:{droppedOnTaskId, droppedOnTaskBoard, droppedTaskId, droppedTaskBoard}})
+        let payload = onDrop(transferedData, this.task)
+        if(payload){
+            this.store.dispatch({type:'TRANSFER_TASK', payload:payload})
         }
-        
-        
+                
     }
 
     onDragOver(e){
@@ -197,7 +157,6 @@ export class TaskComponent{
     }
 
     onDragStart(e){
-        console.log('TASK DRAGGING')
         e.dataTransfer.setData('text/plain', `${this.task.key}+${this.task.boardKey}`);
     }
 
@@ -206,15 +165,7 @@ export class TaskComponent{
     }
     
     addCompletionStyling(property){
-        if(this.task.isComplete && property === 'opacity'){
-            return '.5'
-        }
-        else if(this.task.isComplete && property === 'text-decoration'){
-            return 'line-through'
-        }
-        else{
-            return ''
-        }
+        return addCompletionStyling(property, this.task)
     }
 
 }

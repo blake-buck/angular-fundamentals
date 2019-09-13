@@ -67,7 +67,7 @@
     
 
     <mat-list role='list'>
-        <task (autoScroller)='taskAutoScroll($event)' (taskTransfer)='onTaskTransfer($event)' (taskChange)='onTaskChange($event)' *ngFor='let task of board.tasks; index as i' [task]='task' [board]='board'></task>
+        <task (autoScroller)='taskAutoScroll($event)' *ngFor='let task of board.tasks; index as i' [task]='task' [board]='board'></task>
     </mat-list>
 
 </mat-card>

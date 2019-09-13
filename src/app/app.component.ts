@@ -21,6 +21,7 @@ export class AppComponent {
   row$:Observable<any>
 
   constructor(private store:Store<AppState>, private http:HttpClient){
+    this.store.select(state => console.log(state))
     this.board$ = this.store.select(state => state.simpleReducer.boards)
     this.row$ = this.store.select(state => state.simpleReducer.rows)
   }
