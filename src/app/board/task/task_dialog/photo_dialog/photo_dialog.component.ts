@@ -28,7 +28,6 @@ export class PhotoDialogComponent{
             console.log(fileReader.result)
             this.imagesToDisplay.push(fileReader.result);
         }
-
         fileReader.readAsDataURL(e.target.files[0])
         
     }

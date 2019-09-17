@@ -3,6 +3,7 @@ import { Component, Inject } from '@angular/core';
 import { MatDialog, MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 import { AppState } from 'src/app/app.component';
 import { Store } from '@ngrx/store';
+import { months, currentDayMoment, calculateDays, calculateFirstDayOfMonth, tabChange, dateSelection } from './date_pick_dialog.logic';
 
 @Component({
     templateUrl:'./date_pick_dialog.component.html',
@@ -18,81 +19,43 @@ export class DatePickDialogComponent{
         public dialog:MatDialog
     ){}
 
-    months =[
-        'January',
-        'Febuary',
-        'Match',
-        'April',
-        'May',
-        'June',
-        'July',
-        'August',
-        'September',
-        'October',
-        'November',
-        'December'
-    ]
+    months = months;
+    currentDayMoment = currentDayMoment;
+
+
     selectedMonthIndex=moment().month();
-    
-    daysInMonth = [
-
-    ]
-
-    days=new Array(moment().month(this.selectedMonthIndex).daysInMonth())
-    firstDayOfMonthIsoIndex = moment().month(this.selectedMonthIndex).date(1).weekday()
-    
-    currentDayMoment = moment();
+    days=calculateDays(this.selectedMonthIndex)
+    firstDayOfMonthIsoIndex = calculateFirstDayOfMonth(this.selectedMonthIndex)
     dueDateMoment = this.data.dueDate;
     
     
     tabChange(e){
-        this.selectedMonthIndex = e;
-        this.days=new Array(moment().month(this.selectedMonthIndex).daysInMonth())
-        this.firstDayOfMonthIsoIndex = moment().month(this.selectedMonthIndex).date(1).weekday()
-
-        if(this.selectedMonthIndex === moment().month()){
-            this.days[moment().date()-1] ='cyan'
-        }
-        
-        if(this.dueDateMoment && this.dueDateMoment.month === this.selectedMonthIndex){
-            this.days[this.dueDateMoment.date] = '#adff2f'
-        }
+        let state = tabChange(e, this.dueDateMoment);
+        this.selectedMonthIndex = state.selectedMonthIndex;
+        this.days = state.days;
+        this.firstDayOfMonthIsoIndex = state.firstDayOfMonthIsoIndex;
     }
 
     dateSelection(day){
-        let momentToExport = moment();
-        momentToExport.set('month', this.selectedMonthIndex);
-        momentToExport.set('date', day+1);    
-        
-        if(this.data.dueDate && (this.data.dueDate.month() === momentToExport.month() && this.data.dueDate.date() === momentToExport.date())){
-            this.data.dueDate = null;
-        }
-        else{
-            this.days = new Array(moment().month(this.selectedMonthIndex).daysInMonth())
-            this.days[moment().date()-1] ='cyan'
-            this.days[day] = '#adff2f'
+        let state = dateSelection(day, this.selectedMonthIndex, this.dueDateMoment, this.data)
+        if(state.days)
+            this.days = state.days
+        if(state.data.dueDate)
+            this.dueDateMoment = state.data.dueDate
 
-            this.dueDateMoment = moment();
-            this.dueDateMoment.month = this.selectedMonthIndex;
-            this.dueDateMoment.date = day;
-
-            this.data.dueDate = momentToExport;
-        }
-            
-        this.store.dispatch({type:'EDIT_TASK', payload:this.data})
+        this.store.dispatch({type:'EDIT_TASK', payload: this.data})
         
     }
 
     closeDialog(){
         this.dialogRef.close();
-        
     }
 
     removeDueDate(){
         this.data.dueDate = null;
         this.store.dispatch({type:'EDIT_TASK', payload:this.data})
-        this.days=new Array(moment().month(this.selectedMonthIndex).daysInMonth())
-        this.firstDayOfMonthIsoIndex = moment().month(this.selectedMonthIndex).date(1).weekday()
+        this.days=calculateDays(this.selectedMonthIndex)
+        this.firstDayOfMonthIsoIndex = calculateFirstDayOfMonth(this.selectedMonthIndex)
 
         if(this.selectedMonthIndex === moment().month()){
             this.days[moment().date()-1] ='cyan'
@@ -100,12 +63,8 @@ export class DatePickDialogComponent{
     }
 
     ngOnInit(){
-        
         this.days[moment().date()-1] ='cyan'
-        
         if(this.dueDateMoment && this.dueDateMoment.month() === this.selectedMonthIndex){
-            console.log("BROOOOO")
-            console.log(this.dueDateMoment.month())
             this.days[this.dueDateMoment.date()-1] = '#adff2f'
         }
     }
