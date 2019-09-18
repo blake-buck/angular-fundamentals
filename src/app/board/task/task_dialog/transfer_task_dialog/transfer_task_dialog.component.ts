@@ -3,6 +3,7 @@ import { Store } from '@ngrx/store';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material';
 import { Inject, Component } from '@angular/core';
 import { AppState } from 'src/app/app.component';
+import { transferTaskEmpty } from 'src/app/store/app.actions';
 
 @Component({
     templateUrl:'./transfer_task_dialog.component.html',
@@ -30,7 +31,7 @@ export class TransferTaskDialogComponent{
 
     transferTask(){
         if(this.selectedBoard){
-            this.store.dispatch({type:"TRANSFER_TASK_EMPTY", payload:{droppedTaskId:this.data.key, droppedTaskBoard:this.data.boardKey, droppedOnTaskBoard:this.selectedBoard.key}})
+            this.store.dispatch(transferTaskEmpty({payload:{droppedTaskId:this.data.key, droppedTaskBoard:this.data.boardKey, droppedOnTaskBoard:this.selectedBoard.key}}))
             this.dialogRef.close()
         }
     }

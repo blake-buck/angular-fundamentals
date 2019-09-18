@@ -4,6 +4,7 @@ import { AppState } from 'src/app/app.component';
 import { Store } from '@ngrx/store';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material';
 import { PhotoDialogComponent } from '../photo_dialog/photo_dialog.component';
+import { editTask } from 'src/app/store/app.actions';
 
 @Component({
     templateUrl:'./attachment_dialog.component.html',
@@ -57,6 +58,7 @@ export class AttachmentDialogComponent{
         else{
             this.data.attachment = false;
         }
+        this.store.dispatch(editTask({task:this.data}))
         this.store.dispatch({type:'EDIT_TASK', payload:this.data})
         this.dialogRef.close();
     }

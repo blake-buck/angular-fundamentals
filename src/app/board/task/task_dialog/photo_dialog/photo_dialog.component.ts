@@ -2,6 +2,7 @@ import { Component, Inject } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { AppState } from 'src/app/app.component';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material';
+import { editTask } from 'src/app/store/app.actions';
 
 @Component({
     templateUrl:'./photo_dialog.component.html',
@@ -47,7 +48,7 @@ export class PhotoDialogComponent{
         this.data.displayImageUrls=this.imagesToDisplay;
         this.dialogRef.close();
         this.dialogRef.afterClosed().subscribe(result => {
-            this.store.dispatch({type:'EDIT_TASK', payload:this.data})
+            this.store.dispatch(editTask(this.data))
         })
     }
 

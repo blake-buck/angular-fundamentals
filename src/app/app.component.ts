@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 
 import {Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
-import { simpleReducer } from './simple.reducer';
+import { simpleReducer } from './store/simple.reducer';
 
 import { HttpClient } from '@angular/common/http';
 

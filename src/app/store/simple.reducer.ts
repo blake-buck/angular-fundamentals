@@ -2,6 +2,8 @@ import {Action} from '@ngrx/store';
 
 import * as moment from 'moment'
 
+import {getState, addRow, archiveRow, editRowTitle, editRowDescription, addBoard, transferBoard, editBoardTitle, archiveBoard, deleteBoard, toggleHideCompleteTasks, addTask, editTask, deleteTask, transferTaskEmpty, transferTask } from './app.actions';
+
 const initialState = {
     currentTaskKey:3,
     currentBoardKey:3,
@@ -48,56 +50,46 @@ export function simpleReducer(state=initialState, action){
 
     console.log(state.boards[0].tasks, action);
     switch(action.type){
-        
-        case "GET_STATE":
+
+        case getState.type:
             console.log(state);
             return state;
 
-        case "GET_ROW":
-            modifiedRow= state.rows.find(row => row.key === action.payload)
-            console.log('HURRRR')
-            break;
-
-        case "ADD_ROW":
+        case addRow.type:
             state.rows.push({key:state.currentRowKey, title:'New Row', description:'this is a new row', boards:[]})
             state.currentRowKey++;
             return state; 
+        
+        // case "TRANSFER_ROW":
+        //     if(true){
+        //         let {droppedOnRowKey, droppedRowKey} = action.payload;
+        //         let droppedRowIndex = state.rows.findIndex(row => row.key === droppedRowKey);
+        //         let droppedRow = state.rows.splice(droppedRowIndex, 1);
 
-        case "TRANSFER_ROW":
-            if(true){
-                let {droppedOnRowKey, droppedRowKey} = action.payload;
-                let droppedRowIndex = state.rows.findIndex(row => row.key === droppedRowKey);
-                let droppedRow = state.rows.splice(droppedRowIndex, 1);
+        //         let droppedOnRowIndex = state.rows.findIndex(row => row.key === droppedOnRowKey);
+        //         state.rows.splice(droppedOnRowIndex, 0, droppedRow[0]);
+        //     }
+        //     return state;
 
-                let droppedOnRowIndex = state.rows.findIndex(row => row.key === droppedOnRowKey);
-                state.rows.splice(droppedOnRowIndex, 0, droppedRow[0]);
-            }
-            return state;
-
-        case "ARCHIVE_ROW":
+        case archiveRow.type:
             modifiedRowIndex = state.rows.findIndex(row => row.key === action.key);
             modifiedRow = state.rows.splice(modifiedRowIndex, 1);
             state.archivedRows.push(modifiedRow)
             return state;
 
-        case "EDIT_ROW_TITLE":
+        case editRowTitle.type:
             modifiedRow = state.rows.find(row => row.key === action.key);
             
             modifiedRow.title = action.title;
             return state;
         
-        case "EDIT_ROW_DESCRIPTION":
+        case editRowDescription.type:
             modifiedRow = state.rows.find(row => row.key === action.key);
             
             modifiedRow.description = action.description;
             return state;
-        
 
-        case "GET_BOARD":
-            
-            return state
-
-        case "ADD_BOARD":  
+        case addBoard.type:  
             state.boards.push({
                 rowKey:action.key,
                 key:state.currentBoardKey,
@@ -109,24 +101,20 @@ export function simpleReducer(state=initialState, action){
             state.currentBoardKey++;
             return state;
 
-        case "TRANSFER_BOARD":
-            console.log(action.payload)
+        case transferBoard.type:
             let {draggedBoardKey,droppedOnBoardKey,draggedBoardRowKey,droppedOnRowKey} = action.payload;
             
             if(draggedBoardRowKey === droppedOnRowKey){
                 modifiedBoardIndex = state.boards.findIndex(board => board.key === draggedBoardKey);
                 secondModifiedBoardIndex = state.boards.findIndex(board => board.key == droppedOnBoardKey)
-                console.log('DO WHAT YOU GOTTA DO', modifiedBoardIndex, secondModifiedBoardIndex)
                 
                 modifiedBoard = Object.create(state.boards[modifiedBoardIndex])
                 state.boards.splice(modifiedBoardIndex, 1);
                 state.boards.splice(secondModifiedBoardIndex,0, modifiedBoard)
             }
             else{
-                console.log('SOMETHING AINT RIGHT HERE')
                 modifiedBoardIndex = state.boards.findIndex(board => board.key == draggedBoardKey);
                 modifiedBoard = state.boards.splice(modifiedBoardIndex, 1)
-                console.log(modifiedBoard)
                 modifiedBoard[0].rowKey = droppedOnRowKey
                 state.boards.push(modifiedBoard[0])
             }
@@ -134,51 +122,48 @@ export function simpleReducer(state=initialState, action){
             
             return state;
 
-        case "TRANSFER_BOARD_EMPTY":
 
+        case editBoardTitle.type:
+            modifiedBoard = state.boards.find(board => board.key === action.key);
+            modifiedBoard.title = action.title;
             return state;
 
-        case "EDIT_BOARD_TITLE":
-            modifiedBoard = state.boards.find(board => board.key === action.payload.key);
-            modifiedBoard.title = action.payload.title;
-            return state;
-
-        case "ARCHIVE_BOARD":
-            modifiedBoardIndex = state.boards.findIndex(board => board.key === action.payload.key);
+        case archiveBoard.type:
+            modifiedBoardIndex = state.boards.findIndex(board => board.key === action.key);
             state.archivedBoards.push(state.boards.splice(modifiedBoardIndex, 1))
             return state;
 
-        case "DELETE_BOARD":
-            modifiedBoardIndex = state.boards.findIndex(board => board.key === action.payload);
+        case deleteBoard.type:
+            modifiedBoardIndex = state.boards.findIndex(board => board.key === action.key);
             state.boards.splice(modifiedBoardIndex, 1)
             return state;
 
-        case "TOGGLE_HIDE_COMPLETE_TASKS":
-            modifiedBoard = state.boards.find((board) => board.key === action.payload.boardKey)
+        case toggleHideCompleteTasks.type:
+            modifiedBoard = state.boards.find((board) => board.key === action.key)
             console.log(modifiedBoard)
-            modifiedBoard.hideCompleteTasks = action.payload.hideCompleteTasks;
+            modifiedBoard.hideCompleteTasks = action.hideCompleteTasks;
             return state
 
-        case "GET_TASK":
-            
-            return state;
-        case "ADD_TASK":
-            modifiedBoard = state.boards.find((board) => board.key === action.payload.boardKey);
-            modifiedBoard.tasks = [...modifiedBoard.tasks, {key:state.currentTaskKey++, boardKey:action.payload.boardKey, body:'', 
-            isEditing:true, isComplete:false, description:'', important:false, warning:false, payment:false, vacation:false, social:false,work:false,travel:false,
-            comments:[],
-            currentChecklistKey:1,
-            checklists:[],
-            cardColor:'',
-            fontColor:'',
-            dueDate:null,
-            displayImageUrls:[],
-            downloadNames:[],
-            downloadLinks:[],
-            labels:[],
-            dateCreated:moment(),
-            lastEdited:moment()
-            }]
+        case addTask.type:
+            modifiedBoard = state.boards.find((board) => board.key === action.key);
+            modifiedBoard.tasks = [...modifiedBoard.tasks, 
+                {
+                    key:state.currentTaskKey++, boardKey:action.key, body:'', 
+                    isEditing:true, isComplete:false, description:'', important:false, warning:false, payment:false, vacation:false, social:false,work:false,travel:false,
+                    comments:[],
+                    currentChecklistKey:1,
+                    checklists:[],
+                    cardColor:'',
+                    fontColor:'',
+                    dueDate:null,
+                    displayImageUrls:[],
+                    downloadNames:[],
+                    downloadLinks:[],
+                    labels:[],
+                    dateCreated:moment(),
+                    lastEdited:moment()
+                }
+            ]
             return{
                 ...state,
                 currentTaskKey:state.currentTaskKey+1,
@@ -186,13 +171,14 @@ export function simpleReducer(state=initialState, action){
                     ...state.boards
                 ]
             }
-        case "EDIT_TASK":
-            modifiedBoard = state.boards.find((board) => board.key === action.payload.boardKey);
-            modifiedTaskIndex = modifiedBoard.tasks.findIndex((task) => task.key === action.payload.key)
+        case editTask.type:
+            console.log('EDITING TASK', action.task)
+            modifiedBoard = state.boards.find((board) => board.key === action.task.boardKey);
+            modifiedTaskIndex = modifiedBoard.tasks.findIndex((task) => task.key === action.task.key)
             
-            modifiedBoard.tasks[modifiedTaskIndex] = action.payload;
+            modifiedBoard.tasks[modifiedTaskIndex] = action.task;
             modifiedBoard.tasks[modifiedTaskIndex].lastEdited = moment();
-            console.log('EDITING TASK')
+            
         
             return{
                 ...state,
@@ -201,9 +187,9 @@ export function simpleReducer(state=initialState, action){
                 ]
             }
 
-        case "DELETE_TASK":
-            modifiedBoard = state.boards.find((board) => board.key === action.payload.boardKey);
-            modifiedTaskIndex = modifiedBoard.tasks.findIndex((task) => task.key === action.payload.key);
+        case deleteTask.type:
+            modifiedBoard = state.boards.find((board) => board.key === action.task.boardKey);
+            modifiedTaskIndex = modifiedBoard.tasks.findIndex((task) => task.key === action.task.key);
 
             modifiedBoard.tasks.splice(modifiedTaskIndex, 1);
 
@@ -214,7 +200,7 @@ export function simpleReducer(state=initialState, action){
                 ]
             }
         
-        case "TRANSFER_TASK_EMPTY":
+        case transferTaskEmpty.type:
             console.log('TRANSFER_TASK_EMPTY')
             // Yes this scoping practice is horrible, I'll fix it later
             if(true){ 
@@ -240,7 +226,7 @@ export function simpleReducer(state=initialState, action){
             
             
         
-        case "TRANSFER_TASK":
+        case transferTask.type:
             let {droppedOnTaskId, droppedOnTaskBoard, droppedTaskId, droppedTaskBoard} = action.payload;
             console.log('TRANSFER_TASK', action.payload)
 

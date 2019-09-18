@@ -2,7 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { StoreModule } from '@ngrx/store';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
 
-import {simpleReducer} from './simple.reducer'
+import {simpleReducer} from './store/simple.reducer'
 
 import { HttpClientModule } from '@angular/common/http';
 

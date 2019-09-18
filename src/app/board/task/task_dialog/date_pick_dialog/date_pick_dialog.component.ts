@@ -4,6 +4,7 @@ import { MatDialog, MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 import { AppState } from 'src/app/app.component';
 import { Store } from '@ngrx/store';
 import { months, currentDayMoment, calculateDays, calculateFirstDayOfMonth, tabChange, dateSelection } from './date_pick_dialog.logic';
+import { editTask } from 'src/app/store/app.actions';
 
 @Component({
     templateUrl:'./date_pick_dialog.component.html',
@@ -43,7 +44,7 @@ export class DatePickDialogComponent{
         if(state.data.dueDate)
             this.dueDateMoment = state.data.dueDate
 
-        this.store.dispatch({type:'EDIT_TASK', payload: this.data})
+        this.store.dispatch(editTask({task:this.data}))
         
     }
 
@@ -53,7 +54,7 @@ export class DatePickDialogComponent{
 
     removeDueDate(){
         this.data.dueDate = null;
-        this.store.dispatch({type:'EDIT_TASK', payload:this.data})
+        this.store.dispatch(editTask({task:this.data}))
         this.days=calculateDays(this.selectedMonthIndex)
         this.firstDayOfMonthIsoIndex = calculateFirstDayOfMonth(this.selectedMonthIndex)
 

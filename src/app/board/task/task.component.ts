@@ -14,6 +14,7 @@ export interface AppState{
 
 
 import {TaskDialogComponent} from './task_dialog/task_dialog.component';
+import { editTask, transferTask } from 'src/app/store/app.actions';
 
 
 
@@ -107,7 +108,7 @@ export class TaskComponent{
                 this.task.isEditing= false;
             }
             this.task.isInput = !this.task.isInput;
-            this.store.dispatch({type:'EDIT_TASK', payload:this.task})            
+            this.store.dispatch(editTask({task:this.task}))    
         }
         
     }
@@ -136,7 +137,7 @@ export class TaskComponent{
         this.labelLength(e.target.value.length)
         task.labels[labelIndex].text = e.target.value;
 
-        this.store.dispatch({type:'EDIT_TASK', payload:task})
+        this.store.dispatch(editTask({task}))
     }
 
     onDrop(e){
@@ -144,7 +145,7 @@ export class TaskComponent{
         let transferedData = e.dataTransfer.getData('text');
         let payload = onDrop(transferedData, this.task)
         if(payload){
-            this.store.dispatch({type:'TRANSFER_TASK', payload:payload})
+            this.store.dispatch(transferTask({payload}))
         }
                 
     }

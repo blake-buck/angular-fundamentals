@@ -1,11 +1,12 @@
 import {Component, Input, Output, EventEmitter, Injectable, Inject, OnInit, ViewChild, ElementRef} from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatTabChangeEvent} from '@angular/material';
 import {Store, select} from '@ngrx/store';
-import {addTask} from './board.actions'
+
 import {Observable} from 'rxjs';
 import { DomSanitizer } from '@angular/platform-browser';
 
-import {editBoardTitle, orderByLastEdited, orderByAlphabetical, orderByDateCreated, onDrop} from './board.logic';
+import {orderByLastEdited, orderByAlphabetical, orderByDateCreated, onDrop} from './board.logic';
+import {editBoardTitle, archiveBoard, deleteBoard, toggleHideCompleteTasks, addTask, editTask, reorderBoardTasks} from '../store/app.actions'
 
 export interface AppState{
     simpleReducer:any
@@ -57,15 +58,16 @@ export class BoardComponent implements OnInit{
     }
 
     archiveBoard(board){
-        this.store.dispatch({type:'ARCHIVE_BOARD', payload:{key:board.key}})
+        this.store.dispatch(archiveBoard({key:board.key}))
+        // this.store.dispatch({type:'ARCHIVE_BOARD', payload:{key:board.key}})
     }
 
     addTask(){
-        this.store.dispatch({type:'ADD_TASK', payload:{key:2, boardKey:this.boardKey, body:'', isEditing:false}})
+        this.store.dispatch(addTask({key:this.boardKey}))
     }
 
     onTaskChange(changedTask){
-        this.store.dispatch({type:'EDIT_TASK', payload:changedTask})
+        this.store.dispatch(editTask({task:changedTask}))
     }
     
     onDrop(e, board){
@@ -81,7 +83,7 @@ export class BoardComponent implements OnInit{
 
     toggleEditBoardTitle(board){
         if(this.isEditingBoardTitle){
-            this.store.dispatch({type:'EDIT_BOARD_TITLE', payload:{key:board.key, title:board.title}})
+            this.store.dispatch(editBoardTitle({key:board.key, title:board.title}))
         }
         this.isEditingBoardTitle = !this.isEditingBoardTitle;
         if(this.isEditingBoardTitleFocused){
@@ -97,8 +99,9 @@ export class BoardComponent implements OnInit{
         }
     }
 
-    toggleHideCompleteTasks(boardKey, hideCompleteTasks){
-        this.store.dispatch({type:'TOGGLE_HIDE_COMPLETE_TASKS', payload:{boardKey, hideCompleteTasks}})
+    toggleHideCompleteTasks(key, hideCompleteTasks){
+        this.store.dispatch(toggleHideCompleteTasks({key, hideCompleteTasks}))
+        // this.store.dispatch({type:'TOGGLE_HIDE_COMPLETE_TASKS', payload:{boardKey, hideCompleteTasks}})
     }
    
     onDragStart(e, board){
@@ -168,24 +171,18 @@ export class BoardComponent implements OnInit{
         
     }
 
-    orderByDateCreated(tasks, boardKey){
-        this.store.dispatch({type:"REORDER_BOARD_TASKS", payload:{
-            key:boardKey,
-            tasks:orderByDateCreated(tasks)
-        }})      
+    orderByDateCreated(tasks, key){
+        this.store.dispatch(reorderBoardTasks({payload:{key, tasks:orderByDateCreated(tasks)}}))
     }
 
-    orderByLastEdited(tasks, boardKey){
-        this.store.dispatch({type:"REORDER_BOARD_TASKS", payload:{
-            key:boardKey,
-            tasks:orderByLastEdited(tasks)
-        }})
+    orderByLastEdited(tasks, key){
+        this.store.dispatch(reorderBoardTasks({payload:{key, tasks:orderByLastEdited(tasks)}}))
     }
 
     // for now this system only goes out to 6 letters in a board body -- not perfect but good enough for now
 
-    orderByAlphabetical(tasks, boardKey){
-        this.store.dispatch({type:"REORDER_BOARD_TASKS", payload:{key:boardKey, tasks:orderByAlphabetical(tasks)}})
+    orderByAlphabetical(tasks, key){
+        this.store.dispatch(reorderBoardTasks({payload:{key, tasks:orderByAlphabetical(tasks)}}))
     }
 
 }
@@ -210,7 +207,7 @@ export class DeleteBoardDialogComponent{
     
 
     deleteBoard(){
-        this.store.dispatch({type:'DELETE_BOARD', payload:this.data})
+        this.store.dispatch(deleteBoard({key:this.data}))
         this.dialogRef.close();
     }
 }

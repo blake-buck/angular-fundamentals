@@ -12,6 +12,7 @@ import {DeleteDialogComponent} from './delete_dialog/delete_dialog.component';
 
 import {TransferTaskDialogComponent} from './transfer_task_dialog/transfer_task_dialog.component';
 import { addLabel, addComment, changeCardColor, changeFontColor, addChecklist, deleteChecklist, changeChecklistTitle, toggleEditChecklistTitle, toggleChecklistItem, toggleEditChecklistItem, addChecklistItem, deleteChecklistItem, changeChecklistItemText, removeFile } from './task_dialog.logic';
+import { editTask, deleteTask } from 'src/app/store/app.actions';
 
 
 @Component({
@@ -67,7 +68,7 @@ export class TaskDialogComponent {
         }
        
     addLabel(labelColor){
-        this.store.dispatch({type:'EDIT_TASK', payload:addLabel(this.data, labelColor)})
+        this.store.dispatch(editTask({task:addLabel(this.data, labelColor)}))
     }
 
     toggleEditBody(e?){
@@ -76,7 +77,7 @@ export class TaskDialogComponent {
         }
 
         if(this.isEditingBody){
-            this.store.dispatch({type:'EDIT_TASK', payload:this.data})
+            this.store.dispatch(editTask({task:this.data}))
             this.isEditingBody = false
             this.isEditingBodyFocused = false;
         }
@@ -87,7 +88,7 @@ export class TaskDialogComponent {
 
     toggleEditDescription(){
         if(this.isEditingDescription){
-            this.store.dispatch({type:'EDIT_TASK', payload:this.data})
+            this.store.dispatch(editTask({task:this.data}))
             this.isEditingDescription = false
             this.isEditingDescriptionFocused = false;
         }
@@ -114,71 +115,71 @@ export class TaskDialogComponent {
 
     changeIsComplete(){
         this.data.isComplete = !this.data.isComplete;
-        this.store.dispatch({type:'EDIT_TASK', payload:this.data})
+        this.store.dispatch(editTask({task:this.data}))
     }
 
     changeImportant(){
         this.data.important = !this.data.important;
-        this.store.dispatch({type:'EDIT_TASK', payload:this.data})
+        this.store.dispatch(editTask({task:this.data}))
     }
 
     changeWarning(){
         this.data.warning = !this.data.warning;
-        this.store.dispatch({type:'EDIT_TASK', payload:this.data})
+        this.store.dispatch(editTask({task:this.data}))
     }
 
     changePayment(){
         this.data.payment = !this.data.payment;
-        this.store.dispatch({type:'EDIT_TASK', payload:this.data})
+        this.store.dispatch(editTask({task:this.data}))
     }
 
     changeVacation(){
         this.data.vacation = !this.data.vacation;
-        this.store.dispatch({type:'EDIT_TASK', payload:this.data})
+        this.store.dispatch(editTask({task:this.data}))
     }
 
     changeSocial(){
         this.data.social = !this.data.social;
-        this.store.dispatch({type:'EDIT_TASK', payload:this.data})
+        this.store.dispatch(editTask({task:this.data}))
     }
 
     changeTravel(){
         this.data.travel = !this.data.travel;
-        this.store.dispatch({type:'EDIT_TASK', payload:this.data})
+        this.store.dispatch(editTask({task:this.data}))
     }
 
     changeWork(){
         this.data.work = !this.data.work;
-        this.store.dispatch({type:'EDIT_TASK', payload:this.data})
+        this.store.dispatch(editTask({task:this.data}))
     }
 
     changeCommentContent(e){
         this.commentContent = e.target.value;
     }
     addComment(){
-        this.store.dispatch({type:'EDIT_TASK', payload:addComment(this.data, this.commentContent)})
+        this.store.dispatch(editTask({task:addComment(this.data, this.commentContent)}))
         this.commentContent = '';
     }
 
     changeCardColor(color){
-        this.store.dispatch({type:'EDIT_TASK', payload:changeCardColor(this.data, color)})
+        this.store.dispatch(editTask({task:changeCardColor(this.data, color)}))
     }
     changeFontColor(color){
-        this.store.dispatch({type:'EDIT_TASK', payload:changeFontColor(this.data, color)})
+        this.store.dispatch(editTask({task:changeFontColor(this.data, color)}))
     }
 
     addChecklist(){
-        this.store.dispatch({type:'EDIT_TASK', payload:addChecklist(this.data)});
+        this.store.dispatch(editTask({task:addChecklist(this.data)}))
     }
 
     deleteChecklist(checklist){
-        this.store.dispatch({type:'EDIT_TASK', payload:deleteChecklist(this.data, checklist)})
+        this.store.dispatch(editTask({task:deleteChecklist(this.data, checklist)}))
     }
 
     toggleEditChecklistTitle(checklistKey){
         let result = toggleEditChecklistTitle(checklistKey, this.data)
         if(!result.isEditing){
-            this.store.dispatch({type:'EDIT_TASK', payload:result.data})
+            this.store.dispatch(editTask({task:result.data}))
         }
     }
     changeChecklistTitle(e, checklistKey){
@@ -188,14 +189,14 @@ export class TaskDialogComponent {
     toggleChecklistItem(e, checklistKey, item){
         let result = toggleChecklistItem(checklistKey, item, this.data);
         if(result){
-            this.store.dispatch({type:'EDIT_TASK', payload:result})
+            this.store.dispatch(editTask({task:result}))
         }
     }
 
     toggleEditChecklistItem(e, checklistKey, item){
         let result = toggleEditChecklistItem(checklistKey, item, this.data)
         if(!result.isEditing){
-            this.store.dispatch({type:'EDIT_TASK', payload:result.data})
+            this.store.dispatch(editTask({task:result.data}))
         }
     }
 
@@ -204,12 +205,12 @@ export class TaskDialogComponent {
     }
 
     addChecklistItem(checklistKey){
-        this.store.dispatch({type:'EDIT_TASK', payload:addChecklistItem(checklistKey, this.data)})
+        this.store.dispatch(editTask({task:addChecklistItem(checklistKey, this.data)}))
     }
     
     changeChecklistItem(e, checklistKey, index){
-        if(e.code === 'Delete'){            
-            this.store.dispatch({type:'EDIT_TASK', payload:deleteChecklistItem(checklistKey, index, this.data)})
+        if(e.code === 'Delete'){ 
+            this.store.dispatch(editTask({task:deleteChecklistItem(checklistKey, index, this.data)}))          
         }
         else if(e.code === 'Enter'){
             this.addChecklistItem(checklistKey)
@@ -230,7 +231,7 @@ export class TaskDialogComponent {
         dialogRef.afterClosed().subscribe(result => {
             if(result){
                 this.onCloseDialog();
-                this.store.dispatch({type:'DELETE_TASK', payload:this.data})
+                this.store.dispatch(deleteTask({task:this.data}))
             }
         })
         
@@ -269,7 +270,7 @@ export class TaskDialogComponent {
     }
 
     removeFile(index){
-        this.store.dispatch({type:'EDIT_TASKS', payload:removeFile(index, this.data)})
+        this.store.dispatch(editTask({task:removeFile(index, this.data)}))
     }
     previewAttachment(downloadLink){
         const dialogRef = this.dialog.open(PreviewAttachmentDialogComponent, 

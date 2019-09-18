@@ -13,7 +13,7 @@ import
     ,onDrop
 } from './row.logic';
 
-import {getState, editRowTitle, editRowDescription, addBoard, archiveRow, transferBoard} from './row.actions';
+import {getState, archiveRow, editRowTitle, editRowDescription, addBoard, transferBoard} from '../store/app.actions';
 
 export interface AppState{
     simpleReducer:any
