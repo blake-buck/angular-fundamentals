@@ -5,6 +5,8 @@ import {Observable} from 'rxjs';
 import { simpleReducer } from './store/simple.reducer';
 
 import { HttpClient } from '@angular/common/http';
+import { selectBoards, selectRows } from './store/app.selector';
+import { getState, addRow } from './store/app.actions';
 
 export interface AppState{
   simpleReducer:any
@@ -21,21 +23,15 @@ export class AppComponent {
   row$:Observable<any>
 
   constructor(private store:Store<AppState>, private http:HttpClient){
-    this.store.select(state => console.log(state))
-    this.board$ = this.store.select(state => state.simpleReducer.boards)
-    this.row$ = this.store.select(state => state.simpleReducer.rows)
+    this.row$ = this.store.select(selectRows)
   }
 
   ngOnInit(){
-    this.store.dispatch({type:'GET_STATE', payload:''})
+    this.store.dispatch(getState())
   }
 
   addRow(){
-    this.store.dispatch({type:'ADD_ROW', payload:''})
-  }
-
-  addBoard(row){
-    this.store.dispatch({type:'ADD_BOARD', payload:row.key})
+    this.store.dispatch(addRow())
   }
 
   getApi(){

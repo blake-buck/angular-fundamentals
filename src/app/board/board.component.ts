@@ -21,7 +21,7 @@ export interface AppState{
 
 @Injectable()
 
-export class BoardComponent implements OnInit{
+export class BoardComponent{
     @ViewChild('boardTitleInput', {read: ElementRef, static:false}) boardTitleInput: ElementRef;
     
     @Input() boardTitle:string;
@@ -44,9 +44,7 @@ export class BoardComponent implements OnInit{
         this.board$ = this.store.select(state => state.simpleReducer.boards.find((board) => board.key === this.boardKey))
     }
 
-    ngOnInit(){
-        this.store.dispatch({type:'GET_STATE', payload:''})
-    }
+   
 
     ngAfterViewChecked(){
         if(this.isEditingBoardTitle && !this.isEditingBoardTitleFocused){

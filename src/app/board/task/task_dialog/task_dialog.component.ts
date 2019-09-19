@@ -45,10 +45,6 @@ export class TaskDialogComponent {
         public dialog:MatDialog
         ){}
 
-        ngOnInit(){
-            this.store.dispatch({type:'GET_STATE', payload:''}) 
-        }
-
         ngAfterViewChecked(){
             if( this.isEditingBody && !this.isEditingBodyFocused){
                 this.isEditingBodyFocused = true;

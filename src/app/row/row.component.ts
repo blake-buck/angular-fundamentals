@@ -42,9 +42,9 @@ export class RowComponent{
         this.board$ = this.store.select(state => state.simpleReducer.boards);
     }
 
-    ngOnInit(){
-        this.store.dispatch(getState())
-    }
+    // ngOnInit(){
+    //     this.store.dispatch(getState())
+    // }
 
     editTitle = editTitle;
     onDragStart = onDragStart
