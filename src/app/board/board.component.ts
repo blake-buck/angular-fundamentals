@@ -7,10 +7,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 
 import {orderByLastEdited, orderByAlphabetical, orderByDateCreated, onDrop} from './board.logic';
 import {editBoardTitle, archiveBoard, deleteBoard, toggleHideCompleteTasks, addTask, editTask, reorderBoardTasks} from '../store/app.actions'
-
-export interface AppState{
-    simpleReducer:any
-}
+import { selectRows, selectBoards, selectBoardFromBoardKey } from '../store/app.selector';
 
 
 @Component({
@@ -40,11 +37,13 @@ export class BoardComponent{
 
     titles:any=[]
 
-    constructor(private store:Store<AppState>, public dialog:MatDialog, private sanitization:DomSanitizer,){
-        this.board$ = this.store.select(state => state.simpleReducer.boards.find((board) => board.key === this.boardKey))
+    constructor(private store:Store<any>, public dialog:MatDialog, private sanitization:DomSanitizer,){
+        // this.board$ = this.store.select(state => state.simpleReducer.boards.find((board) => board.key === this.boardKey))
     }
 
-   
+   ngOnInit(){
+       this.board$ = this.store.pipe(select(selectBoardFromBoardKey, this.boardKey))
+   }
 
     ngAfterViewChecked(){
         if(this.isEditingBoardTitle && !this.isEditingBoardTitleFocused){
@@ -192,7 +191,7 @@ export class BoardComponent{
 
 export class DeleteBoardDialogComponent{
     constructor(
-        private store:Store<AppState>,
+        private store:Store<any>,
         public dialogRef: MatDialogRef<DeleteBoardDialogComponent>, 
         @Inject(MAT_DIALOG_DATA) public data:any,
         public dialog:MatDialog
@@ -218,15 +217,17 @@ export class DeleteBoardDialogComponent{
 export class TransferBoardDialogComponent{
 
     rows$:Observable<any>
+    boards$;
     selectedRow = null;
 
     constructor(
-        private store:Store<AppState>,
+        private store:Store<any>,
         public dialogRef: MatDialogRef<TransferBoardDialogComponent>, 
         @Inject(MAT_DIALOG_DATA) public data:any,
         public dialog:MatDialog
     ){
-        this.rows$ = this.store.select(state => state.simpleReducer.rows)
+        this.rows$ = this.store.select(selectRows)
+        this.boards$ = this.store.select(selectBoards)
     }
 
     onCloseDialog(){

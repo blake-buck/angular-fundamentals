@@ -4,6 +4,7 @@ import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material';
 import { Inject, Component } from '@angular/core';
 import { AppState } from 'src/app/app.component';
 import { transferTaskEmpty } from 'src/app/store/app.actions';
+import { selectRows, selectBoards } from 'src/app/store/app.selector';
 
 @Component({
     templateUrl:'./transfer_task_dialog.component.html',
@@ -25,8 +26,8 @@ export class TransferTaskDialogComponent{
         @Inject(MAT_DIALOG_DATA) public data:any,
         public dialog:MatDialog
     ){
-        this.rows$ = this.store.select(state => state.simpleReducer.rows)
-        this.boards$ = this.store.select(state => state.simpleReducer.boards)
+        this.rows$ = this.store.select(selectRows)
+        this.boards$ = this.store.select(selectBoards)
     }
 
     transferTask(){

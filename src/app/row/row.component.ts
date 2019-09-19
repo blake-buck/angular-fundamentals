@@ -1,6 +1,6 @@
 import { Component, Input, ViewChild, ElementRef } from '@angular/core';
 
-import {Store} from '@ngrx/store';
+import {Store, select} from '@ngrx/store';
 import {Observable} from 'rxjs';
 
 import 
@@ -14,6 +14,7 @@ import
 } from './row.logic';
 
 import {getState, archiveRow, editRowTitle, editRowDescription, addBoard, transferBoard} from '../store/app.actions';
+import { selectBoards, selectSpecificBoards } from '../store/app.selector';
 
 export interface AppState{
     simpleReducer:any
@@ -34,17 +35,15 @@ export class RowComponent{
     @ViewChild('scrollRow', {read: ElementRef, static:false}) scrollRow: ElementRef;
 
     board$:Observable<any>
+    specificBoards$;
 
     isEditingTitle = false;
     isEditingDescription = false;
 
-    constructor(private store:Store<AppState>){
-        this.board$ = this.store.select(state => state.simpleReducer.boards);
+    constructor(private store:Store<AppState>){}
+    ngOnInit(){
+        this.board$ = this.store.pipe(select(selectSpecificBoards, this.rowData.key))
     }
-
-    // ngOnInit(){
-    //     this.store.dispatch(getState())
-    // }
 
     editTitle = editTitle;
     onDragStart = onDragStart

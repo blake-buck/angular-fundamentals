@@ -52,7 +52,6 @@ export function simpleReducer(state=initialState, action){
     switch(action.type){
 
         case getState.type:
-            console.log(state);
             return state;
 
         case addRow.type:
