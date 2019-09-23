@@ -25,8 +25,8 @@
         <button mat-button (click)='toggleEditDescription(rowData)'>Save</button>
     </div>
 
-    <button mat-flat-button (click)='addBoard(rowData)' color='primary'>New Board <mat-icon>add</mat-icon></button>
-    <button mat-flat-button color='primary' [matMenuTriggerFor]='rowActions'>Row Actions</button>
+    <button mat-stroked-button class='row-action-button' (click)='addBoard(rowData)'>New Board <mat-icon>add</mat-icon></button>
+    <button mat-stroked-button class='row-action-button' [matMenuTriggerFor]='rowActions'>Row Actions</button>
     <mat-menu #rowActions='matMenu'>
         <button mat-menu-item (click)='toggleEditTitle(rowData)'>Edit Title</button>
         <button mat-menu-item (click)='toggleEditDescription(rowData)'>Edit Description</button>

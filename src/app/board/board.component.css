@@ -6,6 +6,7 @@
     max-width: 400px;
     background-color: rgb(0, 0, 0, .1);
     text-align:left;    
+    margin-right:5px;
 }
 .task-board h3{
     margin:0px;
