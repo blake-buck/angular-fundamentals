@@ -4,6 +4,8 @@ export const getState = createAction('GET_STATE');
 
 export const addRow = createAction('ADD_ROW')
 
+export const duplicateRow = createAction('DUPLICATE_ROW', props<{key:number}>())
+
 // export const transferRow = createAction('TRANSFER_ROW', props<{}>())
 
 export const archiveRow = createAction(
@@ -20,6 +22,8 @@ export const editRowDescription = createAction(
     'EDIT_ROW_DESCRIPTION',
     props<{key:number, description:string}>()
 )
+
+export const duplicateBoard = createAction('DUPLICATE_BOARD', props<{key:number}>())
 
 export const addBoard = createAction(
     'ADD_BOARD',
@@ -55,6 +59,8 @@ export const toggleHideCompleteTasks = createAction(
     'TOGGLE_HIDE_COMPLETE_TASKS',
     props<{key:number, hideCompleteTasks:boolean}>()
 )
+
+export const duplicateTask = createAction('DUPLICATE_TASK', props<{boardKey:number, taskKey:number}>())
 
 export const addTask = createAction(
     'ADD_TASK',

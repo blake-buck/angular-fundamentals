@@ -13,7 +13,7 @@ import
     ,onDrop
 } from './row.logic';
 
-import {getState, archiveRow, editRowTitle, editRowDescription, addBoard, transferBoard} from '../store/app.actions';
+import {getState, archiveRow, editRowTitle, editRowDescription, addBoard, transferBoard, duplicateRow} from '../store/app.actions';
 import { selectBoards, selectSpecificBoards } from '../store/app.selector';
 
 export interface AppState{
@@ -49,6 +49,10 @@ export class RowComponent{
     onDragStart = onDragStart
     onDragOver = onDragOver
     editDescription = editDescription
+
+    duplicateRow(row){
+        this.store.dispatch(duplicateRow({key:row.key}))
+    }
 
     addBoard(row){
         this.store.dispatch(addBoard({key:row.key}))

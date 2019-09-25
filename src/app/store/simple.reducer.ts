@@ -2,10 +2,10 @@ import {Action} from '@ngrx/store';
 
 import * as moment from 'moment'
 
-import {getState, addRow, archiveRow, editRowTitle, editRowDescription, addBoard, transferBoard, editBoardTitle, archiveBoard, deleteBoard, toggleHideCompleteTasks, addTask, editTask, deleteTask, transferTaskEmpty, transferTask } from './app.actions';
+import {getState, addRow, archiveRow, editRowTitle, editRowDescription, addBoard, transferBoard, editBoardTitle, archiveBoard, deleteBoard, toggleHideCompleteTasks, addTask, editTask, deleteTask, transferTaskEmpty, transferTask, duplicateRow, duplicateTask, duplicateBoard } from './app.actions';
 
 const initialState = {
-    currentTaskKey:3,
+    currentTaskKey:1,
     currentBoardKey:3,
     currentRowKey:3,
     archivedRows:[],
@@ -58,6 +58,42 @@ export function simpleReducer(state=initialState, action){
             state.rows.push({key:state.currentRowKey, title:'New Row', description:'this is a new row', boards:[]})
             state.currentRowKey++;
             return state; 
+        case duplicateRow.type:
+            let rowToDuplicate = state.rows.find(row => action.key);
+            let duplicatedRow = {...rowToDuplicate, ...{}}
+
+            duplicatedRow.title += ' *duplicated*';
+            duplicatedRow.key = state.currentRowKey;
+            state.currentRowKey++;
+
+            let duplicatedBoards = []
+            duplicatedRow.boards.map(boardKey => {
+                let boardToDuplicate = state.boards.find(board => board.key === boardKey)
+                let duplicatedBoard = {...boardToDuplicate, ...{}}
+                
+                duplicatedBoard.key = state.currentBoardKey;
+                state.currentBoardKey++;
+
+                let duplicatedTasks = [];
+                duplicatedBoard.tasks.map(task => {
+                    let duplicatedTask = {...task, ...{}};
+                    duplicatedTask.key = state.currentTaskKey;
+                    duplicatedTask.boardKey = duplicatedBoard.key;
+                    state.currentTaskKey++;
+                    duplicatedTasks.push(duplicatedTask)
+                })
+                duplicatedBoard.tasks = duplicatedTasks;
+
+                duplicatedBoard.rowKey = duplicatedRow.key;
+                duplicatedBoards.push(duplicatedBoard.key);
+                state.boards.push(duplicatedBoard)
+            })
+
+
+            
+            state.rows.push(duplicatedRow)
+
+            return state
         
         // case "TRANSFER_ROW":
         //     if(true){
@@ -88,7 +124,33 @@ export function simpleReducer(state=initialState, action){
             modifiedRow.description = action.description;
             return state;
 
+        case duplicateBoard.type:
+            console.log('your mom two')
+            let boardToDuplicate = state.boards.find((board) => board.key === action.key);
+            let duplicatedBoard  = {...boardToDuplicate, ...{}};
+            duplicatedBoard.key = state.currentBoardKey;
+            state.currentBoardKey++;
+
+            duplicatedBoard.title += '*duplicated*';
+
+            console.log(duplicatedBoard)
+            let newTasks = [];
+            duplicatedBoard.tasks.map(task => {
+                let newTask ={...task, ...{}}
+                newTask.boardKey = duplicatedBoard.key;
+                newTask.key = state.currentTaskKey;
+                state.currentTaskKey++;
+                newTasks.push(newTask)
+            })
+            duplicatedBoard.tasks = newTasks;
+
+            state.boards.push(duplicatedBoard)
+
+            return state;
+
         case addBoard.type:  
+            modifiedRow = state.rows.find(row => row.key === action.key)
+            modifiedRow.boards.push(state.currentBoardKey)
             state.boards.push({
                 rowKey:action.key,
                 key:state.currentBoardKey,
@@ -107,7 +169,7 @@ export function simpleReducer(state=initialState, action){
                 modifiedBoardIndex = state.boards.findIndex(board => board.key === draggedBoardKey);
                 secondModifiedBoardIndex = state.boards.findIndex(board => board.key == droppedOnBoardKey)
                 
-                modifiedBoard = Object.create(state.boards[modifiedBoardIndex])
+                modifiedBoard = {...state.boards[modifiedBoardIndex], ...{}}
                 state.boards.splice(modifiedBoardIndex, 1);
                 state.boards.splice(secondModifiedBoardIndex,0, modifiedBoard)
             }
@@ -142,6 +204,16 @@ export function simpleReducer(state=initialState, action){
             console.log(modifiedBoard)
             modifiedBoard.hideCompleteTasks = action.hideCompleteTasks;
             return state
+
+        case duplicateTask.type:
+            modifiedBoard = state.boards.find(board => board.key === action.boardKey);
+            let modifiedTask = modifiedBoard.tasks.find(task => task.key == action.taskKey);
+            let duplicatedTask = {...modifiedTask}///Object.create(modifiedTask);
+            duplicatedTask.key=state.currentTaskKey;
+            state.currentTaskKey++;
+            duplicatedTask.body += '*duplicated task*'
+            modifiedBoard.tasks.push(duplicatedTask)
+            return state;
 
         case addTask.type:
             modifiedBoard = state.boards.find((board) => board.key === action.key);
@@ -208,7 +280,7 @@ export function simpleReducer(state=initialState, action){
                 let draggedBoard   = state.boards.find((board) => board.key === droppedTaskBoard);
 
                 let draggedIndex = draggedBoard.tasks.findIndex((task)=> task.key === droppedTaskId) 
-                let addedItem = Object.create(draggedBoard.tasks[draggedIndex]);
+                let addedItem = {...draggedBoard.tasks[draggedIndex], ...{}};
                 addedItem.boardKey = droppedOnTaskBoard;
                 draggedBoard.tasks.splice(draggedIndex, 1);
                 droppedOnBoard.tasks.push(addedItem);
@@ -235,8 +307,8 @@ export function simpleReducer(state=initialState, action){
                 let draggedIndex = modifiedBoard.tasks.findIndex((task)=> task.key === droppedTaskId) 
                 let droppedIndex = modifiedBoard.tasks.findIndex((task)=> task.key === droppedOnTaskId);   
 
-                let addedItem = {...modifiedBoard.tasks[draggedIndex]}
-                console.log(addedItem)
+                let addedItem = {...modifiedBoard.tasks[draggedIndex], ...{}}
+                console.log("ADDED ITEM", addedItem)
                 modifiedBoard.tasks.splice(draggedIndex, 1);
                 modifiedBoard.tasks.splice(droppedIndex, 0,  addedItem)
                 console.log(state.boards[0].tasks)

@@ -36,7 +36,7 @@ export class AppComponent {
 
   getApi(){
     console.log('GET')   
-    this.http.get('https://localhost:5001/api/board').subscribe(val => console.log(val))
+    this.http.get('http://localhost:7071/api/GetAllRows/').subscribe(val => console.log(val))
   }
 
 

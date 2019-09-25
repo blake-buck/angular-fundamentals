@@ -6,7 +6,7 @@ import {Observable} from 'rxjs';
 import { DomSanitizer } from '@angular/platform-browser';
 
 import {orderByLastEdited, orderByAlphabetical, orderByDateCreated, onDrop} from './board.logic';
-import {editBoardTitle, archiveBoard, deleteBoard, toggleHideCompleteTasks, addTask, editTask, reorderBoardTasks} from '../store/app.actions'
+import {editBoardTitle, archiveBoard, deleteBoard, toggleHideCompleteTasks, addTask, editTask, reorderBoardTasks, duplicateBoard} from '../store/app.actions'
 import { selectRows, selectBoards, selectBoardFromBoardKey } from '../store/app.selector';
 
 
@@ -70,12 +70,17 @@ export class BoardComponent{
     onDrop(e, board){
         let eventDataTransfer = e.dataTransfer.getData('text')
         e.preventDefault()
+        console.log("DATA TRANSFER", eventDataTransfer)
         let state = onDrop(eventDataTransfer, board, this.boardKey);
         console.log("STATE" ,state)
         if(state){
             this.store.dispatch({type:state.type, payload:state.payload})
         }
         
+    }
+
+    duplicateBoard(board){
+        this.store.dispatch(duplicateBoard({key:board.key}))
     }
 
     toggleEditBoardTitle(board){

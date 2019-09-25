@@ -12,7 +12,7 @@ import {DeleteDialogComponent} from './delete_dialog/delete_dialog.component';
 
 import {TransferTaskDialogComponent} from './transfer_task_dialog/transfer_task_dialog.component';
 import { addLabel, addComment, changeCardColor, changeFontColor, addChecklist, deleteChecklist, changeChecklistTitle, toggleEditChecklistTitle, toggleChecklistItem, toggleEditChecklistItem, addChecklistItem, deleteChecklistItem, changeChecklistItemText, removeFile } from './task_dialog.logic';
-import { editTask, deleteTask } from 'src/app/store/app.actions';
+import { editTask, deleteTask, duplicateTask } from 'src/app/store/app.actions';
 
 
 @Component({
@@ -284,6 +284,10 @@ export class TaskDialogComponent {
                 data:this.data
             }
         )
+    }
+
+    duplicateTask(){
+        this.store.dispatch(duplicateTask({boardKey:this.data.boardKey, taskKey:this.data.key}));
     }
 
 }
