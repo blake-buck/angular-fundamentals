@@ -91,7 +91,9 @@ export class TaskComponent{
         if(!this.disableDialogOpening){
             const dialogRef = this.dialog.open(TaskDialogComponent, 
                 {
-                    id:'task-dialog',
+                    // id:'task-dialog',
+                    panelClass:'task-dialog',
+                    // backdropClass:'task-dialog',
                     data:this.task
                 }
             )

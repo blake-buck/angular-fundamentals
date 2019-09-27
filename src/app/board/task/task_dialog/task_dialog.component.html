@@ -57,6 +57,12 @@
     </div>
     
     <div class='dialog-description'>
+        <div *ngIf='(boardAndRowTitle$ | async) as boardAndRowTitle'>
+            <p>Row:   {{boardAndRowTitle.rowTitle}}</p>
+            <p>Board: {{boardAndRowTitle.boardTitle}}</p>
+        </div>
+        
+
         <div class='dialog-description-title'>
             <h3>Description</h3>
             <button mat-icon-button (click)='toggleEditDescription()'>
@@ -86,7 +92,7 @@
     <div class='dialog-other'>
         <h3>Other Stuff</h3>
         <div >
-            <h4>Display Image</h4>
+            <h4>Display Image(s)</h4>
             <img *ngFor='let imageUrl of data.displayImageUrls' src={{imageUrl}} style='max-width:250px;max-height:250px;'/>
         </div>
 
@@ -114,9 +120,13 @@
             
                 <a download={{data.downloadNames[i]}} [href]='downloadLink' mat-icon-button><i class='material-icons'>get_app</i></a>
                 <button mat-icon-button (click)='previewAttachment(downloadLink)'><i class='material-icons'>airplay</i></button>
-                <!-- <a download={{data.downloadNames[i]}} [href]='downloadLink' target='_blank' mat-icon-button><i class='material-icons'>open_in_browser</i></a> -->
-                    
-                
+            </div>
+        </div>
+
+        <div *ngIf='data.linkedTasks.length > 0'>
+            <h4>Linked Tasks</h4>
+            <div *ngFor='let linkedKeys of data.linkedTasks; index as i'>
+                <div class='linked-task' *ngIf='getLinkedTaskInfo(linkedKeys.taskKey, linkedKeys.boardKey, i) | async as value' (click)='openLinkedTask(value)'>{{value.body}}</div>
             </div>
         </div>
 
@@ -182,6 +192,7 @@
             <button mat-raised-button [matMenuTriggerFor]='labelMenu'><mat-icon>view_day</mat-icon>Label</button>
             <button mat-raised-button (click)='transferTask()'><mat-icon>screen_share</mat-icon>Transfer Task</button>
             <button mat-raised-button (click)='duplicateTask()'><mat-icon>dynamic_feed</mat-icon>Duplicate Task</button>
+            <button mat-raised-button (click)='linkTask()'><mat-icon>device_hub</mat-icon>Link Task</button>
         </div>
     </div>
 </div>

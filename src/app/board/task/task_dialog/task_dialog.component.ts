@@ -1,6 +1,6 @@
 import {Component, ViewChild, ElementRef, Inject} from '@angular/core';
 import { CdkTextareaAutosize } from '@angular/cdk/text-field';
-import { Store } from '@ngrx/store';
+import { Store, select } from '@ngrx/store';
 import { AppState } from 'src/app/app.component';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material';
 
@@ -13,6 +13,9 @@ import {DeleteDialogComponent} from './delete_dialog/delete_dialog.component';
 import {TransferTaskDialogComponent} from './transfer_task_dialog/transfer_task_dialog.component';
 import { addLabel, addComment, changeCardColor, changeFontColor, addChecklist, deleteChecklist, changeChecklistTitle, toggleEditChecklistTitle, toggleChecklistItem, toggleEditChecklistItem, addChecklistItem, deleteChecklistItem, changeChecklistItemText, removeFile } from './task_dialog.logic';
 import { editTask, deleteTask, duplicateTask } from 'src/app/store/app.actions';
+import { selectBoardAndRowTitleFromTaskKey, selectSpecificTask } from 'src/app/store/app.selector';
+import { Observable } from 'rxjs';
+import { LinkTaskDialogComponent } from './link_task_dialog/link_task_dialog.component';
 
 
 @Component({
@@ -34,6 +37,9 @@ export class TaskDialogComponent {
     isEditingDescription            = false;
     isEditingDescriptionFocused     = false;
 
+    boardAndRowTitle$:Observable<any>;
+    linkedTasks$ = [];
+
     commentContent = ''
 
     row = null;
@@ -44,6 +50,10 @@ export class TaskDialogComponent {
         @Inject(MAT_DIALOG_DATA) public data:any,
         public dialog:MatDialog
         ){}
+
+        ngOnInit(){
+            this.boardAndRowTitle$ = this.store.pipe(select(selectBoardAndRowTitleFromTaskKey, this.data.boardKey))
+        }
 
         ngAfterViewChecked(){
             if( this.isEditingBody && !this.isEditingBodyFocused){
@@ -288,6 +298,29 @@ export class TaskDialogComponent {
 
     duplicateTask(){
         this.store.dispatch(duplicateTask({boardKey:this.data.boardKey, taskKey:this.data.key}));
+    }
+
+    linkTask(){
+        const dialogRef = this.dialog.open(LinkTaskDialogComponent, {
+            id:'link_task_dialog',
+            data:this.data
+        })
+    }
+
+    getLinkedTaskInfo(taskKey:number, boardKey:number, index){
+        return this.store.pipe(select(selectSpecificTask, ({taskKey, boardKey})))
+    }
+
+    openLinkedTask(task){
+        console.log(this.data.linkedTasks, task.key)
+        const dialogRef = this.dialog.open(TaskDialogComponent, 
+            {
+                // id:'task-dialog',
+                panelClass:'task-dialog',
+                // backdropClass:'task-dialog',
+                data:task
+            }
+        )
     }
 
 }

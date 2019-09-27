@@ -2,7 +2,7 @@ import {Action} from '@ngrx/store';
 
 import * as moment from 'moment'
 
-import {getState, addRow, archiveRow, editRowTitle, editRowDescription, addBoard, transferBoard, editBoardTitle, archiveBoard, deleteBoard, toggleHideCompleteTasks, addTask, editTask, deleteTask, transferTaskEmpty, transferTask, duplicateRow, duplicateTask, duplicateBoard } from './app.actions';
+import {getState, addRow, archiveRow, editRowTitle, editRowDescription, addBoard, transferBoard, editBoardTitle, archiveBoard, deleteBoard, toggleHideCompleteTasks, addTask, editTask, deleteTask, transferTaskEmpty, transferTask, duplicateRow, duplicateTask, duplicateBoard, linkTask } from './app.actions';
 
 const initialState = {
     currentTaskKey:1,
@@ -231,6 +231,9 @@ export function simpleReducer(state=initialState, action){
                     downloadNames:[],
                     downloadLinks:[],
                     labels:[],
+                    
+                    linkedTasks:[],
+                    linkedTo:[],
                     dateCreated:moment(),
                     lastEdited:moment()
                 }
@@ -336,7 +339,12 @@ export function simpleReducer(state=initialState, action){
             let changedBoard = state.boards.find(board => board.key === action.payload.key);
             changedBoard.tasks= action.payload.tasks
             return state;
-
+        
+        case linkTask.type:
+            console.log(action)
+            state.boards.find(board => board.key === action.linkedBoardKey).tasks.find(task => task.key === action.linkedTaskKey).linkedTasks.push({taskKey:action.originalTaskKey, boardKey:action.originalBoardKey});
+            state.boards.find(board => board.key === action.originalBoardKey).tasks.find(task => task.key === action.originalTaskKey).linkedTasks.push({taskKey:action.linkedTaskKey, boardKey:action.linkedBoardKey});
+            return state;
        
             
 

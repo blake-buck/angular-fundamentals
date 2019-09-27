@@ -12,13 +12,23 @@
     margin-right:10px;
 }
 
-#task-dialog{
+.task-dialog{
     background-color:#E5E5E5;
     max-height:90vh;
     overflow:auto;
     width:100vh;
     max-width:800px;
 }
+.task-dialog mat-dialog-container{
+    background-color:#E5E5E5;
+}
+/* #task-dialog{
+    background-color:#E5E5E5;
+    max-height:90vh;
+    overflow:auto;
+    width:100vh;
+    max-width:800px;
+} */
 
 #imageToDisplay{
     max-width: 250px;

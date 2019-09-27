@@ -42,6 +42,7 @@ import {PhotoDialogComponent} from './board/task/task_dialog/photo_dialog/photo_
 import { DeleteDialogComponent} from './board/task/task_dialog/delete_dialog/delete_dialog.component';
 import {TransferTaskDialogComponent} from './board/task/task_dialog/transfer_task_dialog/transfer_task_dialog.component';
 import {PreviewAttachmentDialogComponent} from './board/task/task_dialog/preview_attachment_dialog/preview_attachment_dialog.component';
+import { LinkTaskDialogComponent } from './board/task/task_dialog/link_task_dialog/link_task_dialog.component';
 
 
 @NgModule({
@@ -62,7 +63,8 @@ import {PreviewAttachmentDialogComponent} from './board/task/task_dialog/preview
     PhotoDialogComponent, 
     AttachmentDialogComponent,
     TransferTaskDialogComponent,
-    PreviewAttachmentDialogComponent
+    PreviewAttachmentDialogComponent,
+    LinkTaskDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -90,6 +92,6 @@ import {PreviewAttachmentDialogComponent} from './board/task/task_dialog/preview
     {provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue:{hasBackdrop:false}}
   ],
   bootstrap: [AppComponent],
-  entryComponents : [TaskDialogComponent, DeleteDialogComponent, DatePickDialogComponent, PhotoDialogComponent, AttachmentDialogComponent, DeleteBoardDialogComponent, TransferTaskDialogComponent, TransferBoardDialogComponent, PreviewAttachmentDialogComponent]
+  entryComponents : [TaskDialogComponent, DeleteDialogComponent, DatePickDialogComponent, PhotoDialogComponent, AttachmentDialogComponent, DeleteBoardDialogComponent, TransferTaskDialogComponent, TransferBoardDialogComponent, PreviewAttachmentDialogComponent, LinkTaskDialogComponent]
 })
 export class AppModule { }

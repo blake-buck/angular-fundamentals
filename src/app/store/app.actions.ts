@@ -72,6 +72,11 @@ export const editTask = createAction(
     props<{task:any}>()
 )
 
+export const linkTask = createAction(
+    'LINK_TASK',
+    props<{originalTaskKey:number, originalBoardKey:number, linkedTaskKey:number, linkedBoardKey:number}>()
+)
+
 export const deleteTask = createAction(
     'DELETE_TASK',
     props<{task:any}>()
