@@ -87,7 +87,7 @@ export function toggleEditChecklistItem(checklistKey, item, data){
 export function addChecklistItem(checklistKey, data){
     let modifiedChecklist = data.checklists.find(checklist => checklist.key === checklistKey)
     let taskKey = modifiedChecklist.currentKey = modifiedChecklist.currentKey +1;
-    modifiedChecklist.content.push({key:taskKey, content:'', checked:false, isEditing:true})
+    modifiedChecklist.content.push({key:taskKey, checklistKey, content:'', checked:false, isEditing:true})
     return data;
 }
 

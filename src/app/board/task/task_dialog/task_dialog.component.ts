@@ -192,6 +192,32 @@ export class TaskDialogComponent {
         changeChecklistTitle(e.target.value, this.data, checklistKey);
     }
 
+    onChecklistItemDragStart(e, item){
+        // e.preventDefault()
+        e.dataTransfer.setData('text/plain', `{"itemKey":${item.key}, "checklistKey":${item.checklistKey}}`)
+        console.log('AYYY LMAO', item)
+    }
+
+    onChecklistItemDragOver(e){
+        e.preventDefault();
+    }
+
+    onChecklistDrop(e, item){
+        let droppedItemKeys = JSON.parse(e.dataTransfer.getData('text/plain'))
+        if(droppedItemKeys.checklistKey === item.checklistKey){
+            let modifiedChecklist = this.data.checklists.find(checklist => checklist.key === droppedItemKeys.checklistKey).content;
+            console.log('MODIFIED CHECKLIST', modifiedChecklist)
+            let droppedItemIndex = modifiedChecklist.findIndex(item => droppedItemKeys.itemKey === item.key);
+            let droppedOnItemIndex = modifiedChecklist.findIndex(val => val.key === item.key);
+            let droppedItem = modifiedChecklist.splice(droppedItemIndex, 1)
+            modifiedChecklist.splice(droppedOnItemIndex, 0, droppedItem[0])
+
+            console.log('MODIFIED CHECKLIST', modifiedChecklist)
+            this.store.dispatch(editTask({task:this.data}))
+        }
+    }
+
+
     toggleChecklistItem(e, checklistKey, item){
         let result = toggleChecklistItem(checklistKey, item, this.data);
         if(result){

@@ -107,7 +107,11 @@
             </div>
             
             <div *ngFor='let item of checklist.content; index as i' class='dialog-checklist-item'>
-                <mat-checkbox *ngIf='!item.isEditing' [checked]='item.checked' (change)='toggleChecklistItem($event,checklist.key, item)'><span (click)='toggleEditChecklistItem($event, checklist.key, item)'>{{item.content}}</span></mat-checkbox>
+                <mat-checkbox 
+                    *ngIf='!item.isEditing' [checked]='item.checked' (change)='toggleChecklistItem($event,checklist.key, item)' 
+                    draggable="true" (dragstart)='onChecklistItemDragStart($event, item)' (dragover)='onChecklistItemDragOver($event)' (drop)='onChecklistDrop($event, item)'>
+                        <span (click)='toggleEditChecklistItem($event, checklist.key, item)'>{{item.content}}</span>
+                </mat-checkbox>
                 <mat-checkbox *ngIf='item.isEditing' [checked]='item.checked' (change)='toggleChecklistItem($event, checklist.key, item)'><input (mouseenter)='focusChecklistInput($event)' class='dialog-checklist-item-input'  (focusout)='toggleEditChecklistItem($event, checklist.key, item)' (keyup)='changeChecklistItem($event, checklist.key, i)' value={{item.content}} /></mat-checkbox>
             </div>
             <button mat-flat-button *ngIf='checklist.title.content && !checklist.title.isEditing' (click)='addChecklistItem(checklist.key)'>Add Item</button>
