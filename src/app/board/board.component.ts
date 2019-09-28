@@ -79,9 +79,9 @@ export class BoardComponent{
         
     }
 
-    duplicateBoard(board){
-        this.store.dispatch(duplicateBoard({key:board.key}))
-    }
+    // duplicateBoard(board){
+    //     this.store.dispatch(duplicateBoard({key:board.key}))
+    // }
 
     toggleEditBoardTitle(board){
         if(this.isEditingBoardTitle){

@@ -50,9 +50,9 @@ export class RowComponent{
     onDragOver = onDragOver
     editDescription = editDescription
 
-    duplicateRow(row){
-        this.store.dispatch(duplicateRow({key:row.key}))
-    }
+    // duplicateRow(row){
+    //     this.store.dispatch(duplicateRow({key:row.key}))
+    // }
 
     addBoard(row){
         this.store.dispatch(addBoard({key:row.key}))

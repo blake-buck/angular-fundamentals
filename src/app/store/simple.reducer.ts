@@ -78,6 +78,7 @@ export function simpleReducer(state=initialState, action){
                 duplicatedBoard.tasks.map(task => {
                     let duplicatedTask = {...task, ...{}};
                     duplicatedTask.key = state.currentTaskKey;
+                    duplicatedTask.linkedTasks = []
                     duplicatedTask.boardKey = duplicatedBoard.key;
                     state.currentTaskKey++;
                     duplicatedTasks.push(duplicatedTask)
@@ -139,6 +140,7 @@ export function simpleReducer(state=initialState, action){
                 let newTask ={...task, ...{}}
                 newTask.boardKey = duplicatedBoard.key;
                 newTask.key = state.currentTaskKey;
+                newTask.linkedTasks = []
                 state.currentTaskKey++;
                 newTasks.push(newTask)
             })
@@ -209,6 +211,21 @@ export function simpleReducer(state=initialState, action){
             modifiedBoard = state.boards.find(board => board.key === action.boardKey);
             let modifiedTask = modifiedBoard.tasks.find(task => task.key == action.taskKey);
             let duplicatedTask = {...modifiedTask}///Object.create(modifiedTask);
+            duplicatedTask.linkedTasks = []
+            let duplicatedTaskChecklists =[]
+            duplicatedTask.checklists.map(checklist => {
+                let newChecklistContent = []
+                checklist.content.map(checklistItem => {
+                    console.log(checklistItem)
+                    newChecklistContent.push({...checklistItem, ...{}})
+                })
+                checklist.content =[...newChecklistContent, ...[]]
+               duplicatedTaskChecklists.push({...checklist, ...{}})
+            })
+            duplicatedTask.checklists = [...duplicatedTaskChecklists]
+            // duplicatedTask.checklists.content = [...duplicatedTask.checklists.content]
+
+            console.log('DUPLICATED TASK', duplicatedTask.checklists)
             duplicatedTask.key=state.currentTaskKey;
             state.currentTaskKey++;
             duplicatedTask.body += '*duplicated task*'

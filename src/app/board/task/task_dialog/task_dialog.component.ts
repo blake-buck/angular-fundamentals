@@ -322,9 +322,9 @@ export class TaskDialogComponent {
         )
     }
 
-    duplicateTask(){
-        this.store.dispatch(duplicateTask({boardKey:this.data.boardKey, taskKey:this.data.key}));
-    }
+    // duplicateTask(){
+    //     this.store.dispatch(duplicateTask({boardKey:this.data.boardKey, taskKey:this.data.key}));
+    // }
 
     linkTask(){
         const dialogRef = this.dialog.open(LinkTaskDialogComponent, {
