@@ -13,31 +13,14 @@ export interface AppState{
 }
 
 
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
 export class AppComponent { 
-  board$:Observable<any>
-  row$:Observable<any>
-
-  constructor(private store:Store<AppState>, private http:HttpClient){
-    this.row$ = this.store.select(selectRows)
-  }
-
-  ngOnInit(){
-    this.store.dispatch(getState())
-  }
-
-  addRow(){
-    this.store.dispatch(addRow())
-  }
-
-  getApi(){
-    console.log('GET')   
-    this.http.get('http://localhost:7071/api/GetAllRows/').subscribe(val => console.log(val))
-  }
+  
 
 
 }

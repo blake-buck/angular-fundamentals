@@ -43,6 +43,9 @@ import { DeleteDialogComponent} from './board/task/task_dialog/delete_dialog/del
 import {TransferTaskDialogComponent} from './board/task/task_dialog/transfer_task_dialog/transfer_task_dialog.component';
 import {PreviewAttachmentDialogComponent} from './board/task/task_dialog/preview_attachment_dialog/preview_attachment_dialog.component';
 import { LinkTaskDialogComponent } from './board/task/task_dialog/link_task_dialog/link_task_dialog.component';
+import { RowHolderComponent } from './row-holder/row-holder.component';
+import { LoginComponent } from './login/login.component';
+import { AppRoutingModule } from './app-routing.module';
 
 
 @NgModule({
@@ -64,7 +67,10 @@ import { LinkTaskDialogComponent } from './board/task/task_dialog/link_task_dial
     AttachmentDialogComponent,
     TransferTaskDialogComponent,
     PreviewAttachmentDialogComponent,
-    LinkTaskDialogComponent
+    LinkTaskDialogComponent,
+
+    RowHolderComponent,
+    LoginComponent
   ],
   imports: [
     BrowserModule,
@@ -86,7 +92,9 @@ import { LinkTaskDialogComponent } from './board/task/task_dialog/link_task_dial
     MatExpansionModule,
     MatToolbarModule,
 
-    HttpClientModule
+    HttpClientModule,
+
+    AppRoutingModule
   ],
   providers: [
     {provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue:{hasBackdrop:false}}

@@ -1,0 +1,16 @@
+<mat-toolbar color='primary'>
+  <mat-toolbar-row>
+    <button mat-flat-button (click)='addRow()'>Add Row</button>
+    <!-- <button mat-flat-button>Query Document</button>
+    <button mat-flat-button>Export Document</button> -->
+    <button mat-flat-button (click)='accordion.closeAll()'>Close All</button>
+    <button mat-flat-button (click)='accordion.openAll()'>Open All</button>
+  </mat-toolbar-row>
+</mat-toolbar>
+
+
+<mat-accordion #accordion='matAccordion' multi='true'>
+  <row *ngFor='let row of row$ | async' [rowData]='row' [accordion]='accordion'></row>
+</mat-accordion>
+
+<button (click)='getApi()'>Get</button>
