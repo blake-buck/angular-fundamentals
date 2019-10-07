@@ -3,40 +3,9 @@ import {Action} from '@ngrx/store';
 import * as moment from 'moment'
 
 import {getState, addRow, archiveRow, editRowTitle, editRowDescription, addBoard, transferBoard, editBoardTitle, archiveBoard, deleteBoard, toggleHideCompleteTasks, addTask, editTask, deleteTask, transferTaskEmpty, transferTask, duplicateRow, duplicateTask, duplicateBoard, linkTask } from './app.actions';
+import { AppState, initialState } from './app.state';
 
-const initialState = {
-    currentTaskKey:1,
-    currentBoardKey:3,
-    currentRowKey:3,
-    archivedRows:[],
-    rows:[
-        {key: 1, title:'Test Row', description:'One small step for row, one big step for rowkind', boards:[1,]},
-        {key: 2, title:'Financial Row', description:'All my financial Info', boards:[2]}
-    ],
-    archivedBoards:[],
-    boards:[
-        {
-            rowKey:1,
-            key:1, 
-            title:'Test Board', 
-            hideCompleteTasks:false,
-            isArchived:false,
-            tasks:[
-                
-            ]
-        },
-        {
-            rowKey:2,
-            key:2, 
-            title:'12321', 
-            hideCompleteTasks:false,
-            isArchived:false,
-            tasks:[
-                
-            ]
-        }
-    ]
-}
+
 export function simpleReducer(state=initialState, action){
     let modifiedRow;
     let modifiedRowIndex;
@@ -48,7 +17,7 @@ export function simpleReducer(state=initialState, action){
 
     let task;
 
-    console.log(state.boards[0].tasks, action);
+    // console.log(state.boards[0].tasks, action);
     switch(action.type){
 
         case getState.type:
@@ -59,7 +28,7 @@ export function simpleReducer(state=initialState, action){
             state.currentRowKey++;
             return state; 
         case duplicateRow.type:
-            let rowToDuplicate = state.rows.find(row => action.key);
+            let rowToDuplicate = state.rows.find(row => row.key === action.key);
             let duplicatedRow = {...rowToDuplicate, ...{}}
 
             duplicatedRow.title += ' *duplicated*';
@@ -193,7 +162,7 @@ export function simpleReducer(state=initialState, action){
 
         case archiveBoard.type:
             modifiedBoardIndex = state.boards.findIndex(board => board.key === action.key);
-            state.archivedBoards.push(state.boards.splice(modifiedBoardIndex, 1))
+            state.archivedBoards.push(state.boards.splice(modifiedBoardIndex, 1)[0])
             return state;
 
         case deleteBoard.type:
@@ -236,8 +205,9 @@ export function simpleReducer(state=initialState, action){
             modifiedBoard = state.boards.find((board) => board.key === action.key);
             modifiedBoard.tasks = [...modifiedBoard.tasks, 
                 {
-                    key:state.currentTaskKey++, boardKey:action.key, body:'', 
-                    isEditing:true, isComplete:false, description:'', important:false, warning:false, payment:false, vacation:false, social:false,work:false,travel:false,
+                    key:state.currentTaskKey++, boardKey:action.key, 
+                    body:'', description:'',
+                    isEditing:true, isComplete:false,  important:false, warning:false, payment:false, vacation:false, social:false,work:false,travel:false,
                     comments:[],
                     currentChecklistKey:1,
                     checklists:[],
@@ -250,7 +220,7 @@ export function simpleReducer(state=initialState, action){
                     labels:[],
                     
                     linkedTasks:[],
-                    linkedTo:[],
+                    
                     dateCreated:moment(),
                     lastEdited:moment()
                 }
