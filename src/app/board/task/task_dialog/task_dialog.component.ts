@@ -16,7 +16,8 @@ import { editTask, deleteTask, duplicateTask } from 'src/app/store/app.actions';
 import { selectBoardAndRowTitleFromTaskKey, selectSpecificTask } from 'src/app/store/app.selector';
 import { Observable } from 'rxjs';
 import { LinkTaskDialogComponent } from './link_task_dialog/link_task_dialog.component';
-import { Task } from 'src/app/store/app.state';
+import { App } from 'src/app/store/app.state';
+
 
 
 @Component({
@@ -48,7 +49,7 @@ export class TaskDialogComponent {
     constructor(
         private store:Store<AppState>,
         public dialogRef: MatDialogRef<TaskDialogComponent>, 
-        @Inject(MAT_DIALOG_DATA) public data:Task,
+        @Inject(MAT_DIALOG_DATA) public data:any,
         public dialog:MatDialog
         ){}
 

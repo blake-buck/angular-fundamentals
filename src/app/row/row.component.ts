@@ -45,7 +45,11 @@ export class RowComponent{
         this.board$ = this.store.pipe(select(selectSpecificBoards, this.rowData.key))
     }
 
-    editTitle = editTitle;
+    // editTitle = editTitle;
+    editTitle(e, rowData){
+        console.log('YOUR MOM', e.target.value)
+        this.store.dispatch(editRowTitle({key:rowData.key, title:e.target.value}))
+    }
     onDragStart = onDragStart
     onDragOver = onDragOver
     editDescription = editDescription
@@ -71,9 +75,9 @@ export class RowComponent{
 
     toggleEditTitle(row){
         this.isEditingTitle = !this.isEditingTitle;
-        if(this.isEditingTitle === false){
-            this.store.dispatch(editRowTitle({key:row.key, title:row.title}))
-        }
+        // if(this.isEditingTitle === false){
+        //     this.store.dispatch(editRowTitle({key:row.key, title:row.title}))
+        // }
     }
 
     onDrop(e, row){

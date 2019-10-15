@@ -46,6 +46,8 @@ import { LinkTaskDialogComponent } from './board/task/task_dialog/link_task_dial
 import { RowHolderComponent } from './row-holder/row-holder.component';
 import { LoginComponent } from './login/login.component';
 import { AppRoutingModule } from './app-routing.module';
+import { AppEffects } from './store/app.effects';
+import { EffectsModule } from '@ngrx/effects';
 
 
 @NgModule({
@@ -84,6 +86,7 @@ import { AppRoutingModule } from './app-routing.module';
     MatDialogModule,
     MatGridListModule,
     StoreModule.forRoot({simpleReducer}),
+    EffectsModule.forRoot([AppEffects]),
     MatSelectModule,
     MatMenuModule,
     MatCheckboxModule,

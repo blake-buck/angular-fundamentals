@@ -2,7 +2,7 @@ import { createAction, props } from "@ngrx/store";
 
 export const getState = createAction('GET_STATE');
 
-export const addRow = createAction('ADD_ROW')
+export const addRow = createAction('ADD_ROW');
 
 export const duplicateRow = createAction('DUPLICATE_ROW', props<{key:number}>())
 
@@ -12,11 +12,20 @@ export const archiveRow = createAction(
     'ARCHIVE_ROW',
     props<{key:number}>()
 )
+export const archiveRowSuccess = createAction(
+    'ARCHIVE_ROW_SUCCESS',
+    props<{rows:any, archivedRows:any}>()
+)
 
 export const editRowTitle = createAction(
     'EDIT_ROW_TITLE',
     props<{key:number, title:string}>()
 );
+
+export const editRowTitleSuccess = createAction(
+    'EDIT_ROW_TITLE_ACCESS',
+    props<{rows:any}>()
+)
 
 export const editRowDescription = createAction(
     'EDIT_ROW_DESCRIPTION',

@@ -5,8 +5,12 @@ export interface ApplicationState{
 }
 
 export const selectAppState = (state: ApplicationState) => state.simpleReducer;
+export const selectAppStateWithProps = createSelector(selectAppState, (state, props) =>{
+    return {state, props}
+})
 
 export const selectBoards = createSelector(selectAppState, state => state.boards);
+
 
 export const selectSpecificBoards = createSelector(selectBoards, (boards, props) => boards.filter(board =>  board.rowKey === props))
 

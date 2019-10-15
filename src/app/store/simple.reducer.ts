@@ -2,8 +2,8 @@ import {Action} from '@ngrx/store';
 
 import * as moment from 'moment'
 
-import {getState, addRow, archiveRow, editRowTitle, editRowDescription, addBoard, transferBoard, editBoardTitle, archiveBoard, deleteBoard, toggleHideCompleteTasks, addTask, editTask, deleteTask, transferTaskEmpty, transferTask, duplicateRow, duplicateTask, duplicateBoard, linkTask } from './app.actions';
-import { AppState, initialState } from './app.state';
+import {getState, addRow, archiveRow, editRowTitle, editRowDescription, addBoard, transferBoard, editBoardTitle, archiveBoard, deleteBoard, toggleHideCompleteTasks, addTask, editTask, deleteTask, transferTaskEmpty, transferTask, duplicateRow, duplicateTask, duplicateBoard, linkTask, archiveRowSuccess, editRowTitleSuccess, } from './app.actions';
+import {initialState } from './app.state';
 
 
 export function simpleReducer(state=initialState, action){
@@ -23,10 +23,20 @@ export function simpleReducer(state=initialState, action){
         case getState.type:
             return state;
 
+        // case addRow.type:
+        //     state.rows.push({key:state.currentRowKey, title:'New Row', description:'this is a new row', boards:[]})
+        //     state.currentRowKey++;
+        //     return state; 
         case addRow.type:
-            state.rows.push({key:state.currentRowKey, title:'New Row', description:'this is a new row', boards:[]})
-            state.currentRowKey++;
-            return state; 
+            return{
+                ...state,
+                rows:[
+                    ...state.rows,
+                    {key:state.currentRowKey, title:'New Row', description:'this is a new row', boards:[]}
+                ],
+                currentRowKey:state.currentRowKey + 1
+            }
+
         case duplicateRow.type:
             let rowToDuplicate = state.rows.find(row => row.key === action.key);
             let duplicatedRow = {...rowToDuplicate, ...{}}
@@ -77,16 +87,20 @@ export function simpleReducer(state=initialState, action){
         //     return state;
 
         case archiveRow.type:
-            modifiedRowIndex = state.rows.findIndex(row => row.key === action.key);
-            modifiedRow = state.rows.splice(modifiedRowIndex, 1);
-            state.archivedRows.push(modifiedRow)
-            return state;
+            return {...state};
+        
+        case archiveRowSuccess.type:
+            return {...state, rows:action.rows}
+
 
         case editRowTitle.type:
-            modifiedRow = state.rows.find(row => row.key === action.key);
+            // modifiedRow = state.rows.find(row => row.key === action.key);
             
-            modifiedRow.title = action.title;
+            // modifiedRow.title = action.title;
             return state;
+        case editRowTitleSuccess.type:
+            console.log("SUCCESS", action)
+            return {...state, rows:action.rows}
         
         case editRowDescription.type:
             modifiedRow = state.rows.find(row => row.key === action.key);
@@ -202,6 +216,7 @@ export function simpleReducer(state=initialState, action){
             return state;
 
         case addTask.type:
+            console.log(state)
             modifiedBoard = state.boards.find((board) => board.key === action.key);
             modifiedBoard.tasks = [...modifiedBoard.tasks, 
                 {
