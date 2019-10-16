@@ -47,12 +47,14 @@ export class RowComponent{
 
     // editTitle = editTitle;
     editTitle(e, rowData){
-        console.log('YOUR MOM', e.target.value)
         this.store.dispatch(editRowTitle({key:rowData.key, title:e.target.value}))
+    }
+    editDescription(e, rowData){
+        this.store.dispatch(editRowDescription({key:rowData.key, description:e.target.value}))
     }
     onDragStart = onDragStart
     onDragOver = onDragOver
-    editDescription = editDescription
+    // editDescription = editDescription
 
     // duplicateRow(row){
     //     this.store.dispatch(duplicateRow({key:row.key}))
@@ -68,9 +70,6 @@ export class RowComponent{
 
     toggleEditDescription(row){
         this.isEditingDescription = !this.isEditingDescription;
-        if(this.isEditingDescription === false){
-            this.store.dispatch(editRowDescription({key:row.key, description:row.description}))
-        }
     }
 
     toggleEditTitle(row){

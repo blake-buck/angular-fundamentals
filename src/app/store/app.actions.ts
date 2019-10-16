@@ -32,6 +32,7 @@ export const editRowDescription = createAction(
     props<{key:number, description:string}>()
 )
 
+
 export const duplicateBoard = createAction('DUPLICATE_BOARD', props<{key:number}>())
 
 export const addBoard = createAction(

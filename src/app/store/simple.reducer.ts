@@ -16,6 +16,7 @@ export function simpleReducer(state=initialState, action){
     let secondModifiedBoardIndex;
 
     let task;
+    let newBoards;
 
     // console.log(state.boards[0].tasks, action);
     switch(action.type){
@@ -23,10 +24,6 @@ export function simpleReducer(state=initialState, action){
         case getState.type:
             return state;
 
-        // case addRow.type:
-        //     state.rows.push({key:state.currentRowKey, title:'New Row', description:'this is a new row', boards:[]})
-        //     state.currentRowKey++;
-        //     return state; 
         case addRow.type:
             return{
                 ...state,
@@ -104,9 +101,18 @@ export function simpleReducer(state=initialState, action){
         
         case editRowDescription.type:
             modifiedRow = state.rows.find(row => row.key === action.key);
-            
-            modifiedRow.description = action.description;
-            return state;
+            return {
+                ...state,
+                rows:state.rows.map(row => {
+                    if(row.key === action.key){
+                        return{
+                            ...row,
+                            description:action.description
+                        }
+                    }
+                    return row
+                })
+            };
 
         case duplicateBoard.type:
             console.log('your mom two')
@@ -134,61 +140,105 @@ export function simpleReducer(state=initialState, action){
             return state;
 
         case addBoard.type:  
-            modifiedRow = state.rows.find(row => row.key === action.key)
-            modifiedRow.boards.push(state.currentBoardKey)
-            state.boards.push({
-                rowKey:action.key,
-                key:state.currentBoardKey,
-                title:'New Board', 
-                hideCompleteTasks:false,
-                isArchived:false,
-                tasks:[]
-            })
-            state.currentBoardKey++;
-            return state;
+            return{
+                ...state,
+                rows:state.rows.map(row => {
+                    if(row.key === action.key){
+                        return{
+                            ...row,
+                            boards:[...row.boards, state.currentBoardKey]
+                        }
+                    }
+                    return row
+                }),
+                boards:[
+                    ...state.boards,
+                    {
+                        rowKey:action.key,
+                        key:state.currentBoardKey,
+                        title:'New Board', 
+                        hideCompleteTasks:false,
+                        isArchived:false,
+                        tasks:[]
+                    }
+                ],
+                currentBoardKey:state.currentBoardKey + 1
+            }
 
         case transferBoard.type:
             let {draggedBoardKey,droppedOnBoardKey,draggedBoardRowKey,droppedOnRowKey} = action.payload;
-            
+            // this should really be split into two seperate actions
             if(draggedBoardRowKey === droppedOnRowKey){
-                modifiedBoardIndex = state.boards.findIndex(board => board.key === draggedBoardKey);
-                secondModifiedBoardIndex = state.boards.findIndex(board => board.key == droppedOnBoardKey)
-                
+                newBoards = state.boards.slice();
+                modifiedBoardIndex = newBoards.findIndex(board => board.key === draggedBoardKey);
+                secondModifiedBoardIndex = newBoards.findIndex(board => board.key == droppedOnBoardKey)
                 modifiedBoard = {...state.boards[modifiedBoardIndex], ...{}}
-                state.boards.splice(modifiedBoardIndex, 1);
-                state.boards.splice(secondModifiedBoardIndex,0, modifiedBoard)
+                newBoards.splice(modifiedBoardIndex, 1);
+                newBoards.splice(secondModifiedBoardIndex,0, modifiedBoard)
             }
             else{
-                modifiedBoardIndex = state.boards.findIndex(board => board.key == draggedBoardKey);
-                modifiedBoard = state.boards.splice(modifiedBoardIndex, 1)
+                newBoards = state.boards.slice();
+                modifiedBoardIndex = newBoards.findIndex(board => board.key == draggedBoardKey);
+                modifiedBoard = newBoards.splice(modifiedBoardIndex, 1)
                 modifiedBoard[0].rowKey = droppedOnRowKey
-                state.boards.push(modifiedBoard[0])
+                newBoards.push(modifiedBoard[0])
+                
+            }
+            return{
+                ...state,
+                boards:newBoards
             }
 
-            
-            return state;
-
-
         case editBoardTitle.type:
-            modifiedBoard = state.boards.find(board => board.key === action.key);
-            modifiedBoard.title = action.title;
-            return state;
+            return{
+                ...state,
+                
+                boards:
+                    state.boards.map(board => {
+                        if(board.key === action.key){
+                            return {
+                                ...board,
+                                title:action.title
+                            }
+                        }
+                        return board
+                    })
+                
+            }
 
         case archiveBoard.type:
-            modifiedBoardIndex = state.boards.findIndex(board => board.key === action.key);
-            state.archivedBoards.push(state.boards.splice(modifiedBoardIndex, 1)[0])
-            return state;
+            newBoards = state.boards.slice();
+            modifiedBoardIndex = newBoards.findIndex(board => board.key === action.key);
+            modifiedBoard= newBoards.splice(modifiedBoardIndex, 1)
+            
+            return {
+                ...state,
+                archivedBoards:[...state.archivedBoards, modifiedBoard],
+                boards:newBoards
+            };
 
         case deleteBoard.type:
-            modifiedBoardIndex = state.boards.findIndex(board => board.key === action.key);
-            state.boards.splice(modifiedBoardIndex, 1)
-            return state;
+            newBoards = state.boards.slice();
+            modifiedBoardIndex = newBoards.findIndex(board => board.key === action.key);
+            newBoards.splice(modifiedBoardIndex, 1)
+            return {
+                ...state,
+                boards:newBoards
+            }
 
         case toggleHideCompleteTasks.type:
-            modifiedBoard = state.boards.find((board) => board.key === action.key)
-            console.log(modifiedBoard)
-            modifiedBoard.hideCompleteTasks = action.hideCompleteTasks;
-            return state
+            return {
+                ...state,
+                boards:state.boards.map(board => {
+                    if(board.key === action.key){
+                        return {
+                            ...board,
+                            hideCompleteTasks:action.hideCompleteTasks
+                        }
+                    }
+                    return board
+                })
+            }
 
         case duplicateTask.type:
             modifiedBoard = state.boards.find(board => board.key === action.boardKey);
@@ -216,64 +266,72 @@ export function simpleReducer(state=initialState, action){
             return state;
 
         case addTask.type:
-            console.log(state)
-            modifiedBoard = state.boards.find((board) => board.key === action.key);
-            modifiedBoard.tasks = [...modifiedBoard.tasks, 
-                {
-                    key:state.currentTaskKey++, boardKey:action.key, 
-                    body:'', description:'',
-                    isEditing:true, isComplete:false,  important:false, warning:false, payment:false, vacation:false, social:false,work:false,travel:false,
-                    comments:[],
-                    currentChecklistKey:1,
-                    checklists:[],
-                    cardColor:'',
-                    fontColor:'',
-                    dueDate:null,
-                    displayImageUrls:[],
-                    downloadNames:[],
-                    downloadLinks:[],
-                    labels:[],
-                    
-                    linkedTasks:[],
-                    
-                    dateCreated:moment(),
-                    lastEdited:moment()
-                }
-            ]
             return{
                 ...state,
-                currentTaskKey:state.currentTaskKey+1,
-                boards:[
-                    ...state.boards
-                ]
+                currentTaskKey:state.currentTaskKey + 1,
+                boards:state.boards.map(board => {
+                    if(board.key === action.key){
+                        return {
+                            ...board,
+                            
+                            tasks:[
+                                ...board.tasks,
+                                {
+                                    key:state.currentTaskKey, boardKey:action.key, 
+                                    body:'', description:'',
+                                    isEditing:true, isComplete:false,  important:false, warning:false, payment:false, vacation:false, social:false,work:false,travel:false,
+                                    comments:[],
+                                    currentChecklistKey:1,
+                                    checklists:[],
+                                    cardColor:'',
+                                    fontColor:'',
+                                    dueDate:null,
+                                    displayImageUrls:[],
+                                    downloadNames:[],
+                                    downloadLinks:[],
+                                    labels:[],
+                                    
+                                    linkedTasks:[],
+                                    
+                                    dateCreated:moment(),
+                                    lastEdited:moment()
+                                }
+                            ]
+                        }
+                    }
+                    return board
+                })
             }
+
         case editTask.type:
+            // This is definitely going to get broken down into a million different actions at some point
             console.log('EDITING TASK', action.task)
-            modifiedBoard = state.boards.find((board) => board.key === action.task.boardKey);
-            modifiedTaskIndex = modifiedBoard.tasks.findIndex((task) => task.key === action.task.key)
-            
-            modifiedBoard.tasks[modifiedTaskIndex] = action.task;
-            modifiedBoard.tasks[modifiedTaskIndex].lastEdited = moment();
-            
-        
             return{
                 ...state,
-                boards:[
-                    ...state.boards
-                ]
+                boards:state.boards.map(board => {
+                    if(board.key === action.task.boardKey){
+                        return{
+                            ...board,
+                            tasks:board.tasks.map(task => {
+                                if(task.key === action.task.key){
+                                    return action.task
+                                }
+                                return task
+                            })
+                        }
+                    }
+                    return board
+                })
             }
 
         case deleteTask.type:
-            modifiedBoard = state.boards.find((board) => board.key === action.task.boardKey);
+            newBoards = state.boards.slice();
+            modifiedBoard = newBoards.find((board) => board.key === action.task.boardKey);
             modifiedTaskIndex = modifiedBoard.tasks.findIndex((task) => task.key === action.task.key);
-
             modifiedBoard.tasks.splice(modifiedTaskIndex, 1);
-
             return{
                 ...state,
-                boards:[
-                    ...state.boards
-                ]
+                boards:newBoards
             }
         
         case transferTaskEmpty.type:
@@ -281,8 +339,9 @@ export function simpleReducer(state=initialState, action){
             // Yes this scoping practice is horrible, I'll fix it later
             if(true){ 
                 let {droppedTaskId, droppedTaskBoard, droppedOnTaskBoard} = action.payload;
-                let droppedOnBoard = state.boards.find((board) => board.key === droppedOnTaskBoard);
-                let draggedBoard   = state.boards.find((board) => board.key === droppedTaskBoard);
+                newBoards = state.boards.slice()
+                let droppedOnBoard = newBoards.find((board) => board.key === droppedOnTaskBoard);
+                let draggedBoard   = newBoards.find((board) => board.key === droppedTaskBoard);
 
                 let draggedIndex = draggedBoard.tasks.findIndex((task)=> task.key === droppedTaskId) 
                 let addedItem = {...draggedBoard.tasks[draggedIndex], ...{}};
@@ -293,9 +352,7 @@ export function simpleReducer(state=initialState, action){
 
                 return {
                     ...state,
-                    boards:[
-                        ...state.boards
-                    ]
+                    boards:newBoards
                 };
             }
             
@@ -305,8 +362,9 @@ export function simpleReducer(state=initialState, action){
         case transferTask.type:
             let {droppedOnTaskId, droppedOnTaskBoard, droppedTaskId, droppedTaskBoard} = action.payload;
             console.log('TRANSFER_TASK', action.payload)
-
+            newBoards     = state.boards.slice();
             if(droppedOnTaskBoard === droppedTaskBoard){
+                
                 modifiedBoard = state.boards.find((board) => board.key === droppedOnTaskBoard);
 
                 let draggedIndex = modifiedBoard.tasks.findIndex((task)=> task.key === droppedTaskId) 
@@ -318,12 +376,13 @@ export function simpleReducer(state=initialState, action){
                 modifiedBoard.tasks.splice(droppedIndex, 0,  addedItem)
                 console.log(state.boards[0].tasks)
                 return {
-                    ...state
+                    ...state,
+                    boards:newBoards
                 };
             }
             else{
-                let droppedOnBoard = state.boards.find((board) => board.key === droppedOnTaskBoard);
-                let draggedBoard   = state.boards.find((board) => board.key === droppedTaskBoard);
+                let droppedOnBoard = newBoards.find((board) => board.key === droppedOnTaskBoard);
+                let draggedBoard   = newBoards.find((board) => board.key === droppedTaskBoard);
 
                 let draggedIndex = draggedBoard.tasks.findIndex((task)=> task.key === droppedTaskId) 
                 let droppedIndex = droppedOnBoard.tasks.findIndex((task)=> task.key === droppedOnTaskId);   
@@ -334,19 +393,28 @@ export function simpleReducer(state=initialState, action){
                 droppedOnBoard.tasks.splice(droppedIndex+1, 0, addedItem);
                 return {
                     ...state,
+                    boards:newBoards
                 };
             }
 
         case "REORDER_BOARD_TASKS":
-            let changedBoard = state.boards.find(board => board.key === action.payload.key);
+            newBoards = state.boards.slice()
+            let changedBoard = newBoards.find(board => board.key === action.payload.key);
             changedBoard.tasks= action.payload.tasks
-            return state;
+            return {
+                ...state,
+                boards:newBoards
+            };
         
         case linkTask.type:
             console.log(action)
-            state.boards.find(board => board.key === action.linkedBoardKey).tasks.find(task => task.key === action.linkedTaskKey).linkedTasks.push({taskKey:action.originalTaskKey, boardKey:action.originalBoardKey});
-            state.boards.find(board => board.key === action.originalBoardKey).tasks.find(task => task.key === action.originalTaskKey).linkedTasks.push({taskKey:action.linkedTaskKey, boardKey:action.linkedBoardKey});
-            return state;
+            newBoards = state.boards.slice()
+            newBoards.find(board => board.key === action.linkedBoardKey).tasks.find(task => task.key === action.linkedTaskKey).linkedTasks.push({taskKey:action.originalTaskKey, boardKey:action.originalBoardKey});
+            newBoards.find(board => board.key === action.originalBoardKey).tasks.find(task => task.key === action.originalTaskKey).linkedTasks.push({taskKey:action.linkedTaskKey, boardKey:action.linkedBoardKey});
+            return {
+                ...state,
+                boards:newBoards
+            };
        
             
 
