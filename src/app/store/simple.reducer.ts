@@ -2,7 +2,7 @@ import {Action} from '@ngrx/store';
 
 import * as moment from 'moment'
 
-import {getState, addRow, archiveRow, editRowTitle, editRowDescription, addBoard, transferBoard, editBoardTitle, archiveBoard, deleteBoard, toggleHideCompleteTasks, addTask, editTask, deleteTask, transferTaskEmpty, transferTask, duplicateRow, duplicateTask, duplicateBoard, linkTask, archiveRowSuccess, editRowTitleSuccess, } from './app.actions';
+import {getState, addRow, archiveRow, editRowTitle, editRowDescription, addBoard, transferBoard, editBoardTitle, archiveBoard, deleteBoard, toggleHideCompleteTasks, addTask, editTask, deleteTask, transferTaskEmpty, transferTask, duplicateRow, duplicateTask, duplicateBoard, linkTask, archiveRowSuccess, editRowTitleSuccess, getStateFromCosmosSuccess, } from './app.actions';
 import {initialState } from './app.state';
 
 
@@ -415,6 +415,13 @@ export function simpleReducer(state=initialState, action){
                 ...state,
                 boards:newBoards
             };
+
+        case getStateFromCosmosSuccess.type:
+            console.log("STATE FROM COSMOS", action)
+            return {...action.state[0]}
+        
+        default:
+            return state;
        
             
 

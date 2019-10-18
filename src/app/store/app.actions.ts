@@ -106,3 +106,20 @@ export const reorderBoardTasks = createAction(
     'REORDER_BOARD_TASKS',
     props<{payload:{key:number, tasks:any}}>()
 )
+
+export const postStateToCosmos = createAction(
+    'POST_STATE_TO_COSMOS'
+)
+
+export const putStateToCosmos = createAction(
+    'PUT_STATE_TO_COSMOS'
+)
+
+export const getStateFromCosmos = createAction(
+    'GET_STATE_FROM_COSMOS'
+)
+
+export const getStateFromCosmosSuccess = createAction(
+    'GET_STATE_FROM_COSMOS_SUCCESS',
+    props<{state:any}>()
+)

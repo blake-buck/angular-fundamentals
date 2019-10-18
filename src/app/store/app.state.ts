@@ -1,6 +1,7 @@
 import { Moment } from 'moment';
 export namespace App{
     export interface AppState{
+        partitionKey:string;
         currentTaskKey:number,
         currentBoardKey:number,
         currentRowKey:number,
@@ -101,6 +102,7 @@ export namespace App{
 
 
 export const initialState:App.AppState = {
+    partitionKey:'state',
     currentTaskKey:1,
     currentBoardKey:3,
     currentRowKey:3,

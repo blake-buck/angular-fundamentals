@@ -1,5 +1,6 @@
 <mat-toolbar color='primary'>
   <mat-toolbar-row>
+    <button mat-flat-button (click)='putState()'>Save</button>
     <button mat-flat-button (click)='addRow()'>Add Row</button>
     <!-- <button mat-flat-button>Query Document</button>
     <button mat-flat-button>Export Document</button> -->
@@ -13,6 +14,9 @@
   <row *ngFor='let row of row$ | async' [rowData]='row' [accordion]='accordion'></row>
 </mat-accordion>
 
-<button (click)='getApi()'>Get</button>
+<!-- <button (click)='getApi()'>Get</button>
 <button (click)='postApi()'>Post</button>
 <button (click)='putApi()'>Put</button>
+
+<button (click)='postState()'>POST STATE</button>
+<button (click)='putState()'>PUT STATE</button> -->

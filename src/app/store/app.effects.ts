@@ -2,14 +2,15 @@ import { Injectable } from "@angular/core";
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import {tap, exhaust, exhaustMap, switchMap, map, mergeMap, switchAll, combineAll, concatMap, first} from 'rxjs/operators'
 import { Store, select } from '@ngrx/store';
-import { selectAppState } from './app.selector';
+import { selectAppState, selectAppStateWithProps } from './app.selector';
 import { Observable, combineLatest } from 'rxjs';
-import { archiveRowSuccess, archiveRow, getState, editRowTitle, editRowTitleSuccess } from './app.actions';
+import { archiveRowSuccess, archiveRow, getState, editRowTitle, editRowTitleSuccess, postStateToCosmos, putStateToCosmos, getStateFromCosmos, getStateFromCosmosSuccess } from './app.actions';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable()
 
 export class AppEffects {
-    constructor(private actions$:Actions, private store:Store<any>){}
+    constructor(private actions$:Actions, private store:Store<any>, private http:HttpClient){}
 
     archiveRow$ = createEffect(
         () => this.actions$.pipe(
@@ -58,4 +59,52 @@ export class AppEffects {
         ),
         {dispatch:false}
     )
+
+    postState$ = createEffect(
+        () => this.actions$.pipe(
+            ofType(postStateToCosmos),
+            map(() => {
+                return this.store.select(selectAppState)
+            }),
+            map((state) => {
+                console.log(state)
+                state.subscribe(val => {
+                    console.log(val)
+                    this.http.post('http://localhost:7071/api/PostState/', val).subscribe(val => console.log(val))
+                })
+            })
+        ),
+        {dispatch: false}
+    )
+
+    putState$ = createEffect(
+        () => this.actions$.pipe(
+            ofType(putStateToCosmos.type),
+            map(() => {
+                return this.store.select(selectAppState).pipe(first())
+            }),
+            map((state) => {
+                console.log("PUTTING STATE")
+                state.subscribe(val => {
+                    console.log(val)
+                    this.http.put('http://localhost:7071/api/PutState/', val).pipe(first()).subscribe(val => console.log(val))
+                })
+            })
+        ),
+        {dispatch: false}
+    )
+
+    getState$ = createEffect(
+        () => this.actions$.pipe(
+            ofType(getStateFromCosmos),
+            map(() => {
+                this.http.get('http://localhost:7071/api/GetState').subscribe(val => {
+                    this.store.dispatch(getStateFromCosmosSuccess({state:val}))
+                })
+            })
+        ),
+        {dispatch: false}
+    )
+
+    
 }

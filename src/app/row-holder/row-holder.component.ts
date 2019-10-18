@@ -3,9 +3,10 @@ import { Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
 
 import { HttpClient } from '@angular/common/http';
-import { selectRows } from '../store/app.selector';
-import { getState, addRow } from '../store/app.actions';
+import { selectRows, selectAppState } from '../store/app.selector';
+import { getState, addRow, postStateToCosmos, putStateToCosmos, getStateFromCosmos } from '../store/app.actions';
 import { AppState } from '../app.component';
+import { tap } from 'rxjs/operators';
 
 
 @Component({
@@ -24,6 +25,7 @@ export class RowHolderComponent{
 
     ngOnInit(){
         this.store.dispatch(getState())
+        this.store.dispatch(getStateFromCosmos())
     }
 
     addRow(){
@@ -43,5 +45,20 @@ export class RowHolderComponent{
     putApi(){
         console.log('PUT')
         this.http.put('http://localhost:7071/api/PutRow', {description:'my name is jeff'}).subscribe(val => console.log(val))
+    }
+
+    postState(){
+        // this.http.post('http://localhost:7071/api/PostState', val).subscribe(val => console.log(val)).unsubscribe()
+        
+        this.store.dispatch(postStateToCosmos())
+        
+    }
+
+    putState(){
+        this.store.dispatch(putStateToCosmos())
+    }
+
+    getState(){
+        
     }
 }
