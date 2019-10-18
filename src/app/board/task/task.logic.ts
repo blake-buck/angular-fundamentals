@@ -11,7 +11,6 @@ export function addCompletionStyling(property, task){
 }
 
 export function onDrop(transferredData, task){
-    console.log('YOUR MOM')
     if(transferredData.includes('+')){
         transferredData = transferredData.split('+')
         let droppedTaskId = +transferredData[0];

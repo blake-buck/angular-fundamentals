@@ -18,7 +18,6 @@ export class ExportButtonComponent{
     constructor(){}
 
     ngOnInit(){
-        console.log('GOSH DANG')
         
     }
     ngAfterViewInit(){

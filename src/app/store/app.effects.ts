@@ -67,10 +67,8 @@ export class AppEffects {
                 return this.store.select(selectAppState)
             }),
             map((state) => {
-                console.log(state)
                 state.subscribe(val => {
-                    console.log(val)
-                    this.http.post('http://localhost:7071/api/PostState/', val).subscribe(val => console.log(val))
+                    this.http.post('http://localhost:7071/api/PostState/', val).subscribe(val => val)
                 })
             })
         ),
@@ -84,10 +82,8 @@ export class AppEffects {
                 return this.store.select(selectAppState).pipe(first())
             }),
             map((state) => {
-                console.log("PUTTING STATE")
                 state.subscribe(val => {
-                    console.log(val)
-                    this.http.put('http://localhost:7071/api/PutState/', val).pipe(first()).subscribe(val => console.log(val))
+                    this.http.put('http://localhost:7071/api/PutState/', val).pipe(first()).subscribe(val => val)
                 })
             })
         ),

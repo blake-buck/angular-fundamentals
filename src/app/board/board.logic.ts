@@ -83,7 +83,6 @@ export function orderByDateCreated(tasks){
 }
 
 export function onDrop(eventDataTransfer, board, boardKey){
-    console.log("FUUUUCk", eventDataTransfer)
     let type = '';
     let payload = {};
     
@@ -95,7 +94,6 @@ export function onDrop(eventDataTransfer, board, boardKey){
 
         type = 'TRANSFER_TASK_EMPTY'
         payload = {droppedTaskId, droppedTaskBoard, droppedOnTaskBoard:boardKey};
-        console.log("STATE EMPTY", payload)
         return {type:type, payload:payload}
     }
     else if(eventDataTransfer.includes('BOARD')){
@@ -103,7 +101,6 @@ export function onDrop(eventDataTransfer, board, boardKey){
         let keyArray = unSanitizedKeys.split('-')
         let droppedOnBoardKey = board.key;
         
-        console.log("STATE BOARD", payload)
         type = 'TRANSFER_BOARD'
         payload = {draggedBoardKey:+keyArray[0], draggedBoardRowKey:+keyArray[1], droppedOnBoardKey, droppedOnRowKey:board.rowKey}
         return {type:type, payload:payload}

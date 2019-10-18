@@ -25,7 +25,6 @@ export class PreviewAttachmentDialogComponent{
     isText  = false;
 
     ngOnInit(){
-        console.log(this.data)
         if(this.data.changingThisBreaksApplicationSecurity.includes('image')){
             this.isImage = true;
             this.imgSrc = this.sanitization.bypassSecurityTrustUrl(this.data);

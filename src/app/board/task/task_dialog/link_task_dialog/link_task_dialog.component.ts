@@ -23,7 +23,6 @@ export class LinkTaskDialogComponent{
     ){}
 
     logShit(jeff){
-        console.log(jeff)
     }
 
     linkTask(linkedBoardKey, linkedTaskKey){

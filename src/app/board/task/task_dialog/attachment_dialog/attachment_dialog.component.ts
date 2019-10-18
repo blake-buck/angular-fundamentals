@@ -34,7 +34,6 @@ export class AttachmentDialogComponent{
             this.downloadLink = this.sanitization.bypassSecurityTrustUrl(untrustedLink);
             this.downloadLinks.push(this.downloadLink)
         }
-        console.log(e.target.files[0])
         let file = e.target.files[e.target.files.length-1];
         if(file){
             this.downloadNames.push(file.name)

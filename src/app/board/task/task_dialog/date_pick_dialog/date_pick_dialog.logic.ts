@@ -33,7 +33,6 @@ export function tabChange(e, dueDateMoment){
     if(selectedMonthIndex === moment().month()){
         days[moment().date()-1] ='cyan'
     }
-    console.log("DUE DATE MOMENT", dueDateMoment.month(), selectedMonthIndex)
     if(dueDateMoment && dueDateMoment.month() === selectedMonthIndex){
         days[dueDateMoment.date()-1] = '#adff2f'
     }

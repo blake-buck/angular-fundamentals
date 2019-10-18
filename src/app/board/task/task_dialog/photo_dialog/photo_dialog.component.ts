@@ -20,13 +20,9 @@ export class PhotoDialogComponent{
     imagesToDisplay = this.data.displayImageUrls;
 
     getFile(e){
-        console.log(e.target.files);
-
-        console.log(e.target.files[0])
         let fileReader = new FileReader();
         
         fileReader.onloadend = (e) => {
-            console.log(fileReader.result)
             this.imagesToDisplay.push(fileReader.result);
         }
         fileReader.readAsDataURL(e.target.files[0])

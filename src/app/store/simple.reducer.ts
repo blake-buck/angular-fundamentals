@@ -18,7 +18,6 @@ export function simpleReducer(state=initialState, action){
     let task;
     let newBoards;
 
-    // console.log(state.boards[0].tasks, action);
     switch(action.type){
 
         case getState.type:
@@ -96,7 +95,6 @@ export function simpleReducer(state=initialState, action){
             // modifiedRow.title = action.title;
             return state;
         case editRowTitleSuccess.type:
-            console.log("SUCCESS", action)
             return {...state, rows:action.rows}
         
         case editRowDescription.type:
@@ -115,7 +113,6 @@ export function simpleReducer(state=initialState, action){
             };
 
         case duplicateBoard.type:
-            console.log('your mom two')
             let boardToDuplicate = state.boards.find((board) => board.key === action.key);
             let duplicatedBoard  = {...boardToDuplicate, ...{}};
             duplicatedBoard.key = state.currentBoardKey;
@@ -123,7 +120,6 @@ export function simpleReducer(state=initialState, action){
 
             duplicatedBoard.title += '*duplicated*';
 
-            console.log(duplicatedBoard)
             let newTasks = [];
             duplicatedBoard.tasks.map(task => {
                 let newTask ={...task, ...{}}
@@ -249,7 +245,6 @@ export function simpleReducer(state=initialState, action){
             duplicatedTask.checklists.map(checklist => {
                 let newChecklistContent = []
                 checklist.content.map(checklistItem => {
-                    console.log(checklistItem)
                     newChecklistContent.push({...checklistItem, ...{}})
                 })
                 checklist.content =[...newChecklistContent, ...[]]
@@ -258,7 +253,6 @@ export function simpleReducer(state=initialState, action){
             duplicatedTask.checklists = [...duplicatedTaskChecklists]
             // duplicatedTask.checklists.content = [...duplicatedTask.checklists.content]
 
-            console.log('DUPLICATED TASK', duplicatedTask.checklists)
             duplicatedTask.key=state.currentTaskKey;
             state.currentTaskKey++;
             duplicatedTask.body += '*duplicated task*'
@@ -305,7 +299,6 @@ export function simpleReducer(state=initialState, action){
 
         case editTask.type:
             // This is definitely going to get broken down into a million different actions at some point
-            console.log('EDITING TASK', action.task)
             return{
                 ...state,
                 boards:state.boards.map(board => {
@@ -335,7 +328,6 @@ export function simpleReducer(state=initialState, action){
             }
         
         case transferTaskEmpty.type:
-            console.log('TRANSFER_TASK_EMPTY')
             // Yes this scoping practice is horrible, I'll fix it later
             if(true){ 
                 let {droppedTaskId, droppedTaskBoard, droppedOnTaskBoard} = action.payload;
@@ -361,7 +353,6 @@ export function simpleReducer(state=initialState, action){
         
         case transferTask.type:
             let {droppedOnTaskId, droppedOnTaskBoard, droppedTaskId, droppedTaskBoard} = action.payload;
-            console.log('TRANSFER_TASK', action.payload)
             newBoards     = state.boards.slice();
             if(droppedOnTaskBoard === droppedTaskBoard){
                 
@@ -371,10 +362,8 @@ export function simpleReducer(state=initialState, action){
                 let droppedIndex = modifiedBoard.tasks.findIndex((task)=> task.key === droppedOnTaskId);   
 
                 let addedItem = {...modifiedBoard.tasks[draggedIndex], ...{}}
-                console.log("ADDED ITEM", addedItem)
                 modifiedBoard.tasks.splice(draggedIndex, 1);
                 modifiedBoard.tasks.splice(droppedIndex, 0,  addedItem)
-                console.log(state.boards[0].tasks)
                 return {
                     ...state,
                     boards:newBoards
@@ -407,7 +396,6 @@ export function simpleReducer(state=initialState, action){
             };
         
         case linkTask.type:
-            console.log(action)
             newBoards = state.boards.slice()
             newBoards.find(board => board.key === action.linkedBoardKey).tasks.find(task => task.key === action.linkedTaskKey).linkedTasks.push({taskKey:action.originalTaskKey, boardKey:action.originalBoardKey});
             newBoards.find(board => board.key === action.originalBoardKey).tasks.find(task => task.key === action.originalTaskKey).linkedTasks.push({taskKey:action.linkedTaskKey, boardKey:action.linkedBoardKey});
@@ -417,7 +405,6 @@ export function simpleReducer(state=initialState, action){
             };
 
         case getStateFromCosmosSuccess.type:
-            console.log("STATE FROM COSMOS", action)
             return {...action.state[0]}
         
         default:

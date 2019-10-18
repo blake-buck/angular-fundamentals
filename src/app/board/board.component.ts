@@ -70,9 +70,7 @@ export class BoardComponent{
     onDrop(e, board){
         let eventDataTransfer = e.dataTransfer.getData('text')
         e.preventDefault()
-        console.log("DATA TRANSFER", eventDataTransfer)
         let state = onDrop(eventDataTransfer, board, this.boardKey);
-        console.log("STATE" ,state)
         if(state){
             this.store.dispatch({type:state.type, payload:state.payload})
         }
