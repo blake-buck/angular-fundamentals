@@ -22,7 +22,7 @@ export function changeFontColor(data, color){
 
 export function addChecklist(data){
     data.checklists.push({
-        title:{content:'New Checklist', isEditing:true},
+        title:{content:'New Checklist', isEditing:false},
         key:data.currentChecklistKey,
         color:'black',
         currentKey:1,

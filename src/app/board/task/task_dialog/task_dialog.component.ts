@@ -33,6 +33,9 @@ export class TaskDialogComponent {
     @ViewChild('descriptionInput', {read: ElementRef, static:false}) descriptionInput: ElementRef;
     @ViewChild('autosize', {static:false}) autosize:CdkTextareaAutosize;
 
+    @ViewChild('checklistTitle', {read: ElementRef, static:false}) checklistTitle: ElementRef;
+    @ViewChild('checklistInput', {read: ElementRef, static:false}) checklistInput: ElementRef;
+
     isEditingBody                   = false;
     isEditingBodyFocused            = false;
 
@@ -186,6 +189,9 @@ export class TaskDialogComponent {
 
     toggleEditChecklistTitle(checklistKey){
         let result = toggleEditChecklistTitle(checklistKey, this.data)
+        if(result.isEditing){
+            setTimeout(() => this.checklistTitle.nativeElement.focus(), 0)
+        }
         if(!result.isEditing){
             this.store.dispatch(editTask({task:result.data}))
         }
@@ -226,17 +232,21 @@ export class TaskDialogComponent {
 
     toggleEditChecklistItem(e, checklistKey, item){
         let result = toggleEditChecklistItem(checklistKey, item, this.data)
+        if(result.isEditing){
+            setTimeout(() => this.checklistInput.nativeElement.focus(), 0)
+        }
         if(!result.isEditing){
             this.store.dispatch(editTask({task:result.data}))
         }
     }
 
     focusChecklistInput(e){
-        e.target.focus()
+        // e.target.focus()
     }
 
     addChecklistItem(checklistKey){
         this.store.dispatch(editTask({task:addChecklistItem(checklistKey, this.data)}))
+        setTimeout(() => this.checklistInput.nativeElement.focus(), 0)
     }
     
     changeChecklistItem(e, checklistKey, index){
