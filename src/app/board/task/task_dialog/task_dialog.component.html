@@ -12,11 +12,11 @@
         </div>
 
         <div>
-            <i *ngIf='data.important' class="material-icons">visibility</i>
-            <i *ngIf='data.warning' class="material-icons">warning</i>
-            <i *ngIf='data.payment' class="material-icons">payment</i>
-            <i *ngIf='data.vacation' class="material-icons">weekend</i>
-            <i *ngIf='data.attachment' class="material-icons">attach_file</i>
+            <mat-icon *ngIf='data.important'>visibility</mat-icon>
+            <mat-icon *ngIf='data.warning'>warning</mat-icon>
+            <mat-icon *ngIf='data.payment'>payment</mat-icon>
+            <mat-icon *ngIf='data.vacation'>weekend</mat-icon>
+            <mat-icon *ngIf='data.attachment'>attach_file</mat-icon>
             <mat-icon *ngIf='data.social'>group</mat-icon>
             <mat-icon *ngIf='data.work'>work</mat-icon>
             <mat-icon *ngIf='data.travel'>local_airport</mat-icon>
@@ -39,11 +39,11 @@
         </div>
 
         <div>
-            <i *ngIf='data.important' class="material-icons">visibility</i>
-            <i *ngIf='data.warning' class="material-icons">warning</i>
-            <i *ngIf='data.payment' class="material-icons">payment</i>
-            <i *ngIf='data.vacation' class="material-icons">weekend</i>
-            <i *ngIf='data.attachment' class="material-icons">attach_file</i>
+            <mat-icon *ngIf='data.important'>visibility</mat-icon>
+            <mat-icon *ngIf='data.warning'>warning</mat-icon>
+            <mat-icon *ngIf='data.payment'>payment</mat-icon>
+            <mat-icon *ngIf='data.vacation'>weekend</mat-icon>
+            <mat-icon *ngIf='data.attachment'>attach_file</mat-icon>
             <mat-icon *ngIf='data.social'>group</mat-icon>
             <mat-icon *ngIf='data.work'>work</mat-icon>
             <mat-icon *ngIf='data.travel'>local_airport</mat-icon>
@@ -52,7 +52,7 @@
 
     <div class='dialog-exit'>
         <button mat-icon-button (click)='onCloseDialog()'>
-            <i class="material-icons">clear</i>
+            <mat-icon>clear</mat-icon>
         </button>
     </div>
     
@@ -66,7 +66,7 @@
         <div class='dialog-description-title'>
             <h3>Description</h3>
             <button mat-icon-button (click)='toggleEditDescription()'>
-                <i class="material-icons">edit</i>
+                <mat-icon>edit</mat-icon>
             </button>
         </div>
         
@@ -122,8 +122,8 @@
             <div *ngFor='let downloadLink of data.downloadLinks; index as i' class='task-dialog-attachment-download'>
                 <p>{{data.downloadNames[i]}}</p>
             
-                <a download={{data.downloadNames[i]}} [href]='downloadLink' mat-icon-button><i class='material-icons'>get_app</i></a>
-                <button mat-icon-button (click)='previewAttachment(downloadLink)'><i class='material-icons'>airplay</i></button>
+                <a download={{data.downloadNames[i]}} [href]='downloadLink' mat-icon-button><mat-icon>get_app</mat-icon></a>
+                <button mat-icon-button (click)='previewAttachment(downloadLink)'><mat-icon>airplay</mat-icon></button>
             </div>
         </div>
 
@@ -145,22 +145,22 @@
         <div class='dialog-actions-button-wrapper'>
 
             <mat-menu #iconMenu='matMenu'>
-                <button mat-menu-item (click)='changeImportant()'><i class="material-icons">visibility</i>Important</button>
-                <button mat-menu-item (click)='changeWarning()'><i class="material-icons">warning</i>Warning</button>
-                <button mat-menu-item (click)='changePayment()'><i class="material-icons">payment</i>Payment</button>
-                <button mat-menu-item (click)='changeVacation()'><i class='material-icons'>weekend</i>Vacation</button>
+                <button mat-menu-item (click)='changeImportant()'><mat-icon aria-hidden="false">visibility</mat-icon>Important</button>
+                <button mat-menu-item (click)='changeWarning()'><mat-icon aria-hidden="false">warning</mat-icon>Warning</button>
+                <button mat-menu-item (click)='changePayment()'><mat-icon aria-hidden="false">payment</mat-icon>Payment</button>
+                <button mat-menu-item (click)='changeVacation()'><mat-icon aria-hidden="false">weekend</mat-icon>Vacation</button>
                 <button mat-menu-item (click)='changeSocial()'><mat-icon aria-hidden="false">group</mat-icon>Social</button>
                 <button mat-menu-item (click)='changeWork()'><mat-icon aria-hidden='false'>work</mat-icon>Work</button>
                 <button mat-menu-item (click)='changeTravel()'><mat-icon aria-hidden='false'>local_airport</mat-icon>Travel</button>
             </mat-menu>
 
             <mat-menu #colorMenu='matMenu'>
-                <button mat-menu-item (click)='changeCardColor("red")'><i class="material-icons" style='color:red'>label</i>Red</button>
-                <button mat-menu-item (click)='changeCardColor("yellow")'><i class="material-icons" style='color:yellow'>label</i>Yellow</button>
-                <button mat-menu-item (click)='changeCardColor("blue")'><i class="material-icons" style='color:blue'>label</i>Blue</button>
-                <button mat-menu-item (click)='changeCardColor("green")'><i class="material-icons" style='color:green'>label</i>Green</button>
-                <button mat-menu-item (click)='changeCardColor("purple")'><i class="material-icons" style='color:purple'>label</i>Purple</button>
-                <button mat-menu-item (click)='changeCardColor("orange")'><i class="material-icons" style='color:orange'>label</i>Orange</button>
+                <button mat-menu-item (click)='changeCardColor("red")'><mat-icon  style='color:red'>label</mat-icon>Red</button>
+                <button mat-menu-item (click)='changeCardColor("yellow")'><mat-icon  style='color:yellow'>label</mat-icon>Yellow</button>
+                <button mat-menu-item (click)='changeCardColor("blue")'><mat-icon  style='color:blue'>label</mat-icon>Blue</button>
+                <button mat-menu-item (click)='changeCardColor("green")'><mat-icon  style='color:green'>label</mat-icon>Green</button>
+                <button mat-menu-item (click)='changeCardColor("purple")'><mat-icon  style='color:purple'>label</mat-icon>Purple</button>
+                <button mat-menu-item (click)='changeCardColor("orange")'><mat-icon  style='color:orange'>label</mat-icon>Orange</button>
                 <button mat-menu-item (click)='changeCardColor("")'>NONE</button>
             </mat-menu>
 
@@ -184,15 +184,15 @@
                 <p></p>
             </mat-menu>
             
-            <button mat-raised-button [matMenuTriggerFor]='iconMenu'><i class="material-icons">label</i>Tags</button>
-            <button mat-raised-button (click)='openDatePicker()'><i class='material-icons'>access_time</i>Due Date</button>
-            <button mat-raised-button (click)='addPhotos()'><i class='material-icons'>add_a_photo</i>Photo</button>
-            <button mat-raised-button (click)='attachItem()'><i class="material-icons">attach_file</i>Attachment</button>
-            <button mat-raised-button (click)='addChecklist()'><i class="material-icons">check_box</i>Checklist</button>
-            <button mat-raised-button (click)='changeIsComplete()'><i class="material-icons">check_circle</i>Complete</button>
-            <button mat-raised-button (click)='deleteTask()'><i class="material-icons">delete</i>Delete</button>
-            <button mat-raised-button [matMenuTriggerFor]='colorMenu'><i class="material-icons">format_color_fill</i>Card Color</button>
-            <button mat-raised-button [matMenuTriggerFor]='fontColorMenu'><i class='material-icons'>format_color_text</i>Font Color</button>
+            <button mat-raised-button [matMenuTriggerFor]='iconMenu'><mat-icon>label</mat-icon>Tags</button>
+            <button mat-raised-button (click)='openDatePicker()'><mat-icon>access_time</mat-icon>Due Date</button>
+            <button mat-raised-button (click)='addPhotos()'><mat-icon>add_a_photo</mat-icon>Photo</button>
+            <button mat-raised-button (click)='attachItem()'><mat-icon>attach_file</mat-icon>Attachment</button>
+            <button mat-raised-button (click)='addChecklist()'><mat-icon>check_box</mat-icon>Checklist</button>
+            <button mat-raised-button (click)='changeIsComplete()'><mat-icon>check_circle</mat-icon>Complete</button>
+            <button mat-raised-button (click)='deleteTask()'><mat-icon>delete</mat-icon>Delete</button>
+            <button mat-raised-button [matMenuTriggerFor]='colorMenu'><mat-icon>format_color_fill</mat-icon>Card Color</button>
+            <button mat-raised-button [matMenuTriggerFor]='fontColorMenu'><mat-icon>format_color_text</mat-icon>Font Color</button>
             <button mat-raised-button [matMenuTriggerFor]='labelMenu'><mat-icon>view_day</mat-icon>Label</button>
             <button mat-raised-button (click)='transferTask()'><mat-icon>screen_share</mat-icon>Transfer Task</button>
             <!-- <button mat-raised-button (click)='duplicateTask()'><mat-icon>dynamic_feed</mat-icon>Duplicate Task</button> -->

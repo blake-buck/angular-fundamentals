@@ -23,11 +23,11 @@
             </form>
 
             <div>
-                <i *ngIf='task.important' class="material-icons">visibility</i>
-                <i *ngIf='task.warning' class="material-icons">warning</i>
-                <i *ngIf='task.payment' class="material-icons">payment</i>
-                <i *ngIf='task.vacation' class='material-icons'>weekend</i>
-                <i *ngIf='task.attachment' class="material-icons">attach_file</i>
+                <mat-icon *ngIf='task.important'>visibility</mat-icon>
+                <mat-icon *ngIf='task.warning'>warning</mat-icon>
+                <mat-icon *ngIf='task.payment'>payment</mat-icon>
+                <mat-icon *ngIf='task.vacation'>weekend</mat-icon>
+                <mat-icon *ngIf='task.attachment'>attach_file</mat-icon>
                 <mat-icon *ngIf='task.social'>group</mat-icon>
                 <mat-icon *ngIf='task.work'>work</mat-icon>
                 <mat-icon *ngIf='task.travel'>local_airport</mat-icon>
@@ -36,7 +36,7 @@
     </div>
 
     <span class='task-list-checklist-icon-wrapper'>
-            <i class='task-list-checklist-icon material-icons' *ngFor='let checklist of task.checklists' [style.color]='checklist.color'>check_box</i>
+            <mat-icon *ngFor='let checklist of task.checklists' [style.color]='checklist.color'>check_box</mat-icon>
     </span>
 
 </div>
@@ -78,7 +78,7 @@
                 <div style='display:flex; align-items:center;'>
                     <div (click)='toggleInput()'>{{task.body}}</div>
                     <div class='task-due-date' *ngIf='task.dueDate'>
-                        <i class='material-icons'>alarm</i>
+                        <mat-icon>alarm</mat-icon>
                         <span >{{task.dueDate.format('MM/DD')}}</span>
                     </div>
                 </div>
@@ -87,11 +87,11 @@
             
 
             <div>
-                <i class="material-icons" *ngIf='task.important'>visibility</i>
-                <i *ngIf='task.warning' class="material-icons">warning</i>
-                <i *ngIf='task.payment' class="material-icons">payment</i>
-                <i *ngIf='task.vacation' class='material-icons'>weekend</i>
-                <i *ngIf='task.attachment' class="material-icons">attach_file</i>
+                <mat-icon *ngIf='task.important'>visibility</mat-icon>
+                <mat-icon *ngIf='task.warning'>warning</mat-icon>
+                <mat-icon *ngIf='task.payment'>payment</mat-icon>
+                <mat-icon *ngIf='task.vacation'>weekend</mat-icon>
+                <mat-icon *ngIf='task.attachment'>attach_file</mat-icon>
                 <mat-icon *ngIf='task.social'>group</mat-icon>
                 <mat-icon *ngIf='task.work'>work</mat-icon>
                 <mat-icon *ngIf='task.travel'>local_airport</mat-icon>
@@ -102,7 +102,7 @@
     </div>
 
     <span class='task-list-checklist-icon-wrapper'>
-        <i class='task-list-checklist-icon material-icons' *ngFor='let checklist of task.checklists' [style.color]='checklist.color'>check_box</i>
+        <mat-icon class='task-list-checklist-icon' *ngFor='let checklist of task.checklists' [style.color]='checklist.color'>check_box</mat-icon>
     </span>
         
     
