@@ -29,14 +29,17 @@
 }
 .task-list-checklist-icon-wrapper{
     display:flex;
+    flex-wrap: wrap;
     margin:0px;
     
     padding:0px;
     line-height: 0px;
+
+    width:100%;
 }
 .task-list-checklist-icon{
     margin:0px;
-    margin-top:4px;
+    margin-top:10px;
     margin-right:14px;
     padding:0px;
     font-size:.9em;
@@ -68,12 +71,12 @@
 
 .label-row{
     display:flex;
-    
+    flex-wrap:wrap;
 }
 
 .label-row p{
     padding:1px;
-    margin-top:0px;
+    margin-top:3px;
     margin-bottom:0px;
     min-height: 5px;
     min-width: 43px;
@@ -89,4 +92,12 @@
     border-radius: 5px;
     padding-left:10px;
     padding-right:10px;
+}
+
+.task-list-text-due-date{
+    width:70%;
+}
+
+.task-list-labels{
+    width:30%;
 }

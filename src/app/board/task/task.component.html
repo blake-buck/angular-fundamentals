@@ -74,9 +74,9 @@
         </div>
 
         <div class='task-list-item-div'>
-            <div>
+            <div class='task-list-text-due-date' >
                 <div style='display:flex; align-items:center;'>
-                    <div (click)='toggleInput()'>{{task.body}}</div>
+                    <div (click)='toggleInput()' style='width:100%; overflow-wrap: break-word; word-wrap: break-word;' >{{task.body}}</div>
                     <div class='task-due-date' *ngIf='task.dueDate'>
                         <mat-icon>alarm</mat-icon>
                         <span >{{task.dueDate.format('MM/DD')}}</span>
@@ -86,7 +86,7 @@
             </div>
             
 
-            <div>
+            <div class='task-list-labels'>
                 <mat-icon *ngIf='task.important'>visibility</mat-icon>
                 <mat-icon *ngIf='task.warning'>warning</mat-icon>
                 <mat-icon *ngIf='task.payment'>payment</mat-icon>
