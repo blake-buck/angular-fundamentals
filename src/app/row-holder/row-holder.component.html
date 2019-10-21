@@ -1,11 +1,11 @@
 <mat-toolbar color='primary'>
-  <mat-toolbar-row>
-    <button mat-flat-button (click)='putState()'>Save</button>
-    <button mat-flat-button (click)='addRow()'>Add Row</button>
+  <mat-toolbar-row class='toolbar-row'>
+    <button mat-flat-button (click)='putState()'><mat-icon>save</mat-icon>Save</button>
+    <button mat-button (click)='addRow()'>Add Row</button>
     <!-- <button mat-flat-button>Query Document</button>
     <button mat-flat-button>Export Document</button> -->
-    <button mat-flat-button (click)='accordion.closeAll()'>Close All</button>
-    <button mat-flat-button (click)='accordion.openAll()'>Open All</button>
+    <button mat-button (click)='accordion.closeAll()'>Close All</button>
+    <button mat-button (click)='accordion.openAll()'>Open All</button>
   </mat-toolbar-row>
 </mat-toolbar>
 
