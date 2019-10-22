@@ -46,6 +46,7 @@
     *ngIf='!task.isInput && (board.hideCompleteTasks===false && task.isComplete===true || task.isComplete===false)' 
     draggable="true" 
     (dragstart)='onDragStart($event)'
+    (drag)='onDrag($event)'
     (dragend)='onDragEnd($event)' 
     (dragover)='onDragOver($event)' 
     (drop)='onDrop($event)' 

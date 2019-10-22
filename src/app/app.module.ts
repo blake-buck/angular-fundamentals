@@ -86,7 +86,7 @@ import { EffectsModule } from '@ngrx/effects';
     MatDialogModule,
     MatGridListModule,
     StoreModule.forRoot({simpleReducer}),
-    EffectsModule.forRoot([AppEffects]),
+    EffectsModule.forRoot([AppEffects, RowComponent]),
     MatSelectModule,
     MatMenuModule,
     MatCheckboxModule,

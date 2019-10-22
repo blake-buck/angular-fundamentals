@@ -123,3 +123,11 @@ export const getStateFromCosmosSuccess = createAction(
     'GET_STATE_FROM_COSMOS_SUCCESS',
     props<{state:any}>()
 )
+
+export const scrollRowForward = createAction(
+    'SCROLL_ROW_FORWARD'
+)
+
+export const scrollRowBackward = createAction(
+    'SCROLL_ROW_BACKWARD'
+)

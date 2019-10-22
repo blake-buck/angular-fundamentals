@@ -38,7 +38,7 @@
     </mat-menu>
     
 
-    <div #scrollRow class='home_div'>
+    <div #scrollRow class='home_div' (dragover)='onMouseEnter($event)' (dragleave)='onMouseLeave($event)'>
 
         <div  *ngFor='let board of board$ | async'>
             <board class='board' [boardKey]='board.key' [boardTitle]='board.title' (autoScroller)='autoScroller($event)' ></board>

@@ -6,7 +6,7 @@ import {Observable} from 'rxjs';
 import { DomSanitizer } from '@angular/platform-browser';
 
 import {orderByLastEdited, orderByAlphabetical, orderByDateCreated, onDrop} from './board.logic';
-import {editBoardTitle, archiveBoard, deleteBoard, toggleHideCompleteTasks, addTask, editTask, reorderBoardTasks, duplicateBoard} from '../store/app.actions'
+import {editBoardTitle, archiveBoard, deleteBoard, toggleHideCompleteTasks, addTask, editTask, reorderBoardTasks, duplicateBoard, scrollRowForward, scrollRowBackward} from '../store/app.actions'
 import { selectRows, selectBoards, selectBoardFromBoardKey } from '../store/app.selector';
 
 
@@ -113,12 +113,12 @@ export class BoardComponent{
     }
 
     onDrag(e){
-        // if(e.pageX > window.screenX -800){
-        //     this.autoScroller.emit({forward:true, offset:e.clientX})
-        // }
-        // else if(200 > e.pageX){
-        //     this.autoScroller.emit({forward:false, offset:e.clientX})
-        // }
+        if(e.screenX > window.innerWidth -100){
+            this.store.dispatch(scrollRowForward())
+        }   
+        else if(e.screenX < 100){
+            this.store.dispatch(scrollRowBackward())
+        }
     }
 
     taskAutoScroll(e){

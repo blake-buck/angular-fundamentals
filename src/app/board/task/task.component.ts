@@ -14,7 +14,7 @@ export interface AppState{
 
 
 import {TaskDialogComponent} from './task_dialog/task_dialog.component';
-import { editTask, transferTask } from 'src/app/store/app.actions';
+import { editTask, transferTask, scrollRowForward, scrollRowBackward } from 'src/app/store/app.actions';
 
 
 
@@ -79,12 +79,12 @@ export class TaskComponent{
     }
 
     onDrag(e){
-        // if(e.pageX > window.screenX -800){
-        //     this.autoScroller.emit({forward:true, offset:e.clientX})
-        // }
-        // else if(200 > e.pageX){
-        //     this.autoScroller.emit({forward:false, offset:e.clientX})
-        // }
+        if(e.screenX > window.innerWidth -125){
+            this.store.dispatch(scrollRowForward())
+        }   
+        else if(e.screenX < 125){
+            this.store.dispatch(scrollRowBackward())
+        }
     }
 
     openDialog(){

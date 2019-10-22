@@ -1,7 +1,7 @@
-import { Component, Input, ViewChild, ElementRef } from '@angular/core';
+import { Component, Input, ViewChild, ElementRef, Injectable } from '@angular/core';
 
 import {Store, select} from '@ngrx/store';
-import {Observable} from 'rxjs';
+import {Observable, pipe} from 'rxjs';
 
 import 
 {
@@ -13,8 +13,10 @@ import
     ,onDrop
 } from './row.logic';
 
-import {getState, archiveRow, editRowTitle, editRowDescription, addBoard, transferBoard, duplicateRow} from '../store/app.actions';
+import {getState, archiveRow, editRowTitle, editRowDescription, addBoard, transferBoard, duplicateRow, scrollRowForward, scrollRowBackward} from '../store/app.actions';
 import { selectBoards, selectSpecificBoards } from '../store/app.selector';
+import { Actions, createEffect, ofType } from '@ngrx/effects';
+import { map, tap } from 'rxjs/operators';
 
 export interface AppState{
     simpleReducer:any
@@ -25,6 +27,8 @@ export interface AppState{
     selector:'row',
     styleUrls:['./row.component.css']
 })
+
+
 
 export class RowComponent{
 
@@ -40,12 +44,36 @@ export class RowComponent{
     isEditingTitle = false;
     isEditingDescription = false;
 
-    constructor(private store:Store<AppState>){}
+    canScrollRow = false;
+
+    constructor(private store:Store<AppState>, private actions$:Actions){}
     ngOnInit(){
         this.board$ = this.store.pipe(select(selectSpecificBoards, this.rowData.key))
+        
     }
 
-    // editTitle = editTitle;
+    onMouseEnter(e){
+        e.preventDefault();
+        this.canScrollRow = true;
+    }
+    onMouseLeave(e){
+        e.preventDefault();
+        this.canScrollRow = false;
+    }
+
+    scroll = this.actions$.subscribe(val => {
+        if(val.type === scrollRowForward.type && this.canScrollRow){
+            if(this.scrollRow && this.scrollRow.nativeElement){
+                this.scrollRow.nativeElement.scrollLeft = this.scrollRow.nativeElement.scrollLeft + 6; 
+            }
+        }
+        else if(val.type === scrollRowBackward.type && this.canScrollRow){
+            if(this.scrollRow && this.scrollRow.nativeElement){
+                this.scrollRow.nativeElement.scrollLeft = this.scrollRow.nativeElement.scrollLeft - 6;
+            }
+        }
+    })
+
     editTitle(e, rowData){
         this.store.dispatch(editRowTitle({key:rowData.key, title:e.target.value}))
     }
@@ -54,11 +82,6 @@ export class RowComponent{
     }
     onDragStart = onDragStart
     onDragOver = onDragOver
-    // editDescription = editDescription
-
-    // duplicateRow(row){
-    //     this.store.dispatch(duplicateRow({key:row.key}))
-    // }
 
     addBoard(row){
         this.store.dispatch(addBoard({key:row.key}))

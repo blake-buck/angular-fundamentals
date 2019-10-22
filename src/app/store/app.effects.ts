@@ -4,7 +4,7 @@ import {tap, exhaust, exhaustMap, switchMap, map, mergeMap, switchAll, combineAl
 import { Store, select } from '@ngrx/store';
 import { selectAppState, selectAppStateWithProps } from './app.selector';
 import { Observable, combineLatest } from 'rxjs';
-import { archiveRowSuccess, archiveRow, getState, editRowTitle, editRowTitleSuccess, postStateToCosmos, putStateToCosmos, getStateFromCosmos, getStateFromCosmosSuccess } from './app.actions';
+import { archiveRowSuccess, archiveRow, getState, editRowTitle, editRowTitleSuccess, postStateToCosmos, putStateToCosmos, getStateFromCosmos, getStateFromCosmosSuccess, scrollRowForward } from './app.actions';
 import { HttpClient } from '@angular/common/http';
 
 @Injectable()
@@ -101,6 +101,6 @@ export class AppEffects {
         ),
         {dispatch: false}
     )
-
+    
     
 }
