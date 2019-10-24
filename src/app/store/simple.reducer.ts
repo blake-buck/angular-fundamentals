@@ -2,7 +2,7 @@ import {Action} from '@ngrx/store';
 
 import * as moment from 'moment'
 
-import {getState, addRow, archiveRow, editRowTitle, editRowDescription, addBoard, transferBoard, editBoardTitle, archiveBoard, deleteBoard, toggleHideCompleteTasks, addTask, editTask, deleteTask, transferTaskEmpty, transferTask, duplicateRow, duplicateTask, duplicateBoard, linkTask, archiveRowSuccess, editRowTitleSuccess, getStateFromCosmosSuccess, } from './app.actions';
+import {getState, addRow, archiveRow, editRowTitle, editRowDescription, addBoard, transferBoard, editBoardTitle, archiveBoard, deleteBoard, toggleHideCompleteTasks, addTask, editTask, deleteTask, transferTaskEmpty, transferTask, duplicateRow, duplicateTask, duplicateBoard, linkTask, archiveRowSuccess, editRowTitleSuccess, getStateFromCosmosSuccess, saveChanges, } from './app.actions';
 import {initialState } from './app.state';
 
 
@@ -26,6 +26,7 @@ export function simpleReducer(state=initialState, action){
         case addRow.type:
             return{
                 ...state,
+                isDataSaved:false,
                 rows:[
                     ...state.rows,
                     {key:state.currentRowKey, title:'New Row', description:'this is a new row', boards:[]}
@@ -86,7 +87,8 @@ export function simpleReducer(state=initialState, action){
             return {...state};
         
         case archiveRowSuccess.type:
-            return {...state, rows:action.rows}
+            return {...state,
+                isDataSaved:false, rows:action.rows}
 
 
         case editRowTitle.type:
@@ -95,12 +97,14 @@ export function simpleReducer(state=initialState, action){
             // modifiedRow.title = action.title;
             return state;
         case editRowTitleSuccess.type:
-            return {...state, rows:action.rows}
+            return {...state,
+                isDataSaved:false, rows:action.rows}
         
         case editRowDescription.type:
             modifiedRow = state.rows.find(row => row.key === action.key);
             return {
                 ...state,
+                isDataSaved:false,
                 rows:state.rows.map(row => {
                     if(row.key === action.key){
                         return{
@@ -138,6 +142,7 @@ export function simpleReducer(state=initialState, action){
         case addBoard.type:  
             return{
                 ...state,
+                isDataSaved:false,
                 rows:state.rows.map(row => {
                     if(row.key === action.key){
                         return{
@@ -182,12 +187,14 @@ export function simpleReducer(state=initialState, action){
             }
             return{
                 ...state,
+                isDataSaved:false,
                 boards:newBoards
             }
 
         case editBoardTitle.type:
             return{
                 ...state,
+                isDataSaved:false,
                 
                 boards:
                     state.boards.map(board => {
@@ -209,6 +216,7 @@ export function simpleReducer(state=initialState, action){
             
             return {
                 ...state,
+                isDataSaved:false,
                 archivedBoards:[...state.archivedBoards, modifiedBoard],
                 boards:newBoards
             };
@@ -219,12 +227,14 @@ export function simpleReducer(state=initialState, action){
             newBoards.splice(modifiedBoardIndex, 1)
             return {
                 ...state,
+                isDataSaved:false,
                 boards:newBoards
             }
 
         case toggleHideCompleteTasks.type:
             return {
                 ...state,
+                isDataSaved:false,
                 boards:state.boards.map(board => {
                     if(board.key === action.key){
                         return {
@@ -262,6 +272,7 @@ export function simpleReducer(state=initialState, action){
         case addTask.type:
             return{
                 ...state,
+                isDataSaved:false,
                 currentTaskKey:state.currentTaskKey + 1,
                 boards:state.boards.map(board => {
                     if(board.key === action.key){
@@ -301,6 +312,7 @@ export function simpleReducer(state=initialState, action){
             // This is definitely going to get broken down into a million different actions at some point
             return{
                 ...state,
+                isDataSaved:false,
                 boards:state.boards.map(board => {
                     if(board.key === action.task.boardKey){
                         return{
@@ -324,6 +336,7 @@ export function simpleReducer(state=initialState, action){
             modifiedBoard.tasks.splice(modifiedTaskIndex, 1);
             return{
                 ...state,
+                isDataSaved:false,
                 boards:newBoards
             }
         
@@ -344,6 +357,7 @@ export function simpleReducer(state=initialState, action){
 
                 return {
                     ...state,
+                    isDataSaved:false,
                     boards:newBoards
                 };
             }
@@ -366,6 +380,7 @@ export function simpleReducer(state=initialState, action){
                 modifiedBoard.tasks.splice(droppedIndex, 0,  addedItem)
                 return {
                     ...state,
+                    isDataSaved:false,
                     boards:newBoards
                 };
             }
@@ -382,6 +397,7 @@ export function simpleReducer(state=initialState, action){
                 droppedOnBoard.tasks.splice(droppedIndex+1, 0, addedItem);
                 return {
                     ...state,
+                    isDataSaved:false,
                     boards:newBoards
                 };
             }
@@ -392,6 +408,7 @@ export function simpleReducer(state=initialState, action){
             changedBoard.tasks= action.payload.tasks
             return {
                 ...state,
+                isDataSaved:false,
                 boards:newBoards
             };
         
@@ -401,11 +418,20 @@ export function simpleReducer(state=initialState, action){
             newBoards.find(board => board.key === action.originalBoardKey).tasks.find(task => task.key === action.originalTaskKey).linkedTasks.push({taskKey:action.linkedTaskKey, boardKey:action.linkedBoardKey});
             return {
                 ...state,
+                isDataSaved:false,
                 boards:newBoards
             };
 
         case getStateFromCosmosSuccess.type:
-            return {...action.state[0]}
+            return {...action.state[0],
+                isDataSaved:true
+            }
+
+        case saveChanges.type:
+            return {
+                ...state,
+                isDataSaved:true
+            }
         
         default:
             return state;

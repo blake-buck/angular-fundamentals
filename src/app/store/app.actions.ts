@@ -131,3 +131,7 @@ export const scrollRowForward = createAction(
 export const scrollRowBackward = createAction(
     'SCROLL_ROW_BACKWARD'
 )
+
+export const saveChanges = createAction(
+    'SAVE_CHANGES'
+)

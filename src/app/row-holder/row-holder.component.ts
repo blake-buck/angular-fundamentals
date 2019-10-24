@@ -3,7 +3,7 @@ import { Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
 
 import { HttpClient } from '@angular/common/http';
-import { selectRows, selectAppState } from '../store/app.selector';
+import { selectRows, selectAppState, selectIsDataSaved } from '../store/app.selector';
 import { getState, addRow, postStateToCosmos, putStateToCosmos, getStateFromCosmos } from '../store/app.actions';
 import { AppState } from '../app.component';
 import { tap } from 'rxjs/operators';
@@ -19,13 +19,16 @@ export class RowHolderComponent{
     board$:Observable<any>
     row$:Observable<any>
 
+    dataSaved$:Observable<boolean>
+
     constructor(private store:Store<AppState>, private http:HttpClient){
         this.row$ = this.store.select(selectRows)
+        this.dataSaved$ = this.store.select(selectIsDataSaved);
     }
 
     ngOnInit(){
         this.store.dispatch(getState())
-        // this.store.dispatch(getStateFromCosmos())
+        this.store.dispatch(getStateFromCosmos())
     }
 
     addRow(){
@@ -44,4 +47,5 @@ export class RowHolderComponent{
     getState(){
         
     }
+    
 }

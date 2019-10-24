@@ -32,3 +32,7 @@ export const selectBoardAndRowTitleFromTaskKey = createSelector(selectAppState, 
         props
     }
 })
+
+export const selectIsDataSaved = createSelector(selectAppState, state => state.isDataSaved)
+
+export const selectIsDataSaving = createSelector(selectAppState, state => state.isDataSaving)

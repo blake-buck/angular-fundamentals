@@ -4,7 +4,7 @@ import {tap, exhaust, exhaustMap, switchMap, map, mergeMap, switchAll, combineAl
 import { Store, select } from '@ngrx/store';
 import { selectAppState, selectAppStateWithProps } from './app.selector';
 import { Observable, combineLatest } from 'rxjs';
-import { archiveRowSuccess, archiveRow, getState, editRowTitle, editRowTitleSuccess, postStateToCosmos, putStateToCosmos, getStateFromCosmos, getStateFromCosmosSuccess, scrollRowForward } from './app.actions';
+import { archiveRowSuccess, archiveRow, getState, editRowTitle, editRowTitleSuccess, postStateToCosmos, putStateToCosmos, getStateFromCosmos, getStateFromCosmosSuccess, scrollRowForward, saveChanges } from './app.actions';
 import { HttpClient } from '@angular/common/http';
 
 @Injectable()
@@ -83,7 +83,11 @@ export class AppEffects {
             }),
             map((state) => {
                 state.subscribe(val => {
-                    this.http.put('http://localhost:7071/api/PutState/', val).pipe(first()).subscribe(val => val)
+                    this.http.put('http://localhost:7071/api/PutState/', val).pipe(first()).subscribe(val => {
+                        console.log('PUT STATE')
+                        console.log(val)
+                        this.store.dispatch(saveChanges())
+                    })
                 })
             })
         ),

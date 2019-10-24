@@ -14,6 +14,12 @@
   <row *ngFor='let row of row$ | async' [rowData]='row' [accordion]='accordion'></row>
 </mat-accordion>
 
+
+<footer>
+  <span *ngIf='(dataSaved$|async) as dataSaved;'>Saved</span>
+  <span *ngIf='!(dataSaved$ | async)'>Unsaved Changes</span>
+</footer>
+
 <!-- <button (click)='getApi()'>Get</button>
 <button (click)='postApi()'>Post</button>
 <button (click)='putApi()'>Put</button>

@@ -8,7 +8,9 @@ export namespace App{
         archivedRows:Row[],
         rows:Row[],
         archivedBoards:Board[],
-        boards:Board[]
+        boards:Board[],
+        isDataSaved:boolean;
+        isDataSaving:boolean;
     }
     
     export interface Row{
@@ -133,5 +135,7 @@ export const initialState:App.AppState = {
                 
             ]
         }
-    ]
+    ],
+    isDataSaved:true,
+    isDataSaving:false
 }
