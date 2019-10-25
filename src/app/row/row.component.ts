@@ -52,6 +52,10 @@ export class RowComponent{
         
     }
 
+    ngOnDestroy(){
+        this.scroll.unsubscribe()
+    }
+
     onMouseEnter(e){
         e.preventDefault();
         this.canScrollRow = true;
@@ -62,6 +66,7 @@ export class RowComponent{
     }
 
     scroll = this.actions$.subscribe(val => {
+        // console.log(val.type)
         if(val.type === scrollRowForward.type && this.canScrollRow){
             if(this.scrollRow && this.scrollRow.nativeElement){
                 this.scrollRow.nativeElement.scrollLeft = this.scrollRow.nativeElement.scrollLeft + 6; 

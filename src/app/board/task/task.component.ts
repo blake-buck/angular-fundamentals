@@ -79,10 +79,10 @@ export class TaskComponent{
     }
 
     onDrag(e){
-        if(e.screenX > window.innerWidth -125){
+        if(e.clientX > window.innerWidth -125 && e.target.getAttribute('class').includes('task')){
             this.store.dispatch(scrollRowForward())
         }   
-        else if(e.screenX < 125){
+        else if(e.clientX < 125 && e.target.getAttribute('class').includes('task')){
             this.store.dispatch(scrollRowBackward())
         }
     }

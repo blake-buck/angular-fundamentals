@@ -113,10 +113,11 @@ export class BoardComponent{
     }
 
     onDrag(e){
-        if(e.screenX > window.innerWidth -100){
+        
+        if(e.screenX > window.innerWidth -100 && e.target.getAttribute('class').includes('board')){
             this.store.dispatch(scrollRowForward())
         }   
-        else if(e.screenX < 100){
+        else if(e.screenX < 100 && e.target.getAttribute('class').includes('board')){
             this.store.dispatch(scrollRowBackward())
         }
     }

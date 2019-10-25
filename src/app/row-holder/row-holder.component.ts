@@ -28,7 +28,7 @@ export class RowHolderComponent{
 
     ngOnInit(){
         this.store.dispatch(getState())
-        this.store.dispatch(getStateFromCosmos())
+        // this.store.dispatch(getStateFromCosmos())
     }
 
     addRow(){
