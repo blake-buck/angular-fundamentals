@@ -21,6 +21,8 @@ export class RowHolderComponent{
 
     dataSaved$:Observable<boolean>
 
+    autoSaveInterval;
+
     constructor(private store:Store<AppState>, private http:HttpClient){
         this.row$ = this.store.select(selectRows)
         this.dataSaved$ = this.store.select(selectIsDataSaved);
@@ -29,6 +31,13 @@ export class RowHolderComponent{
     ngOnInit(){
         this.store.dispatch(getState())
         // this.store.dispatch(getStateFromCosmos())
+        this.autoSaveInterval = setInterval(() => {
+            // this.store.dispatch(putStateToCosmos())
+        }, 60000)
+    }
+
+    ngOnDestroy(){
+        clearInterval(this.autoSaveInterval)
     }
 
     addRow(){
