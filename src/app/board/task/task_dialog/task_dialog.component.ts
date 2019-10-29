@@ -61,6 +61,7 @@ export class TaskDialogComponent {
 
         ngOnInit(){
             this.boardAndRowTitle$ = this.store.pipe(select(selectBoardAndRowTitleFromTaskKey, this.data.boardKey))
+            this.data.dialogOpen = true;
         }
 
         ngAfterViewChecked(){
@@ -116,6 +117,7 @@ export class TaskDialogComponent {
     }
     
     onCloseDialog(){
+        this.data.dialogOpen = false;
         this.dialogRef.close();
     }
 

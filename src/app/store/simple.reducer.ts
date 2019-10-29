@@ -299,7 +299,9 @@ export function simpleReducer(state=initialState, action){
                                     linkedTasks:[],
                                     
                                     dateCreated:moment(),
-                                    lastEdited:moment()
+                                    lastEdited:moment(),
+
+                                    dialogOpen:false
                                 }
                             ]
                         }

@@ -64,7 +64,9 @@ export namespace App{
     
         dueDate:Moment | null,
         dateCreated:Moment,
-        lastEdited:Moment
+        lastEdited:Moment,
+
+        dialogOpen:boolean
     
     }
     

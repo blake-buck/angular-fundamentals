@@ -45,14 +45,26 @@ export class TaskComponent{
     currentDisplayPhoto = 0;
     classAddedToList = false
 
-    constructor(private store:Store<AppState>, public dialog:MatDialog){
-        
-    }
+    constructor(private store:Store<AppState>, public dialog:MatDialog){}
 
+    dialogRef;
     ngOnInit(){
         if(this.task.isEditing){
             this.task.isInput = true; 
         }
+        if(this.task.dialogOpen){
+            this.dialogRef = this.dialog.open(TaskDialogComponent, 
+                {
+                    // id:'task-dialog',
+                    panelClass:'task-dialog',
+                    // backdropClass:'task-dialog',
+                    data:this.task
+                }
+            )
+        }
+    }
+    ngOnDestroy(){
+        if(this.dialogRef)this.dialogRef.close()
     }
 
     ngAfterViewChecked(){
@@ -89,7 +101,7 @@ export class TaskComponent{
 
     openDialog(){
         if(!this.disableDialogOpening){
-            let dialogRef = this.dialog.open(TaskDialogComponent, 
+            this.dialogRef = this.dialog.open(TaskDialogComponent, 
                 {
                     // id:'task-dialog',
                     panelClass:'task-dialog',
@@ -97,7 +109,6 @@ export class TaskComponent{
                     data:this.task
                 }
             )
-            
         }
     }
 
