@@ -49,12 +49,15 @@ export class TaskDialogComponent {
 
     row = null;
 
+
     constructor(
         private store:Store<AppState>,
         public dialogRef: MatDialogRef<TaskDialogComponent>, 
         @Inject(MAT_DIALOG_DATA) public data:any,
         public dialog:MatDialog
         ){}
+        // data = this.store.select(selectSpecificTask, {boardKey:1, taskKey:1})
+
 
         ngOnInit(){
             this.boardAndRowTitle$ = this.store.pipe(select(selectBoardAndRowTitleFromTaskKey, this.data.boardKey))

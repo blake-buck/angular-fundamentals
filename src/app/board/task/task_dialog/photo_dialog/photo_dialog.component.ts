@@ -1,7 +1,7 @@
 import { Component, Inject } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { AppState } from 'src/app/app.component';
-import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material';
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialog, MatSnackBar } from '@angular/material';
 import { editTask } from 'src/app/store/app.actions';
 import { HttpHeaders, HttpClient } from '@angular/common/http';
 import { by } from 'protractor';
@@ -17,30 +17,60 @@ export class PhotoDialogComponent{
         public dialogRef: MatDialogRef<PhotoDialogComponent>, 
         @Inject(MAT_DIALOG_DATA) public data:any,
         public dialog:MatDialog,
-        private http: HttpClient
+        private http: HttpClient,
+        public snackbar: MatSnackBar
     ){}
 
-    imagesToDisplay = []
+
+    realImages = [...this.data.displayImageUrls, ...[]]
+    unsavedImages = [];
+    canSave = false;
+    isLoading = false;
+    file;
 
     getFile(e){
+        this.isLoading = true;
         let fileReader = new FileReader();
     
         fileReader.onloadend = () => {
-            this.imagesToDisplay.push(fileReader.result);
-            this.http.post('http://localhost:7071/api/BlobUpload', {name:e.target.files[0].name, base64:fileReader.result}).subscribe(val => {
-                // console.log(val)
+            
+            this.http.post('http://localhost:7071/api/DisplayPhoto', {name:e.target.files[0].name, base64:fileReader.result, taskName:`task${this.data.key}`}, {responseType:'json'}).subscribe((val:any) => {
+                if(val.url){
+                    this.realImages.push(val.url)
+                    this.unsavedImages.push(val.url)
+                    this.canSave=true;
+                }
+                else{
+                    this.snackbar.open('Error uploading photo! Please try again.', 'Close')
+                }
+                this.isLoading = false
+
+                
             })
         }
         fileReader.readAsDataURL(e.target.files[0])
+        
     }
 
     onCloseDialog(){
-        this.dialogRef.close();
+        this.unsavedImages.map(val => {
+            let fileName = /display\/.+\?sv=/.exec(val)[0].replace('display/', '').replace('?sv=' ,'')
+            this.http.delete('http://localhost:7071/api/DisplayPhoto', {params:{name:fileName, taskName:`task${this.data.key}`}}).subscribe(val => console.log(val))
+        })
+        this.dialogRef.close(); 
     }
 
     clearImage(){
-        if(this.imagesToDisplay.length > 0){
-            this.imagesToDisplay.pop();
+        if(this.realImages.length > 0){
+            // Best practice? of course not. Good regex practice? hell yeah!
+            let fileName = /display\/.+\?sv=/.exec(this.realImages[this.realImages.length-1])[0].replace('display/', '').replace('?sv=' ,'')
+            // console.log(/display\/.+\?sv=/.exec(this.realImages[this.realImages.length-1])[0].replace('display/', '').replace('?sv=' ,''))
+            this.http.delete('http://localhost:7071/api/DisplayPhoto', {params:{name:fileName, taskName:`task${this.data.key}`}}).subscribe(val => console.log(val))
+
+            this.realImages.pop();
+    
+            // this.http.delete('http://localhost:7071/api/DisplayPhoto')//, {params:{param:'jeff'}}
+            // this.http.delete('', {name:fileName, taskName:`task${this.data.key}`})
         }
         
     }
@@ -48,7 +78,7 @@ export class PhotoDialogComponent{
     saveImage(){
         this.dialogRef.close();
         this.dialogRef.afterClosed().subscribe(result => {
-            this.store.dispatch(editTask({task:{...this.data, displayImageUrls:[...this.data.displayImageUrls, this.imagesToDisplay]}}))
+            this.store.dispatch(editTask({task:{...this.data, displayImageUrls:[...this.data.displayImageUrls, ...this.realImages]}}))
         })
     }
 

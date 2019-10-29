@@ -89,7 +89,7 @@ export class TaskComponent{
 
     openDialog(){
         if(!this.disableDialogOpening){
-            const dialogRef = this.dialog.open(TaskDialogComponent, 
+            let dialogRef = this.dialog.open(TaskDialogComponent, 
                 {
                     // id:'task-dialog',
                     panelClass:'task-dialog',
@@ -97,6 +97,7 @@ export class TaskComponent{
                     data:this.task
                 }
             )
+            
         }
     }
 

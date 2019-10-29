@@ -22,7 +22,9 @@ import
   MatTabsModule,
   MatIconModule,
   MatExpansionModule,
-  MatToolbarModule
+  MatToolbarModule,
+  MatSnackBarModule,
+  MatProgressSpinnerModule
 } 
 from '@angular/material';
 
@@ -94,6 +96,8 @@ import { EffectsModule } from '@ngrx/effects';
     MatIconModule,
     MatExpansionModule,
     MatToolbarModule,
+    MatSnackBarModule,
+    MatProgressSpinnerModule,
 
     HttpClientModule,
 
