@@ -12,11 +12,12 @@ import {DeleteDialogComponent} from './delete_dialog/delete_dialog.component';
 
 import {TransferTaskDialogComponent} from './transfer_task_dialog/transfer_task_dialog.component';
 import { addLabel, addComment, changeCardColor, changeFontColor, addChecklist, deleteChecklist, changeChecklistTitle, toggleEditChecklistTitle, toggleChecklistItem, toggleEditChecklistItem, addChecklistItem, deleteChecklistItem, changeChecklistItemText, removeFile } from './task_dialog.logic';
-import { editTask, deleteTask, duplicateTask } from 'src/app/store/app.actions';
+import { editTask, deleteTask, duplicateTask, putStateToCosmos } from 'src/app/store/app.actions';
 import { selectBoardAndRowTitleFromTaskKey, selectSpecificTask } from 'src/app/store/app.selector';
 import { Observable } from 'rxjs';
 import { LinkTaskDialogComponent } from './link_task_dialog/link_task_dialog.component';
 import { App } from 'src/app/store/app.state';
+import { HttpClient } from '@angular/common/http';
 
 
 
@@ -54,7 +55,8 @@ export class TaskDialogComponent {
         private store:Store<AppState>,
         public dialogRef: MatDialogRef<TaskDialogComponent>, 
         @Inject(MAT_DIALOG_DATA) public data:any,
-        public dialog:MatDialog
+        public dialog:MatDialog,
+        public http:HttpClient
         ){}
         // data = this.store.select(selectSpecificTask, {boardKey:1, taskKey:1})
 
@@ -277,7 +279,18 @@ export class TaskDialogComponent {
         dialogRef.afterClosed().subscribe(result => {
             if(result){
                 this.onCloseDialog();
+                this.data.downloadNames.map(name => {
+                    console.log(name)
+                    this.http.delete('http://localhost:7071/api/TaskAttachment', {params:{name:name, taskName:`task${this.data.key}`}}).subscribe(val => console.log(val))
+                })
+                this.data.displayImageUrls.map(url => {
+                    let fileName = /display\/.+\?sv=/.exec(url)[0].replace('display/', '').replace('?sv=' ,'')
+                    console.log(fileName)
+                    this.http.delete('http://localhost:7071/api/DisplayPhoto', {params:{name:fileName, taskName:`task${this.data.key}`}}).subscribe(val => console.log(val))
+                })
                 this.store.dispatch(deleteTask({task:this.data}))
+                this.store.dispatch(putStateToCosmos())
+
             }
         })
         
