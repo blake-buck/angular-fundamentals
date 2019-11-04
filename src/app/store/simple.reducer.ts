@@ -2,7 +2,7 @@ import {Action} from '@ngrx/store';
 
 import * as moment from 'moment'
 
-import {getState, addRow, archiveRow, editRowTitle, editRowDescription, addBoard, transferBoard, editBoardTitle, archiveBoard, deleteBoard, toggleHideCompleteTasks, addTask, editTask, deleteTask, transferTaskEmpty, transferTask, duplicateRow, duplicateTask, duplicateBoard, linkTask, archiveRowSuccess, editRowTitleSuccess, getStateFromCosmosSuccess, saveChanges, } from './app.actions';
+import {getState, addRow, archiveRow, editRowTitle, editRowDescription, addBoard, transferBoard, editBoardTitle, archiveBoard, deleteBoard, toggleHideCompleteTasks, addTask, editTask, deleteTask, transferTaskEmpty, transferTask, duplicateRow, duplicateTask, duplicateBoard, linkTask, archiveRowSuccess, editRowTitleSuccess, getStateFromCosmosSuccess, saveChanges, editRowExpanded, } from './app.actions';
 import {initialState } from './app.state';
 
 
@@ -29,7 +29,7 @@ export function simpleReducer(state=initialState, action){
                 isDataSaved:false,
                 rows:[
                     ...state.rows,
-                    {key:state.currentRowKey, title:'New Row', description:'this is a new row', boards:[]}
+                    {key:state.currentRowKey, title:'New Row', description:'this is a new row', boards:[], expanded:false}
                 ],
                 currentRowKey:state.currentRowKey + 1
             }
@@ -110,6 +110,22 @@ export function simpleReducer(state=initialState, action){
                         return{
                             ...row,
                             description:action.description
+                        }
+                    }
+                    return row
+                })
+            };
+
+        case editRowExpanded.type:
+            modifiedRow = state.rows.find(row => row.key === action.key);
+            return {
+                ...state,
+                isDataSaved:false,
+                rows:state.rows.map(row => {
+                    if(row.key === action.key){
+                        return{
+                            ...row,
+                            expanded:action.expanded
                         }
                     }
                     return row

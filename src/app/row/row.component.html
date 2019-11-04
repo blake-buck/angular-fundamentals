@@ -1,4 +1,4 @@
-<mat-expansion-panel class='row-wrapper' accordion='accordion' (dragover)='onDragOver($event)' (drop)='onDrop($event, rowData)'>
+<mat-expansion-panel class='row-wrapper' accordion='accordion' (dragover)='onDragOver($event)' (drop)='onDrop($event, rowData)' [expanded]='rowData.expanded' (opened)='openRow()' (closed)='closeRow()'>
     <mat-expansion-panel-header>
         <mat-panel-title>
             <span>{{rowData.title}}</span>

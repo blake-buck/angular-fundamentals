@@ -13,7 +13,7 @@ import
     ,onDrop
 } from './row.logic';
 
-import {getState, archiveRow, editRowTitle, editRowDescription, addBoard, transferBoard, duplicateRow, scrollRowForward, scrollRowBackward} from '../store/app.actions';
+import {getState, archiveRow, editRowTitle, editRowDescription, addBoard, transferBoard, duplicateRow, scrollRowForward, scrollRowBackward, editRowExpanded} from '../store/app.actions';
 import { selectBoards, selectSpecificBoards } from '../store/app.selector';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { map, tap } from 'rxjs/operators';
@@ -113,5 +113,13 @@ export class RowComponent{
           this.store.dispatch(transferBoard({payload}));
         }
     }
-    
+
+    openRow(){
+        if(!this.rowData.expanded)
+            this.store.dispatch(editRowExpanded({key:this.rowData.key, expanded:true}))
+    }
+    closeRow(){
+        if(this.rowData.expanded)
+            this.store.dispatch(editRowExpanded({key:this.rowData.key, expanded:false}))
+    }
 }

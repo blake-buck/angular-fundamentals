@@ -17,7 +17,8 @@ export namespace App{
         key:number,
         title:string,
         description:string,
-        boards:number[]
+        boards:number[],
+        expanded:boolean
     }
     
     export interface Board{
@@ -112,8 +113,8 @@ export const initialState:App.AppState = {
     currentRowKey:3,
     archivedRows:[],
     rows:[
-        {key: 1, title:'Test Row', description:'One small step for row, one big step for rowkind', boards:[1,]},
-        {key: 2, title:'Financial Row', description:'All my financial Info', boards:[2]}
+        {key: 1, title:'Test Row', description:'One small step for row, one big step for rowkind', boards:[1], expanded:false},
+        {key: 2, title:'Financial Row', description:'All my financial Info', boards:[2], expanded:false}
     ],
     archivedBoards:[],
     boards:[
