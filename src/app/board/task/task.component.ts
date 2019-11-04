@@ -151,7 +151,7 @@ export class TaskComponent{
         this.labelLength(e.target.value.length)
         task.labels[labelIndex].text = e.target.value;
 
-        this.store.dispatch(editTask({task}))
+        // this.store.dispatch(editTask({task}))
     }
 
     onDrop(e){

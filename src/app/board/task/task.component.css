@@ -92,6 +92,7 @@
     border-radius: 5px;
     padding-left:10px;
     padding-right:10px;
+    max-width:90px;
 }
 
 .task-list-text-due-date{

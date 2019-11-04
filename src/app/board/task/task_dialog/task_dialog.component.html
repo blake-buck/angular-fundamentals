@@ -23,7 +23,10 @@
         </div>
 
         <div>
-            <p class='label' *ngFor='let label of data.labels' style ='font-weight:bold; color:white' [style.background]='label.background'>{{label.text}}</p>
+            <p class='label' *ngFor='let label of data.labels; index as i' style ='font-weight:bold; color:white' [style.background]='label.background'>
+                <input value={{label.text}} [style.background]='label.background' size={{labelLength(label.text.length)}} (keyup)='changeLabelContent($event, label)' (focusout)='saveLabelContent()'/>
+                <mat-icon (click)='removeLabel(i)'>clear</mat-icon>
+            </p>
         </div>
         
     </div>

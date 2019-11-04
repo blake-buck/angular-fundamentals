@@ -238,13 +238,38 @@
 }
 
 p.label{
-    border-radius:10px;
+    border-radius:5px;
     padding-left:10px;
     padding-right:10px;
     padding-top:2px;
-    padding-bottom:2px
+    padding-bottom:2px;
+    max-width: 120px;
+    display:flex;
+    position: relative;
+    margin-left:18px;
 }
-
+p.label:first-of-type{
+    margin-left:0px;
+}
+.label input{
+    font-size:1em;
+    border:none;
+    outline:none;
+    font-weight:bold; 
+    color:white;
+}
+.label mat-icon{
+    right:-20px;
+    position: absolute;
+    color:black;
+    display: none;
+}
+.label mat-icon:hover{
+    display: block;
+}
+.label:hover mat-icon{
+    display: block;
+}
 
 .due-date{
     line-height: 0px;

@@ -18,6 +18,7 @@ import { Observable } from 'rxjs';
 import { LinkTaskDialogComponent } from './link_task_dialog/link_task_dialog.component';
 import { App } from 'src/app/store/app.state';
 import { HttpClient } from '@angular/common/http';
+import { labelLength } from '../task.logic';
 
 
 
@@ -373,6 +374,21 @@ export class TaskDialogComponent {
                 data:task
             }
         )
+    }
+
+    labelLength = labelLength;
+
+    changeLabelContent(e, label){
+        label.text = e.target.value
+    }
+
+    saveLabelContent(){
+        this.store.dispatch(editTask({task:this.data}))
+    }
+
+    removeLabel(i){
+        this.data.labels.splice(i, 1);
+        this.store.dispatch(editTask({task:this.data}))        
     }
 
 }
