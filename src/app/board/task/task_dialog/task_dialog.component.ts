@@ -65,6 +65,7 @@ export class TaskDialogComponent {
         ngOnInit(){
             this.boardAndRowTitle$ = this.store.pipe(select(selectBoardAndRowTitleFromTaskKey, this.data.boardKey))
             this.data.dialogOpen = true;
+            document.querySelector('#pageTitle').textContent = this.data.body
         }
 
         ngAfterViewChecked(){
@@ -83,6 +84,14 @@ export class TaskDialogComponent {
                 }, 0)
                 
             }
+        }
+
+        ngOnDestroy(){
+            setTimeout(() => {
+                if(!document.querySelector('.task-dialog')){
+                    document.querySelector('#pageTitle').textContent = 'AngularFundamentals'
+                }
+            }, 500)
         }
        
     addLabel(labelColor){
