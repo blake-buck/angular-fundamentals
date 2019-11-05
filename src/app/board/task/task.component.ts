@@ -128,7 +128,13 @@ export class TaskComponent{
     }
 
     changeTaskBody(e){
-        this.task.body = e.target.value; 
+        if(e.code === 'Enter'){
+            e.preventDefault()
+            this.toggleInput()
+        }
+        else{
+            this.task.body = e.target.value; 
+        }
     }
 
     toggleDisplayLabelText(){

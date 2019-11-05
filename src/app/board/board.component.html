@@ -7,18 +7,18 @@
     <export-button *ngIf='displayExportLink' [exportLink]='exportLink' [title]='board.title' (linkHasBegunDownload)='downloadLinkLoads()'></export-button>
 
     <div class='card-title' >
-        <h3 (click)='toggleEditBoardTitle(board)' *ngIf='!isEditingBoardTitle' >{{board.title}}</h3>
-
+        <h3 (click)='toggleEditBoardTitle(board)' *ngIf='!isEditingBoardTitle && board.title.length > 0'>{{board.title}}</h3>
+        <h3 (click)='toggleEditBoardTitle(board)' *ngIf='!isEditingBoardTitle && board.title.length === 0' class='placeholderTitle' >Board Title...</h3>
         
         <mat-form-field *ngIf='isEditingBoardTitle' class='board-title-input'>
             <input #boardTitleInput matInput (focusout)='toggleEditBoardTitle(board)' *ngIf='isEditingBoardTitle' value={{board.title}} class='board-title-input-a' (keyup)='editBoardTitle($event, board)'>
         </mat-form-field>
 
-        <div>
+        <div class='board-buttons'>
             <button mat-icon-button [matMenuTriggerFor]='boardOptions'>
                 <mat-icon matTooltip='Board Actions'>more_vert</mat-icon>
                 <mat-menu #boardOptions>
-                    <button mat-menu-item ><mat-checkbox (change)='toggleHideCompleteTasks(board.key, !board.hideCompleteTasks)' [checked]='board.hideCompleteTasks'>Hide completed tasks</mat-checkbox></button>
+                    <button mat-menu-item><mat-checkbox (change)='toggleHideCompleteTasks(board.key, !board.hideCompleteTasks)' [checked]='board.hideCompleteTasks'>Hide completed tasks</mat-checkbox></button>
                     
                     <button mat-menu-item (click)='archiveBoard(board)'>
                         <mat-icon>archive</mat-icon>

@@ -12,13 +12,15 @@
         <div class='task-list-item-div'>
             <form class='task-list-form' (submit)='toggleInput($event)'>
                 <mat-form-field class='task-list-field' style='margin-bottom:-0.5em; margin-top:-0.5em; ' >
-                    <input   
+                    <textarea   
                         matInput
                         #taskBodyInput
                         value={{task.body}} 
                         (keyup)='changeTaskBody($event)'
                         (focusout)='toggleInput()'
-                    />
+                        cdkTextareaAutosize
+                    >
+                    </textarea>
                 </mat-form-field>
             </form>
 
@@ -53,8 +55,7 @@
     class='task-list-item'
     [style.background]='task.cardColor'
     [style.color]='task.fontColor'
-    [style.opacity]='addCompletionStyling("opacity")'
-    [style.text-decoration]='addCompletionStyling("text-decoration")'
+    [ngClass]='{"card-complete":task.isComplete}'
     style='height:100%;padding-top:10px;padding-bottom:10px; position:relative; '
     #elementWrapper
 >   
@@ -63,8 +64,8 @@
         <p *ngFor='let label of task.labels' [style.background]='label.background'></p>
     </div>
 
-    <div (dblclick)='toggleDisplayLabelText()' *ngIf='displayLabelText' class='label-row'>
-        <input (click)='focusLabel()' (keyup)='changeLabelText($event, i, task)' *ngFor='let label of task.labels; index as i' size={{labelLength(label.text.length)}} value={{label.text}} [style.background]='label.background' />
+    <div (click)='toggleDisplayLabelText()' *ngIf='displayLabelText' class='label-row'>
+        <input disabled (click)='focusLabel()' (keyup)='changeLabelText($event, i, task)' *ngFor='let label of task.labels; index as i' size={{labelLength(label.text.length)}} value={{label.text}} [style.background]='label.background' />
     </div>
     
     <div class='task-list-item-wrapper'>
@@ -77,7 +78,7 @@
         <div class='task-list-item-div'>
             <div class='task-list-text-due-date' >
                 <div style='display:flex; align-items:center;'>
-                    <div (click)='toggleInput()' style='width:100%; overflow-wrap: break-word; word-wrap: break-word;' >{{task.body}}</div>
+                    <div style='width:100%; overflow-wrap: break-word; word-wrap: break-word;' [ngClass]='{"text-complete":task.isComplete}'>{{task.body}}</div>
                     <div class='task-due-date' *ngIf='task.dueDate'>
                         <mat-icon>alarm</mat-icon>
                         <span >{{task.dueDate.format('MM/DD')}}</span>
@@ -102,7 +103,7 @@
     
     </div>
 
-    <span class='task-list-checklist-icon-wrapper'>
+    <span class='task-list-checklist-icon-wrapper' *ngIf='task.checklists.length > 0'>
         <mat-icon class='task-list-checklist-icon' *ngFor='let checklist of task.checklists' [style.color]='checklist.color'>check_box</mat-icon>
     </span>
         

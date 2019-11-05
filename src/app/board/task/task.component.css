@@ -22,8 +22,9 @@
 
 .task-list-item-div{
     display:flex;
+    flex-direction:column;
     justify-content: space-between;
-    align-items:center;
+    /* align-items:center; */
     width:100%;
     height:100%;
 }
@@ -31,6 +32,7 @@
     display:flex;
     flex-wrap: wrap;
     margin:0px;
+    margin-top:5px;
     
     padding:0px;
     line-height: 0px;
@@ -49,7 +51,10 @@
 }
 
 .task-list-form, .task-list-field{
-    width:70%;
+    width:100%;
+}
+.task-list-form textarea{
+    overflow:hidden;
 }
 .task-list-field{
     width:100%;
@@ -72,12 +77,13 @@
 .label-row{
     display:flex;
     flex-wrap:wrap;
+    margin-top:-2px;
 }
 
 .label-row p{
     padding:1px;
-    margin-top:3px;
-    margin-bottom:0px;
+    margin-top:0px;
+    margin-bottom:1px;
     min-height: 5px;
     min-width: 43px;
     margin-right:5px;
@@ -95,10 +101,25 @@
     max-width:90px;
 }
 
-.task-list-text-due-date{
-    width:70%;
+.task-list-text-due-date{   
+    /* width:70%; */
+    max-width:100%;
 }
 
 .task-list-labels{
-    width:30%;
+    max-width:100%;
+    max-height:12px;
+    margin-bottom:2px;
 }
+
+.task-list-labels *{
+    bottom:2px;
+    position: relative;
+ }
+
+ .card-complete{
+     opacity: 0.5;
+ }
+ .text-complete{
+     text-decoration: line-through;
+ }

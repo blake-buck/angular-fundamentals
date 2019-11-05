@@ -1,8 +1,8 @@
 <div class='dialog-wrapper' >
     <div class='dialog-title' *ngIf='!isEditingBody'>
 
-        <div (click)='toggleEditBody()'>
-            <h1>{{data.body}}</h1>
+        <div class='dialog-body' (click)='toggleEditBody()'>
+            <h1 [ngClass]='{"complete":data.isComplete}'>{{data.body}}</h1>
             
             <h1 *ngIf='!data.body' style='opacity:.7;'>Card Title...</h1>
         </div>
@@ -60,7 +60,7 @@
     </div>
     
     <div class='dialog-description'>
-        <div *ngIf='(boardAndRowTitle$ | async) as boardAndRowTitle'>
+        <div class='rowAndBoard' *ngIf='(boardAndRowTitle$ | async) as boardAndRowTitle'>
             <p>Row:   {{boardAndRowTitle.rowTitle}}</p>
             <p>Board: {{boardAndRowTitle.boardTitle}}</p>
         </div>
@@ -95,7 +95,7 @@
     <div class='dialog-other'>
         <h3>Other Stuff</h3>
         <div >
-            <h4>Display Image(s)</h4>
+            <h4 *ngIf='data.displayImageUrls.length > 0'>Display Image(s)</h4>
             <img *ngFor='let imageUrl of data.displayImageUrls' src={{imageUrl}} style='max-width:250px;max-height:250px;'/>
         </div>
 
@@ -137,7 +137,7 @@
             </div>
         </div>
 
-        <div>
+        <div class='editedAndCreated'>
             <h5>Last Edited: {{data.lastEdited}}</h5>
             <h5>Created on: {{data.dateCreated}}</h5>
         </div>
