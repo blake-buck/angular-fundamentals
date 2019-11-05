@@ -57,7 +57,7 @@ export class TaskComponent{
                 {
                     // id:'task-dialog',
                     panelClass:'task-dialog',
-                    // backdropClass:'task-dialog',
+                    backdropClass:'FUCKYOUWHORE',
                     data:this.task
                 }
             )

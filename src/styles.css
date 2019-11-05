@@ -18,6 +18,8 @@
     overflow:auto;
     width:100vh;
     max-width:800px;
+    z-index: -1;
+    position: relative;
 }
 .task-dialog mat-dialog-container{
     background-color:#E5E5E5;
@@ -34,6 +36,16 @@
     max-width: 250px;
     max-height: 250px;
 }
+
+.dialogToBack{
+    /* background:green; */
+    z-index:-1;
+}
+
+/* #delete-dialog, #date-pick-dialog, #photo-dialog, #attachment-dialog, #preview-attachment-dialog, #transfer-task-dialog, #link_task_dialog, #task-dialog{
+    z-index: 1500 !important;
+    position: relative;
+} */
 
 @media only screen and (max-width: 450px) {
     

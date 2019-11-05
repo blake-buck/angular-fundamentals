@@ -65,7 +65,10 @@ export class TaskDialogComponent {
         ngOnInit(){
             this.boardAndRowTitle$ = this.store.pipe(select(selectBoardAndRowTitleFromTaskKey, this.data.boardKey))
             this.data.dialogOpen = true;
+            // this.dialogRef.addPanelClass('FUCKYOUWHORE')
+            // this.dialogRef.
             document.querySelector('#pageTitle').textContent = this.data.body
+            document.querySelector('.cdk-global-overlay-wrapper:last-of-type').classList.add('dialogToBack')
         }
 
         ngAfterViewChecked(){
