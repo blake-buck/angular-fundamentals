@@ -24,7 +24,8 @@ import
   MatExpansionModule,
   MatToolbarModule,
   MatSnackBarModule,
-  MatProgressSpinnerModule
+  MatProgressSpinnerModule,
+  MatTooltipModule
 } 
 from '@angular/material';
 
@@ -98,6 +99,7 @@ import { EffectsModule } from '@ngrx/effects';
     MatToolbarModule,
     MatSnackBarModule,
     MatProgressSpinnerModule,
+    MatTooltipModule,
 
     HttpClientModule,
 

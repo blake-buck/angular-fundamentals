@@ -16,7 +16,7 @@
 
         <div>
             <button mat-icon-button [matMenuTriggerFor]='boardOptions'>
-                <mat-icon>more_vert</mat-icon>
+                <mat-icon matTooltip='Board Actions'>more_vert</mat-icon>
                 <mat-menu #boardOptions>
                     <button mat-menu-item ><mat-checkbox (change)='toggleHideCompleteTasks(board.key, !board.hideCompleteTasks)' [checked]='board.hideCompleteTasks'>Hide completed tasks</mat-checkbox></button>
                     
@@ -59,7 +59,7 @@
 
             </button>
 
-            <button mat-icon-button (click)='addTask(board.tasks)'>
+            <button mat-icon-button (click)='addTask(board.tasks)' matTooltip='Add Task'>
                 <mat-icon>add</mat-icon>
             </button>
         </div>
