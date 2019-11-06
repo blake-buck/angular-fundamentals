@@ -54,6 +54,7 @@ export class DatePickDialogComponent{
 
     removeDueDate(){
         this.data.dueDate = null;
+        this.dueDateMoment = null;
         this.store.dispatch(editTask({task:this.data}))
         this.days=calculateDays(this.selectedMonthIndex)
         this.firstDayOfMonthIsoIndex = calculateFirstDayOfMonth(this.selectedMonthIndex)

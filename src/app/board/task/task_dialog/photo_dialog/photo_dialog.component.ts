@@ -8,6 +8,7 @@ import { by } from 'protractor';
 
 @Component({
     templateUrl:'./photo_dialog.component.html',
+    styleUrls:['./photo_dialog.component.css'],
     selector:'photo-dialog'
 })
 export class PhotoDialogComponent{
@@ -21,9 +22,8 @@ export class PhotoDialogComponent{
         public snackbar: MatSnackBar
     ){}
 
-
     realImages = [...this.data.displayImageUrls, ...[]]
-    unsavedImages = [];
+    // unsavedImages = [];
     canSave = false;
     isLoading = false;
     file;
@@ -37,7 +37,7 @@ export class PhotoDialogComponent{
             this.http.post('http://localhost:7071/api/DisplayPhoto', {name:e.target.files[0].name, base64:fileReader.result, taskName:`task${this.data.key}`}, {responseType:'json'}).subscribe((val:any) => {
                 if(val.url){
                     this.realImages.push(val.url)
-                    this.unsavedImages.push(val.url)
+                    // this.unsavedImages.push(val.url)
                     this.canSave=true;
                 }
                 else{
@@ -53,21 +53,21 @@ export class PhotoDialogComponent{
     }
 
     onCloseDialog(){
-        this.unsavedImages.map(val => {
-            let fileName = /display\/.+\?sv=/.exec(val)[0].replace('display/', '').replace('?sv=' ,'')
-            this.http.delete('http://localhost:7071/api/DisplayPhoto', {params:{name:fileName, taskName:`task${this.data.key}`}}).subscribe(val => console.log(val))
-        })
+        // this.unsavedImages.map(val => {
+        //     let fileName = /display\/.+\?sv=/.exec(val)[0].replace('display/', '').replace('?sv=' ,'')
+        //     this.http.delete('http://localhost:7071/api/DisplayPhoto', {params:{name:fileName, taskName:`task${this.data.key}`}}).subscribe(val => console.log(val))
+        // })
         this.dialogRef.close(); 
     }
 
-    clearImage(){
+    clearImage(index){
         if(this.realImages.length > 0){
             // Best practice? of course not. Good regex practice? hell yeah!
-            let fileName = /display\/.+\?sv=/.exec(this.realImages[this.realImages.length-1])[0].replace('display/', '').replace('?sv=' ,'')
+            let fileName = /display\/.+\?sv=/.exec(this.realImages[index])[0].replace('display/', '').replace('?sv=' ,'')
             // console.log(/display\/.+\?sv=/.exec(this.realImages[this.realImages.length-1])[0].replace('display/', '').replace('?sv=' ,''))
             this.http.delete('http://localhost:7071/api/DisplayPhoto', {params:{name:fileName, taskName:`task${this.data.key}`}}).subscribe(val => console.log(val))
 
-            this.realImages.pop();
+            this.realImages.splice(index, 1);
     
             // this.http.delete('http://localhost:7071/api/DisplayPhoto')//, {params:{param:'jeff'}}
             // this.http.delete('', {name:fileName, taskName:`task${this.data.key}`})
@@ -78,7 +78,7 @@ export class PhotoDialogComponent{
     saveImage(){
         this.dialogRef.close();
         this.dialogRef.afterClosed().subscribe(result => {
-            this.store.dispatch(editTask({task:{...this.data, displayImageUrls:[...this.data.displayImageUrls, ...this.realImages]}}))
+            this.store.dispatch(editTask({task:{...this.data, displayImageUrls:this.realImages}}))
         })
     }
 

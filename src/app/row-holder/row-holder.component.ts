@@ -30,7 +30,7 @@ export class RowHolderComponent{
 
     ngOnInit(){
         this.store.dispatch(getState())
-        // this.store.dispatch(getStateFromCosmos())
+        this.store.dispatch(getStateFromCosmos())
         this.autoSaveInterval = setInterval(() => {
             // this.store.dispatch(putStateToCosmos())
         }, 60000)

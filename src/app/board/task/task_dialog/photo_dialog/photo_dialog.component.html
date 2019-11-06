@@ -1,14 +1,21 @@
-<h3>Attach a photo</h3>
-
-<div class='photo-upload-content'>
-    <div style='overflow-y: scroll; max-height: 500px; display:flex; flex-direction: column;'> 
-        <img  *ngFor='let imageUrl of realImages' src={{imageUrl}} style='width:250px; height:250px;' class='imageToDisplay' />
-    </div>
-    <mat-spinner style='margin-left:auto; margin-right:auto;' *ngIf='isLoading'></mat-spinner>
-    <input type='file' id='attachment-upload-input' (change)='getFile($event)' accept='image/*'/>
+<div class='exit-row'>
+    <h3>Attach a display photo</h3>
+    <button mat-icon-button (click)='saveImage()'><mat-icon>clear</mat-icon></button>
 </div>
 
-<div mat-dialog-actions>
+
+<div class='photo-upload-content'>
+    <div style='overflow-y:auto; max-height: 500px; display:flex; flex-direction: column;'> 
+        <div class='imageBlock' *ngFor='let imageUrl of realImages; index as i'>
+            <img src={{imageUrl}} style='width:250px; height:250px;' class='imageToDisplay' />
+            <button color='warn' mat-icon-button (click)='clearImage(i)'><mat-icon>delete</mat-icon></button>
+        </div>
+    </div>
+</div>
+<mat-spinner style='margin-left:auto; margin-right:auto;' *ngIf='isLoading'></mat-spinner>
+<input type='file' id='attachment-upload-input' (change)='getFile($event)' accept='image/*'/>
+
+<!-- <div mat-dialog-actions>
     <button mat-button (click)='onCloseDialog()'>Close</button>
     <button *ngIf='realImages' mat-button (click)='clearImage()'>Clear</button>
     <button mat-flat-button color='primary' (click)='saveImage()' *ngIf='canSave; else disabledButton'>Save</button>
@@ -16,4 +23,4 @@
     <ng-template #disabledButton>
         <button disabled='true' mat-button>Save</button>
     </ng-template>
-</div>
+</div> -->
