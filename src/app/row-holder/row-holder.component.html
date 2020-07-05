@@ -2,8 +2,6 @@
   <mat-toolbar-row class='toolbar-row'>
     <button mat-flat-button (click)='putState()'><mat-icon>save</mat-icon>Save</button>
     <button mat-button (click)='addRow()'>Add Row</button>
-    <!-- <button mat-flat-button>Query Document</button>
-    <button mat-flat-button>Export Document</button> -->
     <button mat-button (click)='accordion.closeAll()'>Close All</button>
     <button mat-button (click)='accordion.openAll()'>Open All</button>
   </mat-toolbar-row>
@@ -14,15 +12,7 @@
   <row *ngFor='let row of row$ | async' [rowData]='row' [accordion]='accordion'></row>
 </mat-accordion>
 
-
 <footer>
-  <span *ngIf='(dataSaved$|async) as dataSaved;'>Saved</span>
+  <span *ngIf='(dataSaved$ | async) as dataSaved'>Saved</span>
   <span *ngIf='!(dataSaved$ | async)'>Unsaved Changes</span>
 </footer>
-
-<!-- <button (click)='getApi()'>Get</button>
-<button (click)='postApi()'>Post</button>
-<button (click)='putApi()'>Put</button>
-
-<button (click)='postState()'>POST STATE</button>
-<button (click)='putState()'>PUT STATE</button> -->

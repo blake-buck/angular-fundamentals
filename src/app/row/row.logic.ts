@@ -1,9 +1,10 @@
 export function autoScroller(e){        
+    const scrollBy = 10;
     if(e.forward){          
-        this.scrollRow.nativeElement.scrollBy({left:10, top:0, behavior:'auto' })
+        this.scrollRow.nativeElement.scrollBy({left:scrollBy, top:0, behavior:'auto' });
     }
     else{
-        this.scrollRow.nativeElement.scrollBy({left:-10, top:0, behavior:'auto' })
+        this.scrollRow.nativeElement.scrollBy({left:-scrollBy, top:0, behavior:'auto' });
     } 
 }
 

@@ -1,22 +1,13 @@
-import { Component, Input, ViewChild, ElementRef, Injectable } from '@angular/core';
+import { Component, Input, ViewChild, ElementRef } from '@angular/core';
 
 import {Store, select} from '@ngrx/store';
-import {Observable, pipe} from 'rxjs';
+import {Observable} from 'rxjs';
 
-import 
-{
-    autoScroller
-    ,editTitle
-    ,editDescription
-    ,onDragStart
-    ,onDragOver
-    ,onDrop
-} from './row.logic';
+import { onDragStart, onDragOver, onDrop } from './row.logic';
 
-import {getState, archiveRow, editRowTitle, editRowDescription, addBoard, transferBoard, duplicateRow, scrollRowForward, scrollRowBackward, editRowExpanded} from '../store/app.actions';
-import { selectBoards, selectSpecificBoards } from '../store/app.selector';
-import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { map, tap } from 'rxjs/operators';
+import { archiveRow, editRowTitle, editRowDescription, addBoard, transferBoard, scrollRowForward, scrollRowBackward, editRowExpanded } from '../store/app.actions';
+import { selectSpecificBoards } from '../store/app.selector';
+import { Actions } from '@ngrx/effects';
 
 export interface AppState{
     simpleReducer:any
@@ -28,11 +19,7 @@ export interface AppState{
     styleUrls:['./row.component.css']
 })
 
-
-
 export class RowComponent{
-
-    // row$:Observable<any>;
     @Input() rowData:any;
     @Input() accordion:any;
 
@@ -47,9 +34,9 @@ export class RowComponent{
     canScrollRow = false;
 
     constructor(private store:Store<AppState>, private actions$:Actions){}
+
     ngOnInit(){
         this.board$ = this.store.pipe(select(selectSpecificBoards, this.rowData.key))
-        
     }
 
     ngOnDestroy(){
@@ -66,7 +53,6 @@ export class RowComponent{
     }
 
     scroll = this.actions$.subscribe(val => {
-        // console.log(val.type)
         if(val.type === scrollRowForward.type && this.canScrollRow){
             if(this.scrollRow && this.scrollRow.nativeElement){
                 this.scrollRow.nativeElement.scrollLeft = this.scrollRow.nativeElement.scrollLeft + 6; 
@@ -102,9 +88,6 @@ export class RowComponent{
 
     toggleEditTitle(row){
         this.isEditingTitle = !this.isEditingTitle;
-        // if(this.isEditingTitle === false){
-        //     this.store.dispatch(editRowTitle({key:row.key, title:row.title}))
-        // }
     }
 
     onDrop(e, row){
@@ -115,11 +98,14 @@ export class RowComponent{
     }
 
     openRow(){
-        if(!this.rowData.expanded)
-            this.store.dispatch(editRowExpanded({key:this.rowData.key, expanded:true}))
+        if(!this.rowData.expanded){
+            this.store.dispatch(editRowExpanded({key:this.rowData.key, expanded:true}));
+        }
     }
+
     closeRow(){
-        if(this.rowData.expanded)
-            this.store.dispatch(editRowExpanded({key:this.rowData.key, expanded:false}))
+        if(this.rowData.expanded){
+            this.store.dispatch(editRowExpanded({key:this.rowData.key, expanded:false}));
+        }
     }
 }
