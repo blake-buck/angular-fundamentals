@@ -6,12 +6,11 @@ export const addRow = createAction('ADD_ROW');
 
 export const duplicateRow = createAction('DUPLICATE_ROW', props<{key:number}>())
 
-// export const transferRow = createAction('TRANSFER_ROW', props<{}>())
-
 export const archiveRow = createAction(
     'ARCHIVE_ROW',
     props<{key:number}>()
 )
+
 export const archiveRowSuccess = createAction(
     'ARCHIVE_ROW_SUCCESS',
     props<{rows:any, archivedRows:any}>()

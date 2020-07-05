@@ -1,10 +1,10 @@
 import { Injectable } from "@angular/core";
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import {tap, exhaust, exhaustMap, switchMap, map, mergeMap, switchAll, combineAll, concatMap, first} from 'rxjs/operators'
-import { Store, select } from '@ngrx/store';
-import { selectAppState, selectAppStateWithProps } from './app.selector';
-import { Observable, combineLatest } from 'rxjs';
-import { archiveRowSuccess, archiveRow, getState, editRowTitle, editRowTitleSuccess, postStateToCosmos, putStateToCosmos, getStateFromCosmos, getStateFromCosmosSuccess, scrollRowForward, saveChanges } from './app.actions';
+import { map, first} from 'rxjs/operators'
+import { Store } from '@ngrx/store';
+import { selectAppState } from './app.selector';
+import { combineLatest } from 'rxjs';
+import { archiveRowSuccess, archiveRow, editRowTitle, editRowTitleSuccess, postStateToCosmos, putStateToCosmos, getStateFromCosmos, getStateFromCosmosSuccess, saveChanges } from './app.actions';
 import { HttpClient } from '@angular/common/http';
 
 @Injectable()
@@ -16,8 +16,8 @@ export class AppEffects {
         () => this.actions$.pipe(
             ofType(archiveRow),
             map(action => {
-                let jeff = this.store.select(selectAppState)
-                return combineLatest(jeff, [action])
+                let appState = this.store.select(selectAppState)
+                return combineLatest(appState, [action])
             }),
 
             map(state => {
@@ -42,8 +42,8 @@ export class AppEffects {
         () => this.actions$.pipe(
             ofType(editRowTitle),
             map(action => {
-                let jeff = this.store.select(selectAppState)
-                return combineLatest(jeff, [action])
+                let appState = this.store.select(selectAppState)
+                return combineLatest(appState, [action])
             }),
             map(payload => {
                 payload.subscribe(val => {
