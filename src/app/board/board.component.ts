@@ -28,8 +28,8 @@ export class BoardComponent{
 
     isEditingBoardTitle = false;
     isEditingBoardTitleFocused = false;
-    exportLink = null;
-    displayExportLink = false;
+    exportData = null;
+    beginDataExport = false;
     
 
     tasks$:Observable<any>
@@ -76,10 +76,6 @@ export class BoardComponent{
         }
         
     }
-
-    // duplicateBoard(board){
-    //     this.store.dispatch(duplicateBoard({key:board.key}))
-    // }
 
     toggleEditBoardTitle(board){
         if(this.isEditingBoardTitle){
@@ -156,8 +152,8 @@ export class BoardComponent{
 
         fileReader.onloadend = (e) => {
             let untrustedLink:any = fileReader.result
-            this.exportLink = this.sanitization.bypassSecurityTrustUrl(untrustedLink);
-            this.displayExportLink = true;
+            this.exportData = this.sanitization.bypassSecurityTrustUrl(untrustedLink);
+            this.beginDataExport = true;
         }
         if(file){
             fileReader.readAsDataURL(file)
@@ -167,7 +163,7 @@ export class BoardComponent{
     downloadLinkLoads(){
         // this seems very hacky, should probably find another way to prevent ExpressionChangedAfter error message
         setTimeout(() => {
-            this.displayExportLink = false
+            this.beginDataExport = false
         }, 0)
         
     }
