@@ -8,6 +8,8 @@ import { DomSanitizer } from '@angular/platform-browser';
 import {orderByLastEdited, orderByAlphabetical, orderByDateCreated, onDrop} from './board.logic';
 import {editBoardTitle, archiveBoard, deleteBoard, toggleHideCompleteTasks, addTask, editTask, reorderBoardTasks, duplicateBoard, scrollRowForward, scrollRowBackward} from '../store/app.actions'
 import { selectRows, selectBoards, selectBoardFromBoardKey } from '../store/app.selector';
+import { TransferBoardDialogComponent } from './transfer-board-dialog/transfer-board-dialog.component';
+import { DeleteBoardDialogComponent } from './delete-board-dialog/delete-board-dialog.component';
 
 
 @Component({
@@ -19,15 +21,20 @@ import { selectRows, selectBoards, selectBoardFromBoardKey } from '../store/app.
 @Injectable()
 
 export class BoardComponent{
+    orderByAlphabetical=orderByAlphabetical;
+    orderByDateCreated=orderByDateCreated;
+    orderByLastEdited=orderByLastEdited;
+
     @ViewChild('boardTitleInput', {read: ElementRef, static:false}) boardTitleInput: ElementRef;
     
     @Input() boardTitle:string;
-    @Input() boardKey:any;
+    @Input() boardKey:number;
 
     @Output() autoScroller = new EventEmitter();
 
     isEditingBoardTitle = false;
     isEditingBoardTitleFocused = false;
+
     exportData = null;
     beginDataExport = false;
     
@@ -35,14 +42,11 @@ export class BoardComponent{
     tasks$:Observable<any>
     board$:Observable<any>
 
-    titles:any=[]
 
-    constructor(private store:Store<any>, public dialog:MatDialog, private sanitization:DomSanitizer,){
-        // this.board$ = this.store.select(state => state.simpleReducer.boards.find((board) => board.key === this.boardKey))
-    }
+    constructor(private store:Store<any>, public dialog:MatDialog, private sanitization:DomSanitizer){}
 
    ngOnInit(){
-       this.board$ = this.store.pipe(select(selectBoardFromBoardKey, this.boardKey))
+       this.board$ = this.store.select(selectBoardFromBoardKey, this.boardKey)
    }
 
     ngAfterViewChecked(){
@@ -56,7 +60,6 @@ export class BoardComponent{
 
     archiveBoard(board){
         this.store.dispatch(archiveBoard({key:board.key}))
-        // this.store.dispatch({type:'ARCHIVE_BOARD', payload:{key:board.key}})
     }
 
     addTask(){
@@ -66,26 +69,18 @@ export class BoardComponent{
     onTaskChange(changedTask){
         this.store.dispatch(editTask({task:changedTask}))
     }
-    
-    onDrop(e, board){
-        let eventDataTransfer = e.dataTransfer.getData('text')
-        e.preventDefault()
-        let state = onDrop(eventDataTransfer, board, this.boardKey);
-        if(state){
-            this.store.dispatch({type:state.type, payload:state.payload})
-        }
-        
-    }
 
     toggleEditBoardTitle(board){
         if(this.isEditingBoardTitle){
             this.store.dispatch(editBoardTitle({key:board.key, title:board.title}))
         }
         this.isEditingBoardTitle = !this.isEditingBoardTitle;
+
         if(this.isEditingBoardTitleFocused){
             this.isEditingBoardTitleFocused = false;
         }
     }
+    
     editBoardTitle(e, board){  
         if(e.code === 'Enter'){
             this.toggleEditBoardTitle(board)
@@ -97,24 +92,33 @@ export class BoardComponent{
 
     toggleHideCompleteTasks(key, hideCompleteTasks){
         this.store.dispatch(toggleHideCompleteTasks({key, hideCompleteTasks}))
-        // this.store.dispatch({type:'TOGGLE_HIDE_COMPLETE_TASKS', payload:{boardKey, hideCompleteTasks}})
     }
    
     onDragStart(e, board){
-        if(e.dataTransfer.getData('text').includes('+')){}
-        else{
+        if(!e.dataTransfer.getData('text').includes('+')){
             e.dataTransfer.setData('text/plain', `BOARD${board.key}-${board.rowKey}`);
-        }
-        
+        }        
     }
 
     onDrag(e){
-        
-        if(e.screenX > window.innerWidth -100 && e.target.getAttribute('class').includes('board')){
+        const beginScrollingWidth = 100; 
+        const targetHasBoardAttribute =  e.target.getAttribute('class').includes('board');
+        if(e.screenX > window.innerWidth - beginScrollingWidth && targetHasBoardAttribute){
             this.store.dispatch(scrollRowForward())
         }   
-        else if(e.screenX < 100 && e.target.getAttribute('class').includes('board')){
+        else if(e.screenX < beginScrollingWidth && targetHasBoardAttribute){
             this.store.dispatch(scrollRowBackward())
+        }
+    }
+
+    onDrop(e, board){
+        e.preventDefault();
+        let eventDataTransfer = e.dataTransfer.getData('text')
+        
+        let state = onDrop(eventDataTransfer, board, this.boardKey);
+
+        if(state){
+            this.store.dispatch({type:state.type, payload:state.payload})
         }
     }
 
@@ -126,37 +130,41 @@ export class BoardComponent{
         e.preventDefault()
     }
 
-    deleteBoard(boardKey){
-        const dialogRef = this.dialog.open(DeleteBoardDialogComponent, 
-            {
-                id:'delete-board-dialog',
-                data:boardKey
-            }
-        )
-    }
 
-    transferBoard(data){
-        const dialogRef = this.dialog.open(TransferBoardDialogComponent, 
+    openDialog(id, data){
+        let component;
+        switch(id){
+            case 'delete-board-dialog':
+                component = DeleteBoardDialogComponent;
+                break;
+            case 'transfer-board-dialog':
+                component = TransferBoardDialogComponent;
+                break;
+        }
+
+
+        this.dialog.open(
+            component,
             {
-                id:'transfer-board-dialog',
-                data:data
+                id, 
+                data
             }
-        )
+        );
     }
 
     
     exportBoard(board){
-        let file = new File([JSON.stringify(board)], board.title)
+        let file = new File([JSON.stringify(board)], board.title);
         
         let fileReader = new FileReader();
 
         fileReader.onloadend = (e) => {
-            let untrustedLink:any = fileReader.result
+            let untrustedLink:any = fileReader.result;
             this.exportData = this.sanitization.bypassSecurityTrustUrl(untrustedLink);
             this.beginDataExport = true;
         }
         if(file){
-            fileReader.readAsDataURL(file)
+            fileReader.readAsDataURL(file);
         }
     }
 
@@ -165,78 +173,10 @@ export class BoardComponent{
         setTimeout(() => {
             this.beginDataExport = false
         }, 0)
-        
     }
 
-    orderByDateCreated(tasks, key){
-        this.store.dispatch(reorderBoardTasks({payload:{key, tasks:orderByDateCreated(tasks)}}))
+    orderTasksBy(orderBy, tasks, key){
+        this.store.dispatch(reorderBoardTasks({payload:{key, tasks:orderBy(tasks)}}))
     }
-
-    orderByLastEdited(tasks, key){
-        this.store.dispatch(reorderBoardTasks({payload:{key, tasks:orderByLastEdited(tasks)}}))
-    }
-
-    // for now this system only goes out to 6 letters in a board body -- not perfect but good enough for now
-
-    orderByAlphabetical(tasks, key){
-        this.store.dispatch(reorderBoardTasks({payload:{key, tasks:orderByAlphabetical(tasks)}}))
-    }
-
-}
-
-@Component({
-    templateUrl:'./delete_board_dialog.component.html',
-    selector:'delete-board-dialog'
-})
-
-export class DeleteBoardDialogComponent{
-    constructor(
-        private store:Store<any>,
-        public dialogRef: MatDialogRef<DeleteBoardDialogComponent>, 
-        @Inject(MAT_DIALOG_DATA) public data:any,
-        public dialog:MatDialog
-    ){}
-
-    onCloseDialog(){
-        this.dialogRef.close();
-    }
-
     
-
-    deleteBoard(){
-        this.store.dispatch(deleteBoard({key:this.data}))
-        this.dialogRef.close();
-    }
-}
-
-@Component({
-    templateUrl:'./transfer_board_dialog.component.html',
-    selector:'transfer-board-dialog'
-})
-
-export class TransferBoardDialogComponent{
-
-    rows$:Observable<any>
-    boards$;
-    selectedRow = null;
-
-    constructor(
-        private store:Store<any>,
-        public dialogRef: MatDialogRef<TransferBoardDialogComponent>, 
-        @Inject(MAT_DIALOG_DATA) public data:any,
-        public dialog:MatDialog
-    ){
-        this.rows$ = this.store.select(selectRows)
-        this.boards$ = this.store.select(selectBoards)
-    }
-
-    onCloseDialog(){
-        this.dialogRef.close();
-    }
-
-    transferBoard(data){
-        this.store.dispatch({type:'TRANSFER_BOARD', payload:{draggedBoardKey:data.key, draggedBoardRowKey:data.rowKey, droppedOnRowKey:this.selectedRow.key}})
-        this.dialogRef.close();
-    }
-
 }

@@ -34,7 +34,9 @@ import { NgModule } from '@angular/core';
 import { AppComponent } from './app.component';
 
 import { RowComponent } from './row/row.component';
-import { BoardComponent, DeleteBoardDialogComponent, TransferBoardDialogComponent } from './board/board.component';
+import { BoardComponent } from './board/board.component';
+import { TransferBoardDialogComponent } from './board/transfer-board-dialog/transfer-board-dialog.component';
+import { DeleteBoardDialogComponent } from './board/delete-board-dialog/delete-board-dialog.component';
 import { TaskComponent } from './board/task/task.component';
 import { ExportButtonComponent } from './board/export-button/export-button.component';
 
@@ -51,6 +53,7 @@ import { LoginComponent } from './login/login.component';
 import { AppRoutingModule } from './app-routing.module';
 import { AppEffects } from './store/app.effects';
 import { EffectsModule } from '@ngrx/effects';
+
 
 
 @NgModule({

@@ -1,7 +1,3 @@
-export function editBoardTitle(e, board){
-
-}
-
 export function orderByLastEdited(tasks){
     let orderedArray = tasks.slice(0, tasks.length + 1);
 
