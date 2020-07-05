@@ -1,30 +1,20 @@
-import { DomSanitizer} from '@angular/platform-browser'
-import {Component, Input, Output, EventEmitter, Inject, ViewChild, ElementRef, 
-    OnChanges, AfterViewChecked, AfterViewInit, AfterContentChecked, DoCheck} from '@angular/core';
-import { CdkTextColumn } from '@angular/cdk/table';
-import {CdkTextareaAutosize} from '@angular/cdk/text-field';
+import {Component, Input, Output, EventEmitter, ViewChild, ElementRef} from '@angular/core';
 import {Store} from '@ngrx/store';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatTabChangeEvent} from '@angular/material';
+import { MatDialog} from '@angular/material';
 
 import {addCompletionStyling, onDrop, labelLength, cyclePhoto} from './task.logic';
 export interface AppState{
     simpleReducer:any
 }
 
-
-
 import {TaskDialogComponent} from './task_dialog/task_dialog.component';
 import { editTask, transferTask, scrollRowForward, scrollRowBackward } from 'src/app/store/app.actions';
-
-
 
 @Component({
     selector:'task',
     templateUrl:'task.component.html',
     styleUrls:['./task.component.css']
 })
-
-
 
 export class TaskComponent{
     @ViewChild('elementWrapper', {read: ElementRef, static:false}) elementWrapper: ElementRef;
@@ -53,18 +43,13 @@ export class TaskComponent{
             this.task.isInput = true; 
         }
         if(this.task.dialogOpen){
-            this.dialogRef = this.dialog.open(TaskDialogComponent, 
-                {
-                    // id:'task-dialog',
-                    panelClass:'task-dialog',
-                    backdropClass:'FUCKYOUWHORE',
-                    data:this.task
-                }
-            )
+            this.openDialog();
         }
     }
     ngOnDestroy(){
-        if(this.dialogRef)this.dialogRef.close()
+        if(this.dialogRef){
+            this.dialogRef.close();
+        }
     }
 
     ngAfterViewChecked(){
@@ -91,10 +76,12 @@ export class TaskComponent{
     }
 
     onDrag(e){
-        if(e.clientX > window.innerWidth -125 && e.target.getAttribute('class').includes('task')){
+        const startScrollingBoundary = 125;
+        const elementHasTaskAttribute = e.target.getAttribute('class').includes('task');
+        if(e.clientX > window.innerWidth - startScrollingBoundary && elementHasTaskAttribute){
             this.store.dispatch(scrollRowForward())
         }   
-        else if(e.clientX < 125 && e.target.getAttribute('class').includes('task')){
+        else if(e.clientX < startScrollingBoundary && elementHasTaskAttribute){
             this.store.dispatch(scrollRowBackward())
         }
     }
@@ -103,9 +90,7 @@ export class TaskComponent{
         if(!this.disableDialogOpening){
             this.dialogRef = this.dialog.open(TaskDialogComponent, 
                 {
-                    // id:'task-dialog',
                     panelClass:'task-dialog',
-                    // backdropClass:'task-dialog',
                     data:this.task
                 }
             )
@@ -156,8 +141,6 @@ export class TaskComponent{
     changeLabelText(e, labelIndex, task){
         this.labelLength(e.target.value.length)
         task.labels[labelIndex].text = e.target.value;
-
-        // this.store.dispatch(editTask({task}))
     }
 
     onDrop(e){
@@ -187,14 +170,3 @@ export class TaskComponent{
     }
 
 }
-
-
-
-
-
-
-
-
-
-
-

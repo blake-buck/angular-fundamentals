@@ -1,7 +1,6 @@
 import {Component, ViewChild, ElementRef, Inject} from '@angular/core';
 import { CdkTextareaAutosize } from '@angular/cdk/text-field';
 import { Store, select } from '@ngrx/store';
-import { AppState } from 'src/app/app.component';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material';
 
 import { PreviewAttachmentDialogComponent} from './preview_attachment_dialog/preview_attachment_dialog.component';
@@ -11,12 +10,11 @@ import {PhotoDialogComponent} from './photo_dialog/photo_dialog.component';
 import {DeleteDialogComponent} from './delete_dialog/delete_dialog.component';
 
 import {TransferTaskDialogComponent} from './transfer_task_dialog/transfer_task_dialog.component';
-import { addLabel, addComment, changeCardColor, changeFontColor, addChecklist, deleteChecklist, changeChecklistTitle, toggleEditChecklistTitle, toggleChecklistItem, toggleEditChecklistItem, addChecklistItem, deleteChecklistItem, changeChecklistItemText, removeFile } from './task_dialog.logic';
-import { editTask, deleteTask, duplicateTask, putStateToCosmos } from 'src/app/store/app.actions';
+import { addLabel, addComment, addChecklist, deleteChecklist, changeChecklistTitle, toggleEditChecklistTitle, toggleChecklistItem, toggleEditChecklistItem, addChecklistItem, deleteChecklistItem, changeChecklistItemText, removeFile } from './task_dialog.logic';
+import { editTask } from 'src/app/store/app.actions';
 import { selectBoardAndRowTitleFromTaskKey, selectSpecificTask } from 'src/app/store/app.selector';
 import { Observable } from 'rxjs';
 import { LinkTaskDialogComponent } from './link_task_dialog/link_task_dialog.component';
-import { App } from 'src/app/store/app.state';
 import { HttpClient } from '@angular/common/http';
 import { labelLength } from '../task.logic';
 
@@ -28,65 +26,43 @@ import { labelLength } from '../task.logic';
     styleUrls:['./task_dialog.component.css']
 })
 
-// OnChanges, AfterViewChecked, AfterViewInit, AfterContentChecked, DoCheck
-// implements AfterContentChecked, AfterViewChecked, AfterViewInit
 export class TaskDialogComponent {
     @ViewChild('bodyInput', {read: ElementRef, static:false}) bodyInput: ElementRef;
     @ViewChild('descriptionInput', {read: ElementRef, static:false}) descriptionInput: ElementRef;
-    @ViewChild('autosize', {static:false}) autosize:CdkTextareaAutosize;
-
     @ViewChild('checklistTitle', {read: ElementRef, static:false}) checklistTitle: ElementRef;
     @ViewChild('checklistInput', {read: ElementRef, static:false}) checklistInput: ElementRef;
 
-    isEditingBody                   = false;
-    isEditingBodyFocused            = false;
+    @ViewChild('autosize', {static:false}) autosize:CdkTextareaAutosize;
 
-    isEditingDescription            = false;
-    isEditingDescriptionFocused     = false;
+    isEditingBody = false;
+    isEditingBodyFocused = false;
+
+    isEditingDescription = false;
+    isEditingDescriptionFocused = false;
 
     boardAndRowTitle$:Observable<any>;
     linkedTasks$ = [];
 
-    commentContent = ''
-
-    row = null;
-
+    commentContent = '';
 
     constructor(
-        private store:Store<AppState>,
+        private store:Store<any>,
         public dialogRef: MatDialogRef<TaskDialogComponent>, 
         @Inject(MAT_DIALOG_DATA) public data:any,
         public dialog:MatDialog,
         public http:HttpClient
         ){}
-        // data = this.store.select(selectSpecificTask, {boardKey:1, taskKey:1})
-
 
         ngOnInit(){
-            this.boardAndRowTitle$ = this.store.pipe(select(selectBoardAndRowTitleFromTaskKey, this.data.boardKey))
+            this.boardAndRowTitle$ = this.store.select(selectBoardAndRowTitleFromTaskKey, this.data.boardKey)
             this.data.dialogOpen = true;
-            // this.dialogRef.addPanelClass('FUCKYOUWHORE')
-            // this.dialogRef.
             document.querySelector('#pageTitle').textContent = this.data.body
             document.querySelector('.cdk-global-overlay-wrapper:last-of-type').classList.add('dialogToBack')
         }
 
         ngAfterViewChecked(){
-            if( this.isEditingBody && !this.isEditingBodyFocused){
-                this.isEditingBodyFocused = true;
-                setTimeout((bodyInput = this.bodyInput) => {
-                    bodyInput.nativeElement.focus();
-                }, 0)
-                
-            }
-
-            if( this.isEditingDescription && !this.isEditingDescriptionFocused){
-                this.isEditingDescriptionFocused = true;
-                setTimeout((descriptionInput = this.descriptionInput) => {
-                    descriptionInput.nativeElement.focus();
-                }, 0)
-                
-            }
+            this.autofocusInput('isEditingBody', 'isEditingBodyFocused', 'bodyInput');
+            this.autofocusInput('isEditingDescription', 'isEditingDescriptionFocused', 'descriptionInput');
         }
 
         ngOnDestroy(){
@@ -96,34 +72,32 @@ export class TaskDialogComponent {
                 }
             }, 500)
         }
-       
+    
+    autofocusInput(isEditingProperty, isFocused, inputElement){
+        if(this[isEditingProperty] && !this[isFocused]){
+            this[isFocused] = true;
+            setTimeout((input = this[inputElement]) => {
+                input.nativeElement.focus();
+            }, 0)
+        }
+    }
+    
     addLabel(labelColor){
         this.store.dispatch(editTask({task:addLabel(this.data, labelColor)}))
     }
 
-    toggleEditBody(e?){
+    toggleInput(isEditing, isFocused, e){
         if(e){
             e.preventDefault();
         }
 
-        if(this.isEditingBody){
-            this.store.dispatch(editTask({task:this.data}))
-            this.isEditingBody = false
-            this.isEditingBodyFocused = false;
+        if(this[isEditing]){
+            this.store.dispatch(editTask({task:this.data}));
+            this[isEditing] = false
+            this[isFocused] = false;
         }
         else{
-            this.isEditingBody = true;
-        }
-    }
-
-    toggleEditDescription(){
-        if(this.isEditingDescription){
-            this.store.dispatch(editTask({task:this.data}))
-            this.isEditingDescription = false
-            this.isEditingDescriptionFocused = false;
-        }
-        else{
-            this.isEditingDescription = true;
+            this[isEditing] = true
         }
     }
 
@@ -136,52 +110,11 @@ export class TaskDialogComponent {
         this.dialogRef.close();
     }
 
-    changeTaskBody(e){
-        this.data.body = e.target.value;
-    }
-
-    changeTaskDescription(e){
-        this.data.description = e.target.value;
-    }
-
-    changeIsComplete(){
-        this.data.isComplete = !this.data.isComplete;
-        this.store.dispatch(editTask({task:this.data}))
-    }
-
-    changeImportant(){
-        this.data.important = !this.data.important;
-        this.store.dispatch(editTask({task:this.data}))
-    }
-
-    changeWarning(){
-        this.data.warning = !this.data.warning;
-        this.store.dispatch(editTask({task:this.data}))
-    }
-
-    changePayment(){
-        this.data.payment = !this.data.payment;
-        this.store.dispatch(editTask({task:this.data}))
-    }
-
-    changeVacation(){
-        this.data.vacation = !this.data.vacation;
-        this.store.dispatch(editTask({task:this.data}))
-    }
-
-    changeSocial(){
-        this.data.social = !this.data.social;
-        this.store.dispatch(editTask({task:this.data}))
-    }
-
-    changeTravel(){
-        this.data.travel = !this.data.travel;
-        this.store.dispatch(editTask({task:this.data}))
-    }
-
-    changeWork(){
-        this.data.work = !this.data.work;
-        this.store.dispatch(editTask({task:this.data}))
+    changeTaskProperty(property, value, delayDispatch){
+        this.data[property] = value;
+        if(!delayDispatch){
+            this.store.dispatch(editTask({task:this.data}));
+        }
     }
 
     changeCommentContent(e){
@@ -190,13 +123,6 @@ export class TaskDialogComponent {
     addComment(){
         this.store.dispatch(editTask({task:addComment(this.data, this.commentContent)}))
         this.commentContent = '';
-    }
-
-    changeCardColor(color){
-        this.store.dispatch(editTask({task:changeCardColor(this.data, color)}))
-    }
-    changeFontColor(color){
-        this.store.dispatch(editTask({task:changeFontColor(this.data, color)}))
     }
 
     addChecklist(){
@@ -221,8 +147,7 @@ export class TaskDialogComponent {
     }
 
     onChecklistItemDragStart(e, item){
-        // e.preventDefault()
-        e.dataTransfer.setData('text/plain', `{"itemKey":${item.key}, "checklistKey":${item.checklistKey}}`)
+        e.dataTransfer.setData('text/plain', `{"itemKey":${item.key}, "checklistKey":${item.checklistKey}}`);
     }
 
     onChecklistItemDragOver(e){
@@ -235,10 +160,10 @@ export class TaskDialogComponent {
             let modifiedChecklist = this.data.checklists.find(checklist => checklist.key === droppedItemKeys.checklistKey).content;
             let droppedItemIndex = modifiedChecklist.findIndex(item => droppedItemKeys.itemKey === item.key);
             let droppedOnItemIndex = modifiedChecklist.findIndex(val => val.key === item.key);
-            let droppedItem = modifiedChecklist.splice(droppedItemIndex, 1)
-            modifiedChecklist.splice(droppedOnItemIndex, 0, droppedItem[0])
+            let droppedItem = modifiedChecklist.splice(droppedItemIndex, 1);
+            modifiedChecklist.splice(droppedOnItemIndex, 0, droppedItem[0]);
 
-            this.store.dispatch(editTask({task:this.data}))
+            this.store.dispatch(editTask({task:this.data}));
         }
     }
 
@@ -270,6 +195,7 @@ export class TaskDialogComponent {
     }
     
     changeChecklistItem(e, checklistKey, index){
+
         if(e.code === 'Delete'){ 
             this.store.dispatch(editTask({task:deleteChecklistItem(checklistKey, index, this.data)}))          
         }
@@ -281,111 +207,56 @@ export class TaskDialogComponent {
         }
     }
 
-    deleteTask(){
-        const dialogRef = this.dialog.open(DeleteDialogComponent, 
-            {
-                id:'delete-dialog',
-                data:this.data
-            }
-        )
+    openDialog(id, data){
+        let dialogComponent;
+        switch(id){
+            case 'delete-dialog':
+                dialogComponent = DeleteDialogComponent;
+                break;
 
-        dialogRef.afterClosed().subscribe(result => {
-            if(result){
-                this.onCloseDialog();
-                this.data.downloadNames.map(name => {
-                    console.log(name)
-                    this.http.delete('http://localhost:7071/api/TaskAttachment', {params:{name:name, taskName:`task${this.data.key}`}}).subscribe(val => console.log(val))
-                })
-                this.data.displayImageUrls.map(url => {
-                    let fileName = /display\/.+\?sv=/.exec(url)[0].replace('display/', '').replace('?sv=' ,'')
-                    console.log(fileName)
-                    this.http.delete('http://localhost:7071/api/DisplayPhoto', {params:{name:fileName, taskName:`task${this.data.key}`}}).subscribe(val => console.log(val))
-                })
-                this.store.dispatch(deleteTask({task:this.data}))
-                this.store.dispatch(putStateToCosmos())
+            case 'date-pick-dialog':
+                dialogComponent = DatePickDialogComponent;
+                break;
 
-            }
-        })
-        
-    }
+            case 'photo-dialog':
+                dialogComponent = PhotoDialogComponent;
+                break;
 
-    openDatePicker(){
-        const dialogRef = this.dialog.open(DatePickDialogComponent, 
-            {
-                id:'date-pick-dialog',
-                data:this.data,
-                maxWidth:'500px'
-            }
-        )
-    }
+            case 'attachment-dialog':
+                dialogComponent = AttachmentDialogComponent;
+                break;
 
-    addPhotos(){
-        const dialogRef = this.dialog.open(PhotoDialogComponent, 
-            {
-                id:'photo-dialog',
-                data:this.data
-            }
-        )
-    }
+            case 'preview-attachment-dialog':
+                dialogComponent = PreviewAttachmentDialogComponent;
+                break;
 
-    attachItem(){
-        const dialogRef = this.dialog.open(AttachmentDialogComponent, 
-            {
-                id:'attachment-dialog',
-                data:this.data
-            }
-        )
-
-        dialogRef.afterClosed().subscribe(result => {
+            case 'transfer-task-dialog':
+                dialogComponent = TransferTaskDialogComponent;
+                break;
             
-        })
+            case 'link_task_dialog':
+                dialogComponent = LinkTaskDialogComponent;
+                break;
+
+            case 'task-dialog': 
+                dialogComponent = TaskDialogComponent;
+                break;
+        }
+        this.dialog.open(
+            dialogComponent,
+            {
+                id,
+                data: data ? data : this.data
+            }
+        );
     }
 
     removeFile(index){
         this.store.dispatch(editTask({task:removeFile(index, this.data)}))
     }
-    previewAttachment(downloadLink){
-        const dialogRef = this.dialog.open(PreviewAttachmentDialogComponent, 
-            {
-                id:'preview-attachment-dialog',
-                data:downloadLink
-            }
-        )
-    }
-
-    transferTask(){
-        const dialogRef = this.dialog.open(TransferTaskDialogComponent, 
-            {
-                id:'transfer-task-dialog',
-                data:this.data
-            }
-        )
-    }
-
-    // duplicateTask(){
-    //     this.store.dispatch(duplicateTask({boardKey:this.data.boardKey, taskKey:this.data.key}));
-    // }
-
-    linkTask(){
-        const dialogRef = this.dialog.open(LinkTaskDialogComponent, {
-            id:'link_task_dialog',
-            data:this.data
-        })
-    }
 
     getLinkedTaskInfo(taskKey:number, boardKey:number, index){
         return this.store.pipe(select(selectSpecificTask, ({taskKey, boardKey})))
-    }
-
-    openLinkedTask(task){
-        const dialogRef = this.dialog.open(TaskDialogComponent, 
-            {
-                // id:'task-dialog',
-                panelClass:'task-dialog',
-                // backdropClass:'task-dialog',
-                data:task
-            }
-        )
     }
 
     labelLength = labelLength;

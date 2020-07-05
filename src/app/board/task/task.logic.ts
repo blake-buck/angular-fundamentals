@@ -40,7 +40,6 @@ export function cyclePhoto(isForward, displayImageUrls, currentDisplayPhoto){
     }
     else if(!isForward && currentDisplayPhoto === 0){
         return currentDisplayPhoto = displayImageUrls.length - 1;
-        
     }
     else{
         return currentDisplayPhoto -= 1;
