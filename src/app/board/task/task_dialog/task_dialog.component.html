@@ -105,13 +105,13 @@
             <button mat-flat-button *ngIf='checklist.title.content && !checklist.title.isEditing' (click)='addChecklistItem(checklist.key)'>Add Item</button>
         </div>
 
-        <div *ngIf='data.downloadLinks.length' class='dialog-attachments'>
+        <div *ngIf='data.attachedFiles.length' class='dialog-attachments'>
             <h4>Attached Files</h4>
-            <div *ngFor='let downloadLink of data.downloadLinks; index as i' class='task-dialog-attachment-download'>
-                <p>{{data.downloadNames[i]}}</p>
+            <div *ngFor='let file of data.attachedFiles; index as i' class='task-dialog-attachment-download'>
+                <p>{{file.name}}</p>
             
-                <a [download]='data.downloadNames[i]' [href]='downloadLink' mat-icon-button><mat-icon>get_app</mat-icon></a>
-                <button mat-icon-button (click)='openDialog("preview-attachment-dialog", downloadLink)'><mat-icon>airplay</mat-icon></button>
+                <a [download]='file.name' [href]='file.link' mat-icon-button><mat-icon>get_app</mat-icon></a>
+                <button mat-icon-button (click)='openDialog("preview-attachment-dialog", file.downloadLink)'><mat-icon>airplay</mat-icon></button>
             </div>
         </div>
 

@@ -55,10 +55,7 @@ export namespace App{
         checklists:TaskChecklist[],
         displayImageUrls:string[],
     
-        // These reeeealyy need to be one array of objects
-        downloadNames:string[],
-        downloadLinks:string[],
-    
+        attachedFiles:{name:string, link:string}[],
     
         labels:TaskLabel[],
         linkedTasks:any[],

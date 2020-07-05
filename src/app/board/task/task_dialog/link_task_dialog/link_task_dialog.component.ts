@@ -1,6 +1,5 @@
-import {Component, Injectable, Inject} from '@angular/core';
+import {Component, Inject} from '@angular/core';
 import { Store } from '@ngrx/store';
-import { AppState } from 'src/app/app.component';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material';
 import { selectRows, selectBoards } from 'src/app/store/app.selector';
 import { linkTask } from 'src/app/store/app.actions';
@@ -16,25 +15,22 @@ export class LinkTaskDialogComponent{
     boards$ = this.store.select(selectBoards);
 
     constructor(
-        private store:Store<AppState>,
+        private store:Store<any>,
         public dialogRef: MatDialogRef<LinkTaskDialogComponent>, 
         @Inject(MAT_DIALOG_DATA) public data:any,
         public dialog:MatDialog
     ){}
 
-    logShit(jeff){
-    }
-
     linkTask(linkedBoardKey, linkedTaskKey){
-        this.store.dispatch(linkTask({linkedBoardKey, linkedTaskKey, originalTaskKey:this.data.key, originalBoardKey:this.data.boardKey}))
-        this.dialogRef.close();
+        this.store.dispatch(linkTask({linkedBoardKey, linkedTaskKey, originalTaskKey:this.data.key, originalBoardKey:this.data.boardKey}));
+        this.closeDialog();
     }
 
     closeDialog(){
         this.dialogRef.close();
     }
 
-    jeff(task){
+    taskAlreadyExists(task){
         return this.data.linkedTasks.some(val => val.taskKey === task.key)
     }
 }

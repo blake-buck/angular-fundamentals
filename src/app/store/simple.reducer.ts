@@ -308,8 +308,7 @@ export function simpleReducer(state=initialState, action){
                                     fontColor:'',
                                     dueDate:null,
                                     displayImageUrls:[],
-                                    downloadNames:[],
-                                    downloadLinks:[],
+                                    attachedFiles:[],
                                     labels:[],
                                     
                                     linkedTasks:[],

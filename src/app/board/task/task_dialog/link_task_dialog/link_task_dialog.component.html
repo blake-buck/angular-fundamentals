@@ -10,7 +10,7 @@
             <mat-option *ngFor='let row of rows$ | async' [value]='row'>{{row.title}}</mat-option>
         </mat-select>
     </mat-form-field>
-<!-- *ngIf='selectedRow && (board.rowKey === selectedRow.key)' -->
+
     <h3>Boards</h3>
     <mat-form-field>
         <mat-select [(value)]='selectedBoard'>
@@ -27,7 +27,7 @@
         <mat-select [(value)]='selectedTask'>
             <div *ngIf='selectedBoard'>
                 <span *ngFor='let task of selectedBoard.tasks' >
-                    <mat-option *ngIf='task.key !== data.key && !jeff(task)' [value]='task'>{{task.body}}</mat-option>
+                    <mat-option *ngIf='task.key !== data.key && !taskAlreadyExists(task)' [value]='task'>{{task.body}}</mat-option>
                 </span>
             </div>
         </mat-select>

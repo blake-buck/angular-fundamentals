@@ -1,10 +1,8 @@
 import { Component, Inject } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { AppState } from 'src/app/app.component';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialog, MatSnackBar } from '@angular/material';
 import { editTask } from 'src/app/store/app.actions';
-import { HttpHeaders, HttpClient } from '@angular/common/http';
-import { by } from 'protractor';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
     templateUrl:'./photo_dialog.component.html',
@@ -14,7 +12,7 @@ import { by } from 'protractor';
 export class PhotoDialogComponent{
     
     constructor(
-        private store:Store<AppState>,
+        private store:Store<any>,
         public dialogRef: MatDialogRef<PhotoDialogComponent>, 
         @Inject(MAT_DIALOG_DATA) public data:any,
         public dialog:MatDialog,
@@ -23,7 +21,6 @@ export class PhotoDialogComponent{
     ){}
 
     realImages = [...this.data.displayImageUrls, ...[]]
-    // unsavedImages = [];
     canSave = false;
     isLoading = false;
     file;

@@ -2,7 +2,6 @@ import { Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material';
 import { Inject, Component } from '@angular/core';
-import { AppState } from 'src/app/app.component';
 import { transferTaskEmpty } from 'src/app/store/app.actions';
 import { selectRows, selectBoards } from 'src/app/store/app.selector';
 
@@ -21,19 +20,19 @@ export class TransferTaskDialogComponent{
     selectedBoard=null;
 
     constructor(
-        private store:Store<AppState>,
+        private store:Store<any>,
         public dialogRef: MatDialogRef<TransferTaskDialogComponent>, 
         @Inject(MAT_DIALOG_DATA) public data:any,
         public dialog:MatDialog
     ){
-        this.rows$ = this.store.select(selectRows)
-        this.boards$ = this.store.select(selectBoards)
+        this.rows$ = this.store.select(selectRows);
+        this.boards$ = this.store.select(selectBoards);
     }
 
     transferTask(){
         if(this.selectedBoard){
             this.store.dispatch(transferTaskEmpty({payload:{droppedTaskId:this.data.key, droppedTaskBoard:this.data.boardKey, droppedOnTaskBoard:this.selectedBoard.key}}))
-            this.dialogRef.close()
+            this.onCloseDialog();
         }
     }
 

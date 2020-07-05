@@ -1,17 +1,13 @@
 <div class='exit-row'>
-    <!-- <button mat-button (click)='onCloseDialog()'>Cancel</button> -->
-    <!-- <button mat-button >Save</button> -->
     <h3>Attach a file</h3>
     <button mat-icon-button (click)='saveFiles()'><mat-icon>clear</mat-icon></button>
 </div>
 
-
-
 <input type='file' id='attachment-upload-input' multiple (change)='getFile($event)'/>
-<div *ngFor='let dwnldLink of downloadLinks; index as i' class='attachment-download'>
-    <p>{{this.downloadNames[i]}}</p>
+<div *ngFor='let file of attachedFiles; index as i' class='attachment-download'>
+    <p>{{file.name}}</p>
     <span>
-        <a download={{this.downloadNames[i]}} [href]='dwnldLink' mat-icon-button><mat-icon class='material-icons'>get_app</mat-icon></a>
+        <a [download]='file.name' [href]='file.link' mat-icon-button><mat-icon class='material-icons'>get_app</mat-icon></a>
         <button mat-icon-button (click)='removeFile(i)'><mat-icon class='material-icons'>delete</mat-icon></button>
     </span>
 </div>

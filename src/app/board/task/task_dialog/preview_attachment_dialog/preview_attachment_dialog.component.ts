@@ -1,6 +1,5 @@
 import { Component, Inject } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { AppState } from 'src/app/app.component';
 import { DomSanitizer } from '@angular/platform-browser';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material';
 
@@ -13,7 +12,7 @@ import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material';
 
 export class PreviewAttachmentDialogComponent{
     constructor(
-        private store:Store<AppState>,
+        private store:Store<any>,
         private sanitization:DomSanitizer,
         public dialogRef: MatDialogRef<PreviewAttachmentDialogComponent>, 
         @Inject(MAT_DIALOG_DATA) public data:any,
