@@ -7,7 +7,7 @@ export interface AppState{
     simpleReducer:any
 }
 
-import {TaskDialogComponent} from './task_dialog/task_dialog.component';
+import {TaskDialogComponent} from '../task_dialog/task_dialog.component';
 import { editTask, transferTask, scrollRowForward, scrollRowBackward } from 'src/app/store/app.actions';
 
 @Component({

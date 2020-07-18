@@ -16,7 +16,7 @@ import { selectBoardAndRowTitleFromTaskKey, selectSpecificTask } from 'src/app/s
 import { Observable } from 'rxjs';
 import { LinkTaskDialogComponent } from './link_task_dialog/link_task_dialog.component';
 import { HttpClient } from '@angular/common/http';
-import { labelLength } from '../task.logic';
+import { labelLength } from '../task/task.logic';
 
 
 
