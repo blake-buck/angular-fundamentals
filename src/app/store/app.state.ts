@@ -11,6 +11,8 @@ export namespace App{
         boards:Board[],
         isDataSaved:boolean;
         isDataSaving:boolean;
+        isTaskDialogOpen:boolean;
+        selectedTask:Task | null;
     }
     
     export interface Row{
@@ -137,5 +139,7 @@ export const initialState:App.AppState = {
         }
     ],
     isDataSaved:true,
-    isDataSaving:false
+    isDataSaving:false,
+    isTaskDialogOpen:false,
+    selectedTask:null
 }

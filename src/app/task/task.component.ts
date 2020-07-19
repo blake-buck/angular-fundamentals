@@ -8,7 +8,7 @@ export interface AppState{
 }
 
 import {TaskDialogComponent} from '../task_dialog/task_dialog.component';
-import { editTask, transferTask, scrollRowForward, scrollRowBackward } from 'src/app/store/app.actions';
+import { editTask, transferTask, scrollRowForward, scrollRowBackward, setSelectedTask, openTaskDialog } from 'src/app/store/app.actions';
 
 @Component({
     selector:'task',
@@ -37,18 +37,9 @@ export class TaskComponent{
 
     constructor(private store:Store<AppState>, public dialog:MatDialog){}
 
-    dialogRef;
     ngOnInit(){
         if(this.task.isEditing){
             this.task.isInput = true; 
-        }
-        if(this.task.dialogOpen){
-            this.openDialog();
-        }
-    }
-    ngOnDestroy(){
-        if(this.dialogRef){
-            this.dialogRef.close();
         }
     }
 
@@ -88,12 +79,8 @@ export class TaskComponent{
 
     openDialog(){
         if(!this.disableDialogOpening){
-            this.dialogRef = this.dialog.open(TaskDialogComponent, 
-                {
-                    panelClass:'task-dialog',
-                    data:this.task
-                }
-            )
+            this.store.dispatch(openTaskDialog());
+            this.store.dispatch(setSelectedTask({task:this.task}));
         }
     }
 

@@ -139,3 +139,14 @@ export const scrollRowBackward = createAction(
 export const saveChanges = createAction(
     'SAVE_CHANGES'
 )
+
+export const openTaskDialog = createAction(
+    'OPEN_TASK_DIALOG'
+);
+export const closeTaskDialog = createAction(
+    'CLOSE_TASK_DIALOG'
+)
+export const setSelectedTask = createAction(
+    'SET_SELECTED_TASK',
+    props<{task:any}>()
+)

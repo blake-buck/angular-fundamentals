@@ -1,15 +1,15 @@
-<div class='dialog-wrapper' >
+<div class='dialog-wrapper' *ngIf='data$ | async as data'>
     <div class='dialog-title'>
         
-        <div class='dialog-body' *ngIf='!isEditingBody' (click)='toggleInput("isEditingBody", "isEditingBodyFocused")'>
+        <div class='dialog-body' *ngIf='!isEditingBody' (click)='toggleInput("isEditingBody", "isEditingBodyFocused", $event, data)'>
             <h1 [ngClass]='{"complete":data.isComplete}'>{{data.body}}</h1>
             
             <h1 *ngIf='!data.body' style='opacity:.7;'>Card Title...</h1>
         </div>
 
-        <form (submit)='toggleInput("isEditingBody", "isEditingBodyFocused", $event)' *ngIf='isEditingBody'>
+        <form (submit)='toggleInput("isEditingBody", "isEditingBodyFocused", $event, data)' *ngIf='isEditingBody'>
             <mat-form-field>
-                    <input #bodyInput matInput (hover)='onBodyInputLoad()' (focusout)='toggleInput("isEditingBody", "isEditingBodyFocused")' [value]='data.body' (keyup)='changeTaskProperty("body", $event.target.value, true)'/>
+                    <input #bodyInput matInput (hover)='onBodyInputLoad()' (focusout)='toggleInput("isEditingBody", "isEditingBodyFocused", $event, data)' [value]='data.body' (keyup)='changeTaskProperty("body", $event.target.value, true, data)'/>
             </mat-form-field>
         </form>
 
@@ -30,15 +30,15 @@
 
         <div>
             <p class='label' *ngFor='let label of data.labels; index as i' style ='font-weight:bold; color:white' [style.background]='label.background'>
-                <input [value]='label.text' [style.background]='label.background' [size]='labelLength(label.text.length)' (keyup)='changeLabelContent($event, label)' (focusout)='saveLabelContent()'/>
-                <mat-icon (click)='removeLabel(i)'>clear</mat-icon>
+                <input [value]='label.text' [style.background]='label.background' [size]='labelLength(label.text.length)' (keyup)='changeLabelContent($event, label, data)' (focusout)='saveLabelContent()'/>
+                <mat-icon (click)='removeLabel(i, data)'>clear</mat-icon>
             </p>
         </div>
         
     </div>
 
     <div class='dialog-exit'>
-        <button mat-icon-button (click)='onCloseDialog()'>
+        <button mat-icon-button (click)='onCloseDialog(data)'>
             <mat-icon>clear</mat-icon>
         </button>
     </div>
@@ -52,14 +52,14 @@
 
         <div class='dialog-description-title'>
             <h3>Description</h3>
-            <button mat-icon-button (click)='toggleEditDescription()'>
+            <button mat-icon-button (click)='toggleEditDescription(data)'>
                 <mat-icon>edit</mat-icon>
             </button>
         </div>
         
         <p *ngIf='!isEditingDescription'>{{data.description}}</p>
         <mat-form-field *ngIf='isEditingDescription'>
-            <textarea matInput (focusout)='toggleInput("isEditingDescription", "isEditingDescriptionFocused")' (keyup)='changeTaskProperty("description", $event.target.value, true)' cdkTextareaAutosize #autosize="cdkTextareaAutosize" #descriptionInput cdkAutosizeMinRows="4" [value]='data.description'></textarea>
+            <textarea matInput (focusout)='toggleInput("isEditingDescription", "isEditingDescriptionFocused", $event, data)' (keyup)='changeTaskProperty("description", $event.target.value, true, data)' cdkTextareaAutosize #autosize="cdkTextareaAutosize" #descriptionInput cdkAutosizeMinRows="4" [value]='data.description'></textarea>
         </mat-form-field>
     </div>
 
@@ -72,8 +72,8 @@
             <p>{{comment.date}}</p>
         </div>
     
-        <textarea rows='3' placeholder='Write a note here...' [value]='commentContent' (keyup)='changeCommentContent($event)'></textarea>
-        <button mat-raised-button (click)='addComment()'>Add</button>
+        <textarea rows='3' placeholder='Write a note here...' [value]='commentContent' (keyup)='changeCommentContent($event, data)'></textarea>
+        <button mat-raised-button (click)='addComment(data)'>Add</button>
         
     </div>
     <div class='dialog-other'>
@@ -87,22 +87,22 @@
             <div class='dialog-checklist-title-wrapper'>
                 <mat-icon [style.color]='checklist.color'>check_box</mat-icon>
                
-                <input #checklistTitle *ngIf='checklist.title.isEditing' placeholder='Checklist title...' (keyup)='changeChecklistTitle($event, checklist.key)' [value]='checklist.title.content' (focusout)='toggleEditChecklistTitle(checklist.key)' />
-                <button *ngIf='checklist.title.isEditing' mat-icon-button (click)='deleteChecklist(checklist)'><mat-icon>delete</mat-icon></button>
+                <input #checklistTitle *ngIf='checklist.title.isEditing' placeholder='Checklist title...' (keyup)='changeChecklistTitle($event, checklist.key, data)' [value]='checklist.title.content' (focusout)='toggleEditChecklistTitle(checklist.key, data)' />
+                <button *ngIf='checklist.title.isEditing' mat-icon-button (click)='deleteChecklist(checklist, data)'><mat-icon>delete</mat-icon></button>
                 
-                <h4 *ngIf='!checklist.title.isEditing' (click)='toggleEditChecklistTitle(checklist.key)'>{{checklist.title.content}}</h4>
+                <h4 *ngIf='!checklist.title.isEditing' (click)='toggleEditChecklistTitle(checklist.key, data)'>{{checklist.title.content}}</h4>
                 <h6 *ngIf='!checklist.title.isEditing'>{{checklist.completedTasks}} / {{checklist.content.length}}</h6> 
             </div>
             
             <div *ngFor='let item of checklist.content; index as i' class='dialog-checklist-item'>
                 <mat-checkbox 
-                    *ngIf='!item.isEditing' [checked]='item.checked' (change)='toggleChecklistItem($event,checklist.key, item)' 
-                    draggable="true" (dragstart)='onChecklistItemDragStart($event, item)' (dragover)='onChecklistItemDragOver($event)' (drop)='onChecklistDrop($event, item)'>
-                        <span (click)='toggleEditChecklistItem($event, checklist.key, item)'>{{item.content}}</span>
+                    *ngIf='!item.isEditing' [checked]='item.checked' (change)='toggleChecklistItem($event,checklist.key, item, data)' 
+                    draggable="true" (dragstart)='onChecklistItemDragStart($event, item, data)' (dragover)='onChecklistItemDragOver($event, data)' (drop)='onChecklistDrop($event, item, data)'>
+                        <span (click)='toggleEditChecklistItem($event, checklist.key, item, data)'>{{item.content}}</span>
                 </mat-checkbox>
-                <mat-checkbox *ngIf='item.isEditing' [checked]='item.checked' (change)='toggleChecklistItem($event, checklist.key, item)'><input #checklistInput (mouseenter)='focusChecklistInput($event)' class='dialog-checklist-item-input'  (focusout)='toggleEditChecklistItem($event, checklist.key, item)' (keyup)='changeChecklistItem($event, checklist.key, i)' [value]='item.content' /></mat-checkbox>
+                <mat-checkbox *ngIf='item.isEditing' [checked]='item.checked' (change)='toggleChecklistItem($event, checklist.key, item, data)'><input #checklistInput (mouseenter)='focusChecklistInput($event)' class='dialog-checklist-item-input'  (focusout)='toggleEditChecklistItem($event, checklist.key, item, data)' (keyup)='changeChecklistItem($event, checklist.key, i, data)' [value]='item.content' /></mat-checkbox>
             </div>
-            <button mat-flat-button *ngIf='checklist.title.content && !checklist.title.isEditing' (click)='addChecklistItem(checklist.key)'>Add Item</button>
+            <button mat-flat-button *ngIf='checklist.title.content && !checklist.title.isEditing' (click)='addChecklistItem(checklist.key, data)'>Add Item</button>
         </div>
 
         <div *ngIf='data.attachedFiles.length' class='dialog-attachments'>
@@ -111,14 +111,14 @@
                 <p>{{file.name}}</p>
             
                 <a [download]='file.name' [href]='file.link' mat-icon-button><mat-icon>get_app</mat-icon></a>
-                <button mat-icon-button (click)='openDialog("preview-attachment-dialog", file.downloadLink)'><mat-icon>airplay</mat-icon></button>
+                <button mat-icon-button (click)='openDialog("preview-attachment-dialog", file.downloadLink, data)'><mat-icon>airplay</mat-icon></button>
             </div>
         </div>
 
         <div *ngIf='data.linkedTasks.length'>
             <h4>Linked Tasks</h4>
             <div *ngFor='let linkedKeys of data.linkedTasks; index as i'>
-                <div class='linked-task' *ngIf='getLinkedTaskInfo(linkedKeys.taskKey, linkedKeys.boardKey, i) | async as value' (click)='openDialog("task-dialog", value)'>{{value.body}}</div>
+                <div class='linked-task' *ngIf='getLinkedTaskInfo(linkedKeys.taskKey, linkedKeys.boardKey, i) | async as value' (click)='openTaskDialog(value)'>{{value.body}}</div>
             </div>
         </div>
 
@@ -133,39 +133,39 @@
         <div class='dialog-actions-button-wrapper'>
 
             <mat-menu #iconMenu='matMenu'>
-                <button mat-menu-item (click)='changeTaskProperty("important", !data.important)'><mat-icon aria-hidden="false">visibility</mat-icon>Important</button>
-                <button mat-menu-item (click)='changeTaskProperty("warning", !data.warning)'><mat-icon aria-hidden="false">warning</mat-icon>Warning</button>
-                <button mat-menu-item (click)='changeTaskProperty("payment", !data.payment)'><mat-icon aria-hidden="false">payment</mat-icon>Payment</button>
-                <button mat-menu-item (click)='changeTaskProperty("vacation", !data.vacation)'><mat-icon aria-hidden="false">weekend</mat-icon>Vacation</button>
-                <button mat-menu-item (click)='changeTaskProperty("social", !data.social)'><mat-icon aria-hidden="false">group</mat-icon>Social</button>
-                <button mat-menu-item (click)='changeTaskProperty("work", !data.work)'><mat-icon aria-hidden='false'>work</mat-icon>Work</button>
-                <button mat-menu-item (click)='changeTaskProperty("travel", !data.travel)'><mat-icon aria-hidden='false'>local_airport</mat-icon>Travel</button>
+                <button mat-menu-item (click)='changeTaskProperty("important", !data.important, data)'><mat-icon aria-hidden="false">visibility</mat-icon>Important</button>
+                <button mat-menu-item (click)='changeTaskProperty("warning", !data.warning, data)'><mat-icon aria-hidden="false">warning</mat-icon>Warning</button>
+                <button mat-menu-item (click)='changeTaskProperty("payment", !data.payment, data)'><mat-icon aria-hidden="false">payment</mat-icon>Payment</button>
+                <button mat-menu-item (click)='changeTaskProperty("vacation", !data.vacation, data)'><mat-icon aria-hidden="false">weekend</mat-icon>Vacation</button>
+                <button mat-menu-item (click)='changeTaskProperty("social", !data.social, data)'><mat-icon aria-hidden="false">group</mat-icon>Social</button>
+                <button mat-menu-item (click)='changeTaskProperty("work", !data.work, data)'><mat-icon aria-hidden='false'>work</mat-icon>Work</button>
+                <button mat-menu-item (click)='changeTaskProperty("travel", !data.travel, data)'><mat-icon aria-hidden='false'>local_airport</mat-icon>Travel</button>
             </mat-menu>
 
             <mat-menu #colorMenu='matMenu'>
-                <button mat-menu-item (click)='changeTaskProperty("cardColor", "red")'><mat-icon  style='color:red'>label</mat-icon>Red</button>
-                <button mat-menu-item (click)='changeTaskProperty("cardColor", "yellow")'><mat-icon  style='color:yellow'>label</mat-icon>Yellow</button>
-                <button mat-menu-item (click)='changeTaskProperty("cardColor", "blue")'><mat-icon  style='color:blue'>label</mat-icon>Blue</button>
-                <button mat-menu-item (click)='changeTaskProperty("cardColor", "green")'><mat-icon  style='color:green'>label</mat-icon>Green</button>
-                <button mat-menu-item (click)='changeTaskProperty("cardColor", "purple")'><mat-icon  style='color:purple'>label</mat-icon>Purple</button>
-                <button mat-menu-item (click)='changeTaskProperty("cardColor", "orange")'><mat-icon  style='color:orange'>label</mat-icon>Orange</button>
-                <button mat-menu-item (click)='changeTaskProperty("cardColor", "")'>NONE</button>
+                <button mat-menu-item (click)='changeTaskProperty("cardColor", "red", data)'><mat-icon  style='color:red'>label</mat-icon>Red</button>
+                <button mat-menu-item (click)='changeTaskProperty("cardColor", "yellow", data)'><mat-icon  style='color:yellow'>label</mat-icon>Yellow</button>
+                <button mat-menu-item (click)='changeTaskProperty("cardColor", "blue", data)'><mat-icon  style='color:blue'>label</mat-icon>Blue</button>
+                <button mat-menu-item (click)='changeTaskProperty("cardColor", "green", data)'><mat-icon  style='color:green'>label</mat-icon>Green</button>
+                <button mat-menu-item (click)='changeTaskProperty("cardColor", "purple", data)'><mat-icon  style='color:purple'>label</mat-icon>Purple</button>
+                <button mat-menu-item (click)='changeTaskProperty("cardColor", "orange", data)'><mat-icon  style='color:orange'>label</mat-icon>Orange</button>
+                <button mat-menu-item (click)='changeTaskProperty("cardColor", "", data)'>NONE</button>
             </mat-menu>
 
             <mat-menu #fontColorMenu='matMenu'>
-                <button mat-menu-item (click)='changeTaskProperty("fontColor", "black")' style='color:black'>Black</button>
-                <button mat-menu-item (click)='changeTaskProperty("fontColor", "firebrick")' style='color:firebrick'>Firebrick</button>
-                <button mat-menu-item (click)='changeTaskProperty("fontColor", "goldenrod")' style='color:goldenrod'>Gold</button>
-                <button mat-menu-item (click)='changeTaskProperty("fontColor", "steelblue")' style='color:steelblue'>Steel Blue</button>
-                <button mat-menu-item (click)='changeTaskProperty("fontColor", "seagreen")' style='color:seagreen'>Sea Green</button>
-                <button mat-menu-item (click)='changeTaskProperty("fontColor", "plum")' style='color:plum'>Plum</button>
+                <button mat-menu-item (click)='changeTaskProperty("fontColor", "black", data)' style='color:black'>Black</button>
+                <button mat-menu-item (click)='changeTaskProperty("fontColor", "firebrick", data)' style='color:firebrick'>Firebrick</button>
+                <button mat-menu-item (click)='changeTaskProperty("fontColor", "goldenrod", data)' style='color:goldenrod'>Gold</button>
+                <button mat-menu-item (click)='changeTaskProperty("fontColor", "steelblue", data)' style='color:steelblue'>Steel Blue</button>
+                <button mat-menu-item (click)='changeTaskProperty("fontColor", "seagreen", data)' style='color:seagreen'>Sea Green</button>
+                <button mat-menu-item (click)='changeTaskProperty("fontColor", "plum", data)' style='color:plum'>Plum</button>
             </mat-menu>
 
             <mat-menu #labelMenu='matMenu'>
-                <button mat-menu-item (click)='addLabel("red")'><mat-icon style='color:red'>view_day</mat-icon>Red</button>
-                <button mat-menu-item (click)='addLabel("yellow")'><mat-icon style='color:yellow'>view_day</mat-icon>Yellow</button>
-                <button mat-menu-item (click)='addLabel("blue")'><mat-icon style='color:blue'>view_day</mat-icon>Blue</button>
-                <button mat-menu-item (click)='addLabel("green")'><mat-icon style='color:green'>view_day</mat-icon>Green</button>
+                <button mat-menu-item (click)='addLabel("red", data)'><mat-icon style='color:red'>view_day</mat-icon>Red</button>
+                <button mat-menu-item (click)='addLabel("yellow", data)'><mat-icon style='color:yellow'>view_day</mat-icon>Yellow</button>
+                <button mat-menu-item (click)='addLabel("blue", data)'><mat-icon style='color:blue'>view_day</mat-icon>Blue</button>
+                <button mat-menu-item (click)='addLabel("green", data)'><mat-icon style='color:green'>view_day</mat-icon>Green</button>
             </mat-menu>
 
             <mat-menu #transferTaskMenu='matMenu'>
@@ -173,17 +173,17 @@
             </mat-menu>
             
             <button mat-raised-button [matMenuTriggerFor]='iconMenu'><mat-icon>label</mat-icon>Tags</button>
-            <button mat-raised-button (click)='openDialog("date-pick-dialog")'><mat-icon>access_time</mat-icon>Due Date</button>
-            <button mat-raised-button (click)='openDialog("photo-dialog")'><mat-icon>add_a_photo</mat-icon>Photo</button>
-            <button mat-raised-button (click)='openDialog("attachment-dialog")'><mat-icon>attach_file</mat-icon>Attachment</button>
-            <button mat-raised-button (click)='addChecklist()'><mat-icon>check_box</mat-icon>Checklist</button>
-            <button mat-raised-button (click)='changeTaskProperty("isComplete", !data.isComplete)'><mat-icon>check_circle</mat-icon>Complete</button>
-            <button mat-raised-button (click)='openDialog("delete-dialog")'><mat-icon>delete</mat-icon>Delete</button>
+            <button mat-raised-button (click)='openDialog("date-pick-dialog", data)'><mat-icon>access_time</mat-icon>Due Date</button>
+            <button mat-raised-button (click)='openDialog("photo-dialog", data)'><mat-icon>add_a_photo</mat-icon>Photo</button>
+            <button mat-raised-button (click)='openDialog("attachment-dialog", data)'><mat-icon>attach_file</mat-icon>Attachment</button>
+            <button mat-raised-button (click)='addChecklist(data)'><mat-icon>check_box</mat-icon>Checklist</button>
+            <button mat-raised-button (click)='changeTaskProperty("isComplete", !data.isComplete, data)'><mat-icon>check_circle</mat-icon>Complete</button>
+            <button mat-raised-button (click)='openDialog("delete-dialog", data)'><mat-icon>delete</mat-icon>Delete</button>
             <button mat-raised-button [matMenuTriggerFor]='colorMenu'><mat-icon>format_color_fill</mat-icon>Card Color</button>
             <button mat-raised-button [matMenuTriggerFor]='fontColorMenu'><mat-icon>format_color_text</mat-icon>Font Color</button>
             <button mat-raised-button [matMenuTriggerFor]='labelMenu'><mat-icon>view_day</mat-icon>Label</button>
-            <button mat-raised-button (click)='openDialog("transfer-task-dialog")'><mat-icon>screen_share</mat-icon>Transfer Task</button>
-            <button mat-raised-button (click)='openDialog("link_task_dialog")'><mat-icon>device_hub</mat-icon>Link Task</button>
+            <button mat-raised-button (click)='openDialog("transfer-task-dialog", data)'><mat-icon>screen_share</mat-icon>Transfer Task</button>
+            <button mat-raised-button (click)='openDialog("link_task_dialog", data)'><mat-icon>device_hub</mat-icon>Link Task</button>
         </div>
     </div>
 </div>

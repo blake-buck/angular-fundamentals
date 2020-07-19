@@ -4,13 +4,15 @@ import { map, first} from 'rxjs/operators'
 import { Store } from '@ngrx/store';
 import { selectAppState } from './app.selector';
 import { combineLatest } from 'rxjs';
-import { archiveRowSuccess, archiveRow, editRowTitle, editRowTitleSuccess, postStateToCosmos, putStateToCosmos, getStateFromCosmos, getStateFromCosmosSuccess, saveChanges } from './app.actions';
+import { archiveRowSuccess, archiveRow, editRowTitle, editRowTitleSuccess, postStateToCosmos, putStateToCosmos, getStateFromCosmos, getStateFromCosmosSuccess, saveChanges, openTaskDialog, closeTaskDialog } from './app.actions';
 import { HttpClient } from '@angular/common/http';
+import { MatDialog } from '@angular/material';
+import { TaskDialogComponent } from '../task_dialog/task_dialog.component';
 
 @Injectable()
 
 export class AppEffects {
-    constructor(private actions$:Actions, private store:Store<any>, private http:HttpClient){}
+    constructor(private actions$:Actions, private store:Store<any>, private http:HttpClient, public dialog:MatDialog){}
 
     archiveRow$ = createEffect(
         () => this.actions$.pipe(
@@ -104,7 +106,31 @@ export class AppEffects {
             })
         ),
         {dispatch: false}
-    )
+    );
+
+    openTaskDialog$ = createEffect(
+        () => this.actions$.pipe(
+            ofType(openTaskDialog),
+            map(() => {
+                this.dialog.closeAll();
+                this.dialog.open(TaskDialogComponent, 
+                    {
+                        panelClass:'task-dialog'
+                    }
+                )
+            })
+        ),
+        {dispatch: false}
+    );
     
+    closeTaskDialog$ = createEffect(
+        () => this.actions$.pipe(
+            ofType(closeTaskDialog),
+            map(() => {
+                this.dialog.closeAll();
+            })
+        ),
+        {dispatch: false}
+    )
     
 }

@@ -11,12 +11,13 @@ import {DeleteDialogComponent} from './delete_dialog/delete_dialog.component';
 
 import {TransferTaskDialogComponent} from './transfer_task_dialog/transfer_task_dialog.component';
 import { addLabel, addComment, addChecklist, deleteChecklist, changeChecklistTitle, toggleEditChecklistTitle, toggleChecklistItem, toggleEditChecklistItem, addChecklistItem, deleteChecklistItem, changeChecklistItemText, removeFile } from './task_dialog.logic';
-import { editTask } from 'src/app/store/app.actions';
-import { selectBoardAndRowTitleFromTaskKey, selectSpecificTask } from 'src/app/store/app.selector';
+import { editTask, closeTaskDialog, openTaskDialog, setSelectedTask } from 'src/app/store/app.actions';
+import { selectBoardAndRowTitleFromTaskKey, selectSpecificTask, selectSelectedTask } from 'src/app/store/app.selector';
 import { Observable } from 'rxjs';
 import { LinkTaskDialogComponent } from './link_task_dialog/link_task_dialog.component';
 import { HttpClient } from '@angular/common/http';
 import { labelLength } from '../task/task.logic';
+import { map, first } from 'rxjs/operators';
 
 
 
@@ -44,20 +45,25 @@ export class TaskDialogComponent {
     linkedTasks$ = [];
 
     commentContent = '';
+    data$;
 
     constructor(
         private store:Store<any>,
-        public dialogRef: MatDialogRef<TaskDialogComponent>, 
-        @Inject(MAT_DIALOG_DATA) public data:any,
         public dialog:MatDialog,
         public http:HttpClient
         ){}
 
         ngOnInit(){
-            this.boardAndRowTitle$ = this.store.select(selectBoardAndRowTitleFromTaskKey, this.data.boardKey)
-            this.data.dialogOpen = true;
-            document.querySelector('#pageTitle').textContent = this.data.body
-            document.querySelector('.cdk-global-overlay-wrapper:last-of-type').classList.add('dialogToBack')
+            this.data$ = this.store.select(selectSelectedTask);
+            this.store.pipe(
+                select(selectSelectedTask),
+                first(),
+                map(val => val)
+            ).subscribe(data => {
+                this.boardAndRowTitle$ = this.store.select(selectBoardAndRowTitleFromTaskKey, data.boardKey)
+                document.querySelector('#pageTitle').textContent = data.body
+                document.querySelector('.cdk-global-overlay-wrapper:last-of-type').classList.add('dialogToBack')
+            })
         }
 
         ngAfterViewChecked(){
@@ -82,17 +88,17 @@ export class TaskDialogComponent {
         }
     }
     
-    addLabel(labelColor){
-        this.store.dispatch(editTask({task:addLabel(this.data, labelColor)}))
+    addLabel(labelColor, data){
+        this.store.dispatch(editTask({task:addLabel(data, labelColor)}))
     }
 
-    toggleInput(isEditing, isFocused, e){
+    toggleInput(isEditing, isFocused, e, data){
         if(e){
             e.preventDefault();
         }
 
         if(this[isEditing]){
-            this.store.dispatch(editTask({task:this.data}));
+            this.store.dispatch(editTask({task:data}));
             this[isEditing] = false
             this[isFocused] = false;
         }
@@ -105,36 +111,35 @@ export class TaskDialogComponent {
         this.bodyInput.nativeElement.focus()
     }
     
-    onCloseDialog(){
-        this.data.dialogOpen = false;
-        this.dialogRef.close();
+    onCloseDialog(data){
+        this.store.dispatch(closeTaskDialog())
     }
 
-    changeTaskProperty(property, value, delayDispatch){
-        this.data[property] = value;
+    changeTaskProperty(property, value, delayDispatch, data){
+        data[property] = value;
         if(!delayDispatch){
-            this.store.dispatch(editTask({task:this.data}));
+            this.store.dispatch(editTask({task:data}));
         }
     }
 
     changeCommentContent(e){
         this.commentContent = e.target.value;
     }
-    addComment(){
-        this.store.dispatch(editTask({task:addComment(this.data, this.commentContent)}))
+    addComment(data){
+        this.store.dispatch(editTask({task:addComment(data, this.commentContent)}))
         this.commentContent = '';
     }
 
-    addChecklist(){
-        this.store.dispatch(editTask({task:addChecklist(this.data)}))
+    addChecklist(data){
+        this.store.dispatch(editTask({task:addChecklist(data)}))
     }
 
-    deleteChecklist(checklist){
-        this.store.dispatch(editTask({task:deleteChecklist(this.data, checklist)}))
+    deleteChecklist(checklist, data){
+        this.store.dispatch(editTask({task:deleteChecklist(data, checklist)}))
     }
 
-    toggleEditChecklistTitle(checklistKey){
-        let result = toggleEditChecklistTitle(checklistKey, this.data)
+    toggleEditChecklistTitle(checklistKey, data){
+        let result = toggleEditChecklistTitle(checklistKey, data)
         if(result.isEditing){
             setTimeout(() => this.checklistTitle.nativeElement.focus(), 0)
         }
@@ -142,8 +147,8 @@ export class TaskDialogComponent {
             this.store.dispatch(editTask({task:result.data}))
         }
     }
-    changeChecklistTitle(e, checklistKey){
-        changeChecklistTitle(e.target.value, this.data, checklistKey);
+    changeChecklistTitle(e, checklistKey, data){
+        changeChecklistTitle(e.target.value, data, checklistKey);
     }
 
     onChecklistItemDragStart(e, item){
@@ -154,29 +159,29 @@ export class TaskDialogComponent {
         e.preventDefault();
     }
 
-    onChecklistDrop(e, item){
+    onChecklistDrop(e, item, data){
         let droppedItemKeys = JSON.parse(e.dataTransfer.getData('text/plain'))
         if(droppedItemKeys.checklistKey === item.checklistKey){
-            let modifiedChecklist = this.data.checklists.find(checklist => checklist.key === droppedItemKeys.checklistKey).content;
+            let modifiedChecklist = data.checklists.find(checklist => checklist.key === droppedItemKeys.checklistKey).content;
             let droppedItemIndex = modifiedChecklist.findIndex(item => droppedItemKeys.itemKey === item.key);
             let droppedOnItemIndex = modifiedChecklist.findIndex(val => val.key === item.key);
             let droppedItem = modifiedChecklist.splice(droppedItemIndex, 1);
             modifiedChecklist.splice(droppedOnItemIndex, 0, droppedItem[0]);
 
-            this.store.dispatch(editTask({task:this.data}));
+            this.store.dispatch(editTask({task:data}));
         }
     }
 
 
-    toggleChecklistItem(e, checklistKey, item){
-        let result = toggleChecklistItem(checklistKey, item, this.data);
+    toggleChecklistItem(e, checklistKey, item, data){
+        let result = toggleChecklistItem(checklistKey, item, data);
         if(result){
             this.store.dispatch(editTask({task:result}))
         }
     }
 
-    toggleEditChecklistItem(e, checklistKey, item){
-        let result = toggleEditChecklistItem(checklistKey, item, this.data)
+    toggleEditChecklistItem(e, checklistKey, item, data){
+        let result = toggleEditChecklistItem(checklistKey, item, data)
         if(result.isEditing){
             setTimeout(() => this.checklistInput.nativeElement.focus(), 0)
         }
@@ -189,25 +194,32 @@ export class TaskDialogComponent {
         // e.target.focus()
     }
 
-    addChecklistItem(checklistKey){
-        this.store.dispatch(editTask({task:addChecklistItem(checklistKey, this.data)}))
+    addChecklistItem(checklistKey, data){
+        this.store.dispatch(editTask({task:addChecklistItem(checklistKey, data)}))
         setTimeout(() => this.checklistInput.nativeElement.focus(), 0)
     }
     
-    changeChecklistItem(e, checklistKey, index){
+    changeChecklistItem(e, checklistKey, index, data){
 
         if(e.code === 'Delete'){ 
-            this.store.dispatch(editTask({task:deleteChecklistItem(checklistKey, index, this.data)}))          
+            this.store.dispatch(editTask({task:deleteChecklistItem(checklistKey, index, data)}))          
         }
         else if(e.code === 'Enter'){
-            this.addChecklistItem(checklistKey)
+            this.addChecklistItem(checklistKey, data)
         }
         else{
-            this.data = changeChecklistItemText(checklistKey, index, e.target.value, this.data)
+            // TODO: add debounce
+            this.store.dispatch(editTask({task: changeChecklistItemText(checklistKey, index, e.target.value, data)}))
         }
     }
+    
+    openTaskDialog(value){
+        this.store.dispatch(openTaskDialog());
+        this.store.dispatch(setSelectedTask({task:value}))
+    }
 
-    openDialog(id, data){
+
+    openDialog(id, dialogData, taskData){
         let dialogComponent;
         switch(id){
             case 'delete-dialog':
@@ -237,22 +249,18 @@ export class TaskDialogComponent {
             case 'link_task_dialog':
                 dialogComponent = LinkTaskDialogComponent;
                 break;
-
-            case 'task-dialog': 
-                dialogComponent = TaskDialogComponent;
-                break;
         }
         this.dialog.open(
             dialogComponent,
             {
                 id,
-                data: data ? data : this.data
+                data: dialogData ? dialogData : taskData
             }
         );
     }
 
-    removeFile(index){
-        this.store.dispatch(editTask({task:removeFile(index, this.data)}))
+    removeFile(index, data){
+        this.store.dispatch(editTask({task:removeFile(index, data)}))
     }
 
     getLinkedTaskInfo(taskKey:number, boardKey:number, index){
@@ -265,13 +273,13 @@ export class TaskDialogComponent {
         label.text = e.target.value
     }
 
-    saveLabelContent(){
-        this.store.dispatch(editTask({task:this.data}))
+    saveLabelContent(data){
+        this.store.dispatch(editTask({task:data}))
     }
 
-    removeLabel(i){
-        this.data.labels.splice(i, 1);
-        this.store.dispatch(editTask({task:this.data}))        
+    removeLabel(i, data){
+        data.labels.splice(i, 1);
+        this.store.dispatch(editTask({task:data}))        
     }
 
 }

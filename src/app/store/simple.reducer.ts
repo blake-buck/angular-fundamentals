@@ -1,4 +1,4 @@
-import {getState, addRow, editRowDescription, addBoard, transferBoard, editBoardTitle, archiveBoard, deleteBoard, toggleHideCompleteTasks, addTask, editTask, deleteTask, transferTaskEmpty, transferTask, duplicateRow, duplicateTask, duplicateBoard, linkTask, archiveRowSuccess, editRowTitleSuccess, getStateFromCosmosSuccess, saveChanges, editRowExpanded, } from './app.actions';
+import {getState, addRow, editRowDescription, addBoard, transferBoard, editBoardTitle, archiveBoard, deleteBoard, toggleHideCompleteTasks, addTask, editTask, deleteTask, transferTaskEmpty, transferTask, duplicateRow, duplicateTask, duplicateBoard, linkTask, archiveRowSuccess, editRowTitleSuccess, getStateFromCosmosSuccess, saveChanges, editRowExpanded, openTaskDialog, setSelectedTask, closeTaskDialog, } from './app.actions';
 import {initialState } from './app.state';
 import { _addTask, _editTask, _deleteTask, _transferTaskEmpty, _transferTask, _linkTask } from './reducer-helpers/task.helpers';
 import { _addBoard, _transferBoard, _editBoardTitle, _archiveBoard, _deleteBoard, _reorderBoardTasks, _toggleHideCompleteTasks } from './reducer-helpers/board.helpers';
@@ -75,6 +75,24 @@ export function simpleReducer(state=initialState, action){
             return {
                 ...state,
                 isDataSaved:true
+            }
+
+        case openTaskDialog.type:
+            return {
+                ...state,
+                isTaskDialogOpen:true
+            }
+        
+        case closeTaskDialog.type:
+            return {
+                ...state, 
+                isTaskDialogOpen:false
+            }
+            
+        case setSelectedTask.type:
+            return {
+                ...state,
+                selectedTask: action.task
             }
         
         default:

@@ -58,7 +58,8 @@ export function _editTask(state, action){
                 }
             }
             return board
-        })
+        }),
+        selectedTask:action.task
     }
 }
 
