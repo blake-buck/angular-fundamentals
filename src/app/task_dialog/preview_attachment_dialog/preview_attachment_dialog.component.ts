@@ -5,7 +5,7 @@ import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material';
 
 @Component({
     template:`
-    <img *ngIf='isImage' src={{imgSrc}} />
+    <img *ngIf='isImage' [src]='imgSrc' />
     `,
     selector:'preview-attachment-dialog'
 })

@@ -37,6 +37,7 @@ export class DatePickDialogComponent{
     }
 
     dateSelection(day){
+        console.log('DATE SELECTION ', this.data.dueDate)
         let state = dateSelection(day, this.selectedMonthIndex, this.dueDateMoment, this.data);
 
         if(state.days){

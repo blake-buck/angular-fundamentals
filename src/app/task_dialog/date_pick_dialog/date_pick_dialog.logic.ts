@@ -49,22 +49,15 @@ export function dateSelection(day, selectedMonthIndex, dueDateMoment, data){
     momentToExport.set('month', selectedMonthIndex);
     momentToExport.set('date', day+1);    
     
-    if(data.dueDate && (data.dueDate.month() === momentToExport.month() && data.dueDate.date() === momentToExport.date())){
-        data.dueDate = null;
-        return {data, dueDate:null}
-    }
-    else{
-        let days = calculateDays(selectedMonthIndex)
-        if(selectedMonthIndex === moment().month())
-            days[moment().date()-1] ='cyan'
-        days[day] = '#adff2f'
+    let days = calculateDays(selectedMonthIndex)
+    if(selectedMonthIndex === moment().month())
+        days[moment().date()-1] ='cyan'
+    days[day] = '#adff2f'
 
-        dueDateMoment = moment();
-        dueDateMoment.set('month',selectedMonthIndex);
-        dueDateMoment.set('date', day + 1) 
+    dueDateMoment = moment();
+    dueDateMoment.set('month',selectedMonthIndex);
+    dueDateMoment.set('date', day + 1) 
 
-        data.dueDate = dueDateMoment;
-        return {data, days}
-    }
-    
+    data.dueDate = dueDateMoment;
+    return {data, days}
 }

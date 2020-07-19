@@ -1,9 +1,9 @@
-<div class='exit-row'>
+<div class='exit-row max-secondary-dialog-width'>
     <h3>Attach a file</h3>
     <button mat-icon-button (click)='saveFiles()'><mat-icon>clear</mat-icon></button>
 </div>
 
-<input type='file' id='attachment-upload-input' multiple (change)='getFile($event)'/>
+<input type='file' id='attachment-upload-input' multiple (change)='getFile($event)' />
 <div *ngFor='let file of attachedFiles; index as i' class='attachment-download'>
     <p>{{file.name}}</p>
     <span>

@@ -1,5 +1,8 @@
-<h2>Transfer Task</h2>
-<mat-dialog-content class='transfer_tasks_select_wrapper'>
+<header class='exit-row'>
+    <h2>Transfer Task</h2>
+    <button mat-icon-button (click)='onCloseDialog()'><mat-icon>clear</mat-icon></button>
+</header>
+<mat-dialog-content class='transfer_tasks_select_wrapper max-secondary-dialog-width'>
     <mat-form-field>
         <mat-label>Row</mat-label>
 
@@ -26,7 +29,6 @@
     </mat-form-field>
 </mat-dialog-content>
 
-<mat-dialog-actions>
-    <button mat-button (click)='onCloseDialog()'>Cancel</button>
-    <button mat-button (click)='transferTask()'>Transfer</button>
+<mat-dialog-actions class='dialog-actions'>
+    <button color='primary' mat-button (click)='transferTask()'>Transfer</button>
 </mat-dialog-actions>

@@ -2,9 +2,9 @@
     <button mat-icon-button (click)='closeDialog()'><mat-icon>clear</mat-icon></button>
 </div>
 
-<mat-tab-group [selectedIndex]='selectedMonthIndex' (selectedIndexChange)='tabChange($event)'>
+<mat-tab-group [selectedIndex]='selectedMonthIndex' (selectedIndexChange)='tabChange($event)' class='max-secondary-dialog-width'>
         
-    <mat-tab *ngFor='let month of months' label={{month}}>
+    <mat-tab *ngFor='let month of months' [label]='month'>
         <div class='date-pick-dialog-day-wrapper'>
             <p class='date-pick-dialog-day-of-week'>S</p>
             <p class='date-pick-dialog-day-of-week'>M</p>
@@ -25,4 +25,6 @@
     
 </mat-tab-group>
 
-<button *ngIf='dueDateMoment' mat-button color='warn' style='float:right;' (click)='removeDueDate()'>Remove Due Date</button>
+<div class='exit-row'>
+    <button *ngIf='dueDateMoment' mat-button color='warn' (click)='removeDueDate()'>Remove Due Date</button>
+</div>  

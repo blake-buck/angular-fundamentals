@@ -1,4 +1,4 @@
-<div class='exit-row'>
+<div class='exit-row max-secondary-dialog-width'>
     <h3>Attach a display photo</h3>
     <button mat-icon-button (click)='saveImage()'><mat-icon>clear</mat-icon></button>
 </div>
@@ -7,7 +7,7 @@
 <div class='photo-upload-content'>
     <div style='overflow-y:auto; max-height: 500px; display:flex; flex-direction: column;'> 
         <div class='imageBlock' *ngFor='let imageUrl of realImages; index as i'>
-            <img src={{imageUrl}} style='width:250px; height:250px;' class='imageToDisplay' />
+            <img [src]='imageUrl' style='width:250px; height:250px;' class='imageToDisplay' />
             <button color='warn' mat-icon-button (click)='clearImage(i)'><mat-icon>delete</mat-icon></button>
         </div>
     </div>

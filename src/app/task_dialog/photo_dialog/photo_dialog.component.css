@@ -14,15 +14,8 @@
 
 .exit-row{
     display:flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items:center;
-}
-.exit-row button{
-    margin-left:auto;
-}
-.exit-row h3{
-    margin-left:auto;
-    margin-right:auto;
 }
 
 .imageBlock{
