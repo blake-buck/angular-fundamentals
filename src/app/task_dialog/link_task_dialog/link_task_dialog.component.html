@@ -5,14 +5,14 @@
 
 <div>
     <h3>Rows</h3>
-    <mat-form-field>
+    <mat-form-field class='max-width'>
         <mat-select [(value)]='selectedRow'>
             <mat-option *ngFor='let row of rows$ | async' [value]='row'>{{row.title}}</mat-option>
         </mat-select>
     </mat-form-field>
 
     <h3>Boards</h3>
-    <mat-form-field>
+    <mat-form-field class='max-width'>
         <mat-select [(value)]='selectedBoard'>
             <span *ngFor='let board of boards$ | async'>
                 <mat-option *ngIf='selectedRow && (board.rowKey === selectedRow.key)' [value]='board'>
@@ -23,7 +23,7 @@
     </mat-form-field>
 
     <h3>Tasks</h3>
-    <mat-form-field>
+    <mat-form-field class='max-width'>
         <mat-select [(value)]='selectedTask'>
             <div *ngIf='selectedBoard'>
                 <span *ngFor='let task of selectedBoard.tasks' >
@@ -34,4 +34,6 @@
     </mat-form-field>
 </div>
 
-<button (click)='linkTask(selectedBoard.key, selectedTask.key)' *ngIf='selectedRow && selectedBoard && selectedTask' mat-raised-button color='primary'>Link Task</button>
+<footer class='max-width'>
+    <button (click)='linkTask(selectedBoard.key, selectedTask.key)' *ngIf='selectedRow && selectedBoard && selectedTask' mat-button color='primary'>Link Task</button>
+</footer>

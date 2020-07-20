@@ -3,3 +3,11 @@ header{
     justify-content: space-between;
     align-items:center;
 }
+
+.max-width{
+    width:100%;
+}
+footer{
+    display: flex;
+    justify-content: flex-end;
+}

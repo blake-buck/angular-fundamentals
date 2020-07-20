@@ -28,7 +28,7 @@
             <mat-icon *ngIf='data.travel'>local_airport</mat-icon>
         </div>
 
-        <div>
+        <div class='label-row'>
             <p class='label' *ngFor='let label of data.labels; index as i' style ='font-weight:bold; color:white' [style.background]='label.background'>
                 <input [value]='label.text' [style.background]='label.background' [size]='labelLength(label.text.length)' (keyup)='changeLabelContent($event, label, data)' (focusout)='saveLabelContent()'/>
                 <mat-icon (click)='removeLabel(i, data)'>clear</mat-icon>
@@ -73,8 +73,10 @@
         </div>
     
         <textarea rows='3' placeholder='Write a note here...' [value]='commentContent' (keyup)='changeCommentContent($event, data)'></textarea>
-        <button mat-raised-button (click)='addComment(data)'>Add</button>
         
+        <div class='dialog-comments-actions'>
+            <button mat-raised-button (click)='addComment(data)'>Add</button>
+        </div> 
     </div>
     <div class='dialog-other'>
         <h3>Other Stuff</h3>
@@ -98,7 +100,7 @@
                 <mat-checkbox 
                     *ngIf='!item.isEditing' [checked]='item.checked' (change)='toggleChecklistItem($event,checklist.key, item, data)' 
                     draggable="true" (dragstart)='onChecklistItemDragStart($event, item, data)' (dragover)='onChecklistItemDragOver($event, data)' (drop)='onChecklistDrop($event, item, data)'>
-                        <span (click)='toggleEditChecklistItem($event, checklist.key, item, data)'>{{item.content}}</span>
+                        <div class='dialog-checklist-item-content' (click)='toggleEditChecklistItem($event, checklist.key, item, data)'>{{item.content}}</div>
                 </mat-checkbox>
                 <mat-checkbox *ngIf='item.isEditing' [checked]='item.checked' (change)='toggleChecklistItem($event, checklist.key, item, data)'><input #checklistInput (mouseenter)='focusChecklistInput($event)' class='dialog-checklist-item-input'  (focusout)='toggleEditChecklistItem($event, checklist.key, item, data)' (keyup)='changeChecklistItem($event, checklist.key, i, data)' [value]='item.content' /></mat-checkbox>
             </div>
@@ -127,9 +129,14 @@
             <h5>Created on: {{data.dateCreated}}</h5>
         </div>
     </div>
+
     
+
     <div class='dialog-actions'>
-        <h3>Actions</h3>
+        <div class='dialog-actions-button-wrapper'>                
+            <button mat-raised-button (click)='changeTaskProperty("isComplete", !data.isComplete, data)'><mat-icon>check_circle</mat-icon>Complete</button>
+            <button mat-raised-button (click)='openDialog("delete-dialog", data)'><mat-icon>delete</mat-icon>Delete</button>
+        </div>
         <div class='dialog-actions-button-wrapper'>
 
             <mat-menu #iconMenu='matMenu'>
@@ -174,16 +181,20 @@
             
             <button mat-raised-button [matMenuTriggerFor]='iconMenu'><mat-icon>label</mat-icon>Tags</button>
             <button mat-raised-button (click)='openDialog("date-pick-dialog", data)'><mat-icon>access_time</mat-icon>Due Date</button>
-            <button mat-raised-button (click)='openDialog("photo-dialog", data)'><mat-icon>add_a_photo</mat-icon>Photo</button>
-            <button mat-raised-button (click)='openDialog("attachment-dialog", data)'><mat-icon>attach_file</mat-icon>Attachment</button>
+            
             <button mat-raised-button (click)='addChecklist(data)'><mat-icon>check_box</mat-icon>Checklist</button>
-            <button mat-raised-button (click)='changeTaskProperty("isComplete", !data.isComplete, data)'><mat-icon>check_circle</mat-icon>Complete</button>
-            <button mat-raised-button (click)='openDialog("delete-dialog", data)'><mat-icon>delete</mat-icon>Delete</button>
             <button mat-raised-button [matMenuTriggerFor]='colorMenu'><mat-icon>format_color_fill</mat-icon>Card Color</button>
             <button mat-raised-button [matMenuTriggerFor]='fontColorMenu'><mat-icon>format_color_text</mat-icon>Font Color</button>
-            <button mat-raised-button [matMenuTriggerFor]='labelMenu'><mat-icon>view_day</mat-icon>Label</button>
+            <button mat-raised-button [matMenuTriggerFor]='labelMenu'><mat-icon>view_day</mat-icon>Label</button>  
+        </div>
+        <div class='dialog-actions-button-wrapper'>
+            <button mat-raised-button (click)='openDialog("photo-dialog", data)'><mat-icon>add_a_photo</mat-icon>Photo</button>
+            <button mat-raised-button (click)='openDialog("attachment-dialog", data)'><mat-icon>attach_file</mat-icon>Attachment</button>
+        </div>
+        <div class='dialog-actions-button-wrapper'>
             <button mat-raised-button (click)='openDialog("transfer-task-dialog", data)'><mat-icon>screen_share</mat-icon>Transfer Task</button>
             <button mat-raised-button (click)='openDialog("link_task_dialog", data)'><mat-icon>device_hub</mat-icon>Link Task</button>
         </div>
     </div>
+
 </div>

@@ -118,8 +118,13 @@
     outline:none;
     overflow: hidden;
 }
-
-
+.dialog-comments .dialog-comments-actions{
+    display:flex;
+    justify-content: flex-end;
+}
+.dialog-comments .dialog-comments-actions button{
+    margin-right:5px;
+}
 .dialog-individual-comment{
     background-color:white;
     padding:10px;
@@ -177,7 +182,8 @@
 }
 
 .dialog-checklist-item{
-    margin-left: 2%;
+    margin-left: 10px;
+    white-space: pre;
 }
 
 .dialog-checklist-item-input{
@@ -188,6 +194,10 @@
     margin-left:9px;
     width:100%;
 }
+.dialog-checklist-item-content{
+    word-break: break-all;
+    white-space: pre-wrap;
+}
 
 
 .dialog-other{
@@ -195,68 +205,53 @@
     grid-row:4;
 }
 .dialog-actions{
-    background-color:rgb(254,254,254, .80);
     grid-column:4/6;
     grid-row:2 /5;
-    border:1px solid black;
-    border-radius:20px;
-    text-align: center;
     max-height:700px;
-    padding-bottom:10px;
 }
 
 .dialog-description h3, .dialog-comments h3, .dialog-other h3{
     line-height:10%;
-    margin-bottom:10px;
+    margin-bottom:20px;
 }
 .dialog-description p, .dialog-comments p, .dialog-other p{
     margin-top:5px;  
 }
 
 .dialog-actions-button-wrapper{
+    border-radius:10px;
+    padding:10px;
+    margin:5px;
+    background-color:rgb(254,254,254, .80);
+    border:1px solid black;
     display:flex;
     flex-direction: column;
 }
 .dialog-actions-button-wrapper button{
-    margin-top: 5px;
-    margin-bottom: 5px;
+    margin:5px;
     font-weight:bold;
+    display:flex;
+}
+.dialog-actions-button-wrapper button mat-icon{
+    margin-right:10px;
 }
 
 .label-row{
     display:flex;
-    
-}
-
-.label-row p{
-    padding:1px;
-    margin-top:0px;
-    margin-bottom:0px;
-    min-height: 5px;
-    min-width: 43px;
-    margin-right:5px;
-    border-radius:5px;
-}
-
-.label-row input{
-    font-weight:bold;
-    color:white;
-    border:none;
-    outline:none;
-    border-radius: 5px;
-    padding-left:10px;
-    padding-right:10px;
+    flex-wrap:wrap;
 }
 
 p.label{
+    margin:0px;
     border-radius:5px;
     padding-left:10px;
     padding-right:10px;
     padding-top:2px;
     padding-bottom:2px;
-    max-width: 120px;
     display:flex;
+    align-items: center;
     position: relative;
+    margin-bottom:5px;
     margin-left:18px;
 }
 p.label:first-of-type{
@@ -274,6 +269,7 @@ p.label:first-of-type{
     position: absolute;
     color:black;
     display: none;
+    cursor: pointer;
 }
 .label mat-icon:hover{
     display: block;
@@ -292,6 +288,12 @@ p.label:first-of-type{
     margin-top:0px;
     margin-bottom:0px
 }
+
+.dialog-checklist{
+    margin-top:20px;
+    margin-bottom:20px;
+}
+
 
 @media only screen and (max-width: 450px) {
     .dialog-wrapper{
@@ -348,10 +350,7 @@ p.label:first-of-type{
         order:6;
     }
 
-    .dialog-other .dialog-checklist{
-        margin-bottom:20px;
-    }
-
+    
     
     
 
