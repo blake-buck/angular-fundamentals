@@ -10,6 +10,11 @@ export function addComment(data, commentContent){
     return data;
 }
 
+export function deleteComment(data, date){
+    data.comments = data.comments.filter(comment => comment.date !== date);
+    return data;
+}
+
 export function changeCardColor(data, color){
     data.cardColor = color;
     return data;

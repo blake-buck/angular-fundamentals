@@ -68,8 +68,13 @@
     <div class='dialog-comments'>
         <h3>Comments</h3>
         <div *ngFor='let comment of data.comments' class='dialog-individual-comment'>
+            <span>
+                <p>{{comment.date}}</p>
+                <button mat-icon-button (click)='deleteComment(data, comment)'><mat-icon>clear</mat-icon></button>
+            </span>
             <h4>{{comment.content}}</h4>
-            <p>{{comment.date}}</p>
+            
+            
         </div>
     
         <textarea rows='3' placeholder='Write a note here...' [value]='commentContent' (keyup)='changeCommentContent($event, data)'></textarea>

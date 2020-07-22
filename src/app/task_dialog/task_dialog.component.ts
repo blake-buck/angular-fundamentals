@@ -10,7 +10,7 @@ import {PhotoDialogComponent} from './photo_dialog/photo_dialog.component';
 import {DeleteDialogComponent} from './delete_dialog/delete_dialog.component';
 
 import {TransferTaskDialogComponent} from './transfer_task_dialog/transfer_task_dialog.component';
-import { addLabel, addComment, addChecklist, deleteChecklist, changeChecklistTitle, toggleEditChecklistTitle, toggleChecklistItem, toggleEditChecklistItem, addChecklistItem, deleteChecklistItem, changeChecklistItemText, removeFile } from './task_dialog.logic';
+import { addLabel, addComment, addChecklist, deleteChecklist, changeChecklistTitle, toggleEditChecklistTitle, toggleChecklistItem, toggleEditChecklistItem, addChecklistItem, deleteChecklistItem, changeChecklistItemText, removeFile, deleteComment } from './task_dialog.logic';
 import { editTask, closeTaskDialog, openTaskDialog, setSelectedTask } from 'src/app/store/app.actions';
 import { selectBoardAndRowTitleFromTaskKey, selectSpecificTask, selectSelectedTask } from 'src/app/store/app.selector';
 import { Observable } from 'rxjs';
@@ -128,6 +128,9 @@ export class TaskDialogComponent {
     addComment(data){
         this.store.dispatch(editTask({task:addComment(data, this.commentContent)}))
         this.commentContent = '';
+    }
+    deleteComment(data, comment){
+        this.store.dispatch(editTask({task:deleteComment(data, comment.date)}))
     }
 
     addChecklist(data){
