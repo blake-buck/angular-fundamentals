@@ -29,7 +29,7 @@ import
 } 
 from '@angular/material';
 
-import { NgModule } from '@angular/core';
+import { NgModule, ErrorHandler } from '@angular/core';
 
 import { AppComponent } from './app.component';
 
@@ -55,6 +55,7 @@ import { LoginComponent } from './login/login.component';
 import { AppRoutingModule } from './app-routing.module';
 import { AppEffects } from './store/app.effects';
 import { EffectsModule } from '@ngrx/effects';
+import { AppErrorHandler } from './error-handler.service';
 
 
 
@@ -111,7 +112,8 @@ import { EffectsModule } from '@ngrx/effects';
     AppRoutingModule
   ],
   providers: [
-    {provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue:{hasBackdrop:false}}
+    {provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue:{hasBackdrop:false}},
+    {provide: ErrorHandler, useClass:AppErrorHandler}
   ],
   bootstrap: [AppComponent],
   entryComponents : [TaskDialogComponent, DeleteDialogComponent, DatePickDialogComponent, PhotoDialogComponent, AttachmentDialogComponent, DeleteBoardDialogComponent, TransferTaskDialogComponent, TransferBoardDialogComponent, PreviewAttachmentDialogComponent, LinkTaskDialogComponent]
