@@ -5,7 +5,7 @@ import {Observable} from 'rxjs';
 
 import { onDragStart, onDragOver, onDrop } from './row.logic';
 
-import { archiveRow, editRowTitle, editRowDescription, addBoard, transferBoard, scrollRowForward, scrollRowBackward, editRowExpanded } from '../store/app.actions';
+import { archiveRow, editRowTitle, editRowDescription, addBoard, transferBoard, scrollRowForward, scrollRowBackward, editRowExpanded, shiftRowUp, shiftRowDown } from '../store/app.actions';
 import { selectSpecificBoards } from '../store/app.selector';
 import { Actions } from '@ngrx/effects';
 
@@ -107,5 +107,13 @@ export class RowComponent{
         if(this.rowData.expanded){
             this.store.dispatch(editRowExpanded({key:this.rowData.key, expanded:false}));
         }
+    }
+
+    shiftRowDown(row){
+        this.store.dispatch(shiftRowDown({position:row.position}))
+    }
+
+    shiftRowUp(row){
+        this.store.dispatch(shiftRowUp({position:row.position}))
     }
 }

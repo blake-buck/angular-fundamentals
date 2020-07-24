@@ -145,8 +145,18 @@ export const openTaskDialog = createAction(
 );
 export const closeTaskDialog = createAction(
     'CLOSE_TASK_DIALOG'
-)
+);
 export const setSelectedTask = createAction(
     'SET_SELECTED_TASK',
     props<{task:any}>()
+);
+
+export const shiftRowUp = createAction(
+    'SHIFT_ROW_UP',
+    props<{position:number}>()
+);
+
+export const shiftRowDown = createAction(
+    'SHIFT_ROW_DOWN',
+    props<{position:number}>()
 )

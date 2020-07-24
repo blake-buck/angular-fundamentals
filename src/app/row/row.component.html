@@ -37,6 +37,9 @@
         <button mat-menu-item>Export Row</button>
         <button mat-menu-item>Delete Row</button>
     </mat-menu>
+
+    <button mat-icon-button matTooltip='Shift row down' (click)='shiftRowDown(rowData)'><mat-icon>keyboard_arrow_down</mat-icon></button>
+    <button mat-icon-button matTooltip='Shift row up' (click)='shiftRowUp(rowData)'><mat-icon>keyboard_arrow_up</mat-icon></button>
     
 
     <div #scrollRow class='home_div' (dragover)='onMouseEnter($event)' (dragleave)='onMouseLeave($event)'>

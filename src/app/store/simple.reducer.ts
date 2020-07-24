@@ -1,8 +1,8 @@
-import {getState, addRow, editRowDescription, addBoard, transferBoard, editBoardTitle, archiveBoard, deleteBoard, toggleHideCompleteTasks, addTask, editTask, deleteTask, transferTaskEmpty, transferTask, duplicateRow, duplicateTask, duplicateBoard, linkTask, archiveRowSuccess, editRowTitleSuccess, getStateFromCosmosSuccess, saveChanges, editRowExpanded, openTaskDialog, setSelectedTask, closeTaskDialog, } from './app.actions';
+import {getState, addRow, editRowDescription, addBoard, transferBoard, editBoardTitle, archiveBoard, deleteBoard, toggleHideCompleteTasks, addTask, editTask, deleteTask, transferTaskEmpty, transferTask, duplicateRow, duplicateTask, duplicateBoard, linkTask, archiveRowSuccess, editRowTitleSuccess, getStateFromCosmosSuccess, saveChanges, editRowExpanded, openTaskDialog, setSelectedTask, closeTaskDialog, shiftRowUp, shiftRowDown, } from './app.actions';
 import {initialState } from './app.state';
 import { _addTask, _editTask, _deleteTask, _transferTaskEmpty, _transferTask, _linkTask } from './reducer-helpers/task.helpers';
 import { _addBoard, _transferBoard, _editBoardTitle, _archiveBoard, _deleteBoard, _reorderBoardTasks, _toggleHideCompleteTasks } from './reducer-helpers/board.helpers';
-import { _addRow, _editRowDescription, _editRowExpanded } from './reducer-helpers/row.helpers';
+import { _addRow, _editRowDescription, _editRowExpanded, _shiftRowUp, _shiftRowDown } from './reducer-helpers/row.helpers';
 
 export function simpleReducer(state=initialState, action){
     switch(action.type){
@@ -26,6 +26,12 @@ export function simpleReducer(state=initialState, action){
 
         case editRowExpanded.type:
             return _editRowExpanded(state, action);
+
+        case shiftRowUp.type:
+            return _shiftRowUp(state, action);
+        
+        case shiftRowDown.type:
+            return _shiftRowDown(state, action);
 
         case addBoard.type:  
             return _addBoard(state, action);
