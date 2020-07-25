@@ -8,11 +8,15 @@ export namespace App{
         archivedRows:Row[],
         rows:Row[],
         archivedBoards:Board[],
+        archivedTasks:Task[],
         boards:Board[],
         isDataSaved:boolean;
         isDataSaving:boolean;
         isTaskDialogOpen:boolean;
         selectedTask:Task | null;
+        rowCount:number;
+        boardCount:number;
+        taskCount:number;
     }
     
     export interface Row{
@@ -117,6 +121,7 @@ export const initialState:App.AppState = {
         {key: 2, position:1, title:'Financial Row', description:'All my financial Info', boards:[2], expanded:false}
     ],
     archivedBoards:[],
+    archivedTasks:[],
     boards:[
         {
             rowKey:1,
@@ -142,5 +147,8 @@ export const initialState:App.AppState = {
     isDataSaved:true,
     isDataSaving:false,
     isTaskDialogOpen:false,
-    selectedTask:null
+    selectedTask:null,
+    rowCount:2,
+    boardCount:2,
+    taskCount:0
 }

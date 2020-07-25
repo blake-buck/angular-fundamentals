@@ -8,13 +8,8 @@ export const duplicateRow = createAction('DUPLICATE_ROW', props<{key:number}>())
 
 export const archiveRow = createAction(
     'ARCHIVE_ROW',
-    props<{key:number}>()
-)
-
-export const archiveRowSuccess = createAction(
-    'ARCHIVE_ROW_SUCCESS',
-    props<{rows:any, archivedRows:any}>()
-)
+    props<{archivedRow:any}>()
+);
 
 export const editRowTitle = createAction(
     'EDIT_ROW_TITLE',
@@ -34,6 +29,11 @@ export const editRowDescription = createAction(
 export const editRowExpanded = createAction(
     'EDIT_ROW_EXPANDED',
     props<{key:number, expanded:boolean}>()
+)
+
+export const deleteRow = createAction(
+    'DELETE_ROW',
+    props<{deletedRow:any}>()
 )
 
 
@@ -93,6 +93,11 @@ export const linkTask = createAction(
 
 export const deleteTask = createAction(
     'DELETE_TASK',
+    props<{task:any}>()
+)
+
+export const archiveTask = createAction(
+    'ARCHIVE_TASK',
     props<{task:any}>()
 )
 

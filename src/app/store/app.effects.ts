@@ -4,7 +4,7 @@ import { map, first} from 'rxjs/operators'
 import { Store } from '@ngrx/store';
 import { selectAppState } from './app.selector';
 import { combineLatest } from 'rxjs';
-import { archiveRowSuccess, archiveRow, editRowTitle, editRowTitleSuccess, postStateToCosmos, putStateToCosmos, getStateFromCosmos, getStateFromCosmosSuccess, saveChanges, openTaskDialog, closeTaskDialog } from './app.actions';
+import { editRowTitle, editRowTitleSuccess, postStateToCosmos, putStateToCosmos, getStateFromCosmos, getStateFromCosmosSuccess, saveChanges, openTaskDialog, closeTaskDialog } from './app.actions';
 import { HttpClient } from '@angular/common/http';
 import { MatDialog } from '@angular/material';
 import { TaskDialogComponent } from '../task_dialog/task_dialog.component';
@@ -14,32 +14,6 @@ import { TaskDialogComponent } from '../task_dialog/task_dialog.component';
 export class AppEffects {
     constructor(private actions$:Actions, private store:Store<any>, private http:HttpClient, public dialog:MatDialog){}
 
-    archiveRow$ = createEffect(
-        () => this.actions$.pipe(
-            ofType(archiveRow),
-            map(action => {
-                let appState = this.store.select(selectAppState)
-                return combineLatest(appState, [action])
-            }),
-
-            map(state => {
-                let payload = state.subscribe(val => {
-                    let state = val[0]
-                    let clonedRows = [...state.rows]
-                    let clonedArchive = [...state.archivedRows]
-                    let index = clonedRows.findIndex(row => row.key === val[1].key)
-                   
-                    let archivedRow = clonedRows.splice(index, 1)
-                    clonedArchive.push(archivedRow)
-                    this.store.dispatch(archiveRowSuccess({rows:clonedRows, archivedRows:clonedArchive}))
-                }).unsubscribe()
-                
-            })
-
-        ),
-        {dispatch:false}
-    )
-    
     editRowTitle$ = createEffect(
         () => this.actions$.pipe(
             ofType(editRowTitle),

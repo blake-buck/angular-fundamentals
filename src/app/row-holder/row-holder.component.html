@@ -15,4 +15,10 @@
 <footer>
   <span *ngIf='(dataSaved$ | async) as dataSaved'>Saved</span>
   <span *ngIf='!(dataSaved$ | async)'>Unsaved Changes</span>
+  
+  <span class='running-count'>
+    <span>Rows: {{rowCount$ | async}}</span>
+    <span>Boards: {{boardCount$ | async}}</span>
+    <span>Tasks: {{taskCount$ | async}}</span>
+  </span>
 </footer>

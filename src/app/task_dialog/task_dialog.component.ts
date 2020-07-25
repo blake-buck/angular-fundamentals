@@ -11,7 +11,7 @@ import {DeleteDialogComponent} from './delete_dialog/delete_dialog.component';
 
 import {TransferTaskDialogComponent} from './transfer_task_dialog/transfer_task_dialog.component';
 import { addLabel, addComment, addChecklist, deleteChecklist, changeChecklistTitle, toggleEditChecklistTitle, toggleChecklistItem, toggleEditChecklistItem, addChecklistItem, deleteChecklistItem, changeChecklistItemText, removeFile, deleteComment } from './task_dialog.logic';
-import { editTask, closeTaskDialog, openTaskDialog, setSelectedTask } from 'src/app/store/app.actions';
+import { editTask, closeTaskDialog, openTaskDialog, setSelectedTask, archiveTask } from 'src/app/store/app.actions';
 import { selectBoardAndRowTitleFromTaskKey, selectSpecificTask, selectSelectedTask } from 'src/app/store/app.selector';
 import { Observable } from 'rxjs';
 import { LinkTaskDialogComponent } from './link_task_dialog/link_task_dialog.component';
@@ -283,6 +283,11 @@ export class TaskDialogComponent {
     removeLabel(i, data){
         data.labels.splice(i, 1);
         this.store.dispatch(editTask({task:data}))        
+    }
+
+    archiveTask(data){
+        this.store.dispatch(archiveTask({task:data}));
+        this.dialog.closeAll();
     }
 
 }

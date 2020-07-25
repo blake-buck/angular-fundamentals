@@ -1,8 +1,8 @@
-import {getState, addRow, editRowDescription, addBoard, transferBoard, editBoardTitle, archiveBoard, deleteBoard, toggleHideCompleteTasks, addTask, editTask, deleteTask, transferTaskEmpty, transferTask, duplicateRow, duplicateTask, duplicateBoard, linkTask, archiveRowSuccess, editRowTitleSuccess, getStateFromCosmosSuccess, saveChanges, editRowExpanded, openTaskDialog, setSelectedTask, closeTaskDialog, shiftRowUp, shiftRowDown, } from './app.actions';
+import {getState, addRow, editRowDescription, addBoard, transferBoard, editBoardTitle, archiveBoard, deleteBoard, toggleHideCompleteTasks, addTask, editTask, deleteTask, transferTaskEmpty, transferTask, linkTask, editRowTitleSuccess, getStateFromCosmosSuccess, saveChanges, editRowExpanded, openTaskDialog, setSelectedTask, closeTaskDialog, shiftRowUp, shiftRowDown, deleteRow, archiveRow, archiveTask} from './app.actions';
 import {initialState } from './app.state';
-import { _addTask, _editTask, _deleteTask, _transferTaskEmpty, _transferTask, _linkTask } from './reducer-helpers/task.helpers';
+import { _addTask, _editTask, _deleteTask, _transferTaskEmpty, _transferTask, _linkTask, _archiveTask } from './reducer-helpers/task.helpers';
 import { _addBoard, _transferBoard, _editBoardTitle, _archiveBoard, _deleteBoard, _reorderBoardTasks, _toggleHideCompleteTasks } from './reducer-helpers/board.helpers';
-import { _addRow, _editRowDescription, _editRowExpanded, _shiftRowUp, _shiftRowDown } from './reducer-helpers/row.helpers';
+import { _addRow, _editRowDescription, _editRowExpanded, _shiftRowUp, _shiftRowDown, _deleteRow, _archiveRow } from './reducer-helpers/row.helpers';
 
 export function simpleReducer(state=initialState, action){
     switch(action.type){
@@ -13,9 +13,8 @@ export function simpleReducer(state=initialState, action){
         case addRow.type:
             return _addRow(state);
         
-        case archiveRowSuccess.type:
-            return {...state,
-                isDataSaved:false, rows:action.rows}
+        case archiveRow.type:
+            return _archiveRow(state, action);
 
         case editRowTitleSuccess.type:
             return {...state,
@@ -32,6 +31,9 @@ export function simpleReducer(state=initialState, action){
         
         case shiftRowDown.type:
             return _shiftRowDown(state, action);
+
+        case deleteRow.type:
+            return _deleteRow(state, action);
 
         case addBoard.type:  
             return _addBoard(state, action);
@@ -62,6 +64,9 @@ export function simpleReducer(state=initialState, action){
             
         case deleteTask.type:
             return _deleteTask(state, action);
+
+        case archiveTask.type:
+            return _archiveTask(state, action);
         
         case transferTaskEmpty.type:
             return _transferTaskEmpty(state, action);

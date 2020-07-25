@@ -37,7 +37,8 @@ export function _addTask(state, action){
                 }
             }
             return board
-        })
+        }),
+        taskCount:state.taskCount + 1
     }
 }
 
@@ -72,7 +73,8 @@ export function _deleteTask(state, action){
     return{
         ...state,
         isDataSaved:false,
-        boards:newBoards
+        boards:newBoards,
+        taskCount:state.taskCount - 1
     }
 }
 
@@ -145,4 +147,17 @@ export function _linkTask(state, action){
         isDataSaved:false,
         boards:newBoards
     };
+}
+
+export function _archiveTask(state, action){
+    let newBoards = state.boards.slice();
+    let modifiedBoard = newBoards.find((board) => board.key === action.task.boardKey);
+    modifiedBoard.tasks = modifiedBoard.tasks.filter(task => task.key !== action.task.key);
+
+    return {
+        ...state,
+        boards:newBoards,
+        archivedTasks:[...state.archivedTasks, action.task],
+        taskCount: state.taskCount - 1
+    }
 }

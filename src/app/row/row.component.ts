@@ -5,7 +5,7 @@ import {Observable} from 'rxjs';
 
 import { onDragStart, onDragOver, onDrop } from './row.logic';
 
-import { archiveRow, editRowTitle, editRowDescription, addBoard, transferBoard, scrollRowForward, scrollRowBackward, editRowExpanded, shiftRowUp, shiftRowDown } from '../store/app.actions';
+import { archiveRow, editRowTitle, editRowDescription, addBoard, transferBoard, scrollRowForward, scrollRowBackward, editRowExpanded, shiftRowUp, shiftRowDown, deleteRow } from '../store/app.actions';
 import { selectSpecificBoards } from '../store/app.selector';
 import { Actions } from '@ngrx/effects';
 
@@ -78,8 +78,8 @@ export class RowComponent{
         this.store.dispatch(addBoard({key:row.key}))
     }
 
-    archiveRow(key){
-        this.store.dispatch(archiveRow({key}))
+    archiveRow(archivedRow){
+        this.store.dispatch(archiveRow({archivedRow}))
     }
 
     toggleEditDescription(row){
@@ -115,5 +115,9 @@ export class RowComponent{
 
     shiftRowUp(row){
         this.store.dispatch(shiftRowUp({position:row.position}))
+    }
+
+    deleteRow(row){
+        this.store.dispatch(deleteRow({deletedRow:row}))
     }
 }

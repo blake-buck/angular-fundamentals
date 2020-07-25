@@ -22,7 +22,8 @@ export function _addBoard(state, action){
                 tasks:[]
             }
         ],
-        currentBoardKey:state.currentBoardKey + 1
+        currentBoardKey:state.currentBoardKey + 1,
+        boardCount:state.boardCount + 1
     }
 }
 
@@ -72,24 +73,28 @@ export function _editBoardTitle(state, action){
 export function _archiveBoard(state, action){
     let newBoards = state.boards.slice();
     let modifiedBoardIndex = newBoards.findIndex(board => board.key === action.key);
-    let modifiedBoard = newBoards.splice(modifiedBoardIndex, 1)
+    let modifiedBoard = newBoards.splice(modifiedBoardIndex, 1)[0]
     
     return {
         ...state,
         isDataSaved:false,
         archivedBoards:[...state.archivedBoards, modifiedBoard],
-        boards:newBoards
+        boards:newBoards,
+        boardCount:newBoards.length,
+        taskCount: state.taskCount - modifiedBoard.tasks.length
     };
 }
 
 export function _deleteBoard(state, action){
     let newBoards = state.boards.slice();
     let modifiedBoardIndex = newBoards.findIndex(board => board.key === action.key);
-    newBoards.splice(modifiedBoardIndex, 1)
+    let deletedBoard = newBoards.splice(modifiedBoardIndex, 1)[0]
     return {
         ...state,
         isDataSaved:false,
-        boards:newBoards
+        boards:newBoards,
+        boardCount:state.boardCount -1,
+        taskCount: state.taskCount - deletedBoard.tasks.length
     }
 }
 

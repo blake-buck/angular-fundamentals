@@ -33,9 +33,8 @@
     <mat-menu #rowActions='matMenu'>
         <button mat-menu-item (click)='toggleEditTitle(rowData)'>Edit Title</button>
         <button mat-menu-item (click)='toggleEditDescription(rowData)'>Edit Description</button>
-        <button mat-menu-item (click)='archiveRow(rowData.key)'>Archive Row</button>
-        <button mat-menu-item>Export Row</button>
-        <button mat-menu-item>Delete Row</button>
+        <button mat-menu-item (click)='archiveRow(rowData)'>Archive Row</button>
+        <button mat-menu-item (click)='deleteRow(rowData)'>Delete Row</button>
     </mat-menu>
 
     <button mat-icon-button matTooltip='Shift row down' (click)='shiftRowDown(rowData)'><mat-icon>keyboard_arrow_down</mat-icon></button>

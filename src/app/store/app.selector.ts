@@ -38,3 +38,7 @@ export const selectIsDataSaved = createSelector(selectAppState, state => state.i
 export const selectIsDataSaving = createSelector(selectAppState, state => state.isDataSaving)
 
 export const selectSelectedTask = createSelector(selectAppState, state => state.selectedTask);
+
+export const selectRowCount = createSelector(selectAppState, state => state.rowCount);
+export const selectBoardCount = createSelector(selectAppState, state => state.boardCount);
+export const selectTaskCount = createSelector(selectAppState, state => state.taskCount);
