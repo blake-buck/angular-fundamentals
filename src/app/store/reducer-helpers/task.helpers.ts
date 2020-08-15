@@ -161,3 +161,28 @@ export function _archiveTask(state, action){
         taskCount: state.taskCount - 1
     }
 }
+
+export function _restoreArchivedTask(state, action){
+    const {task, board} = action;
+    console.log('_restoreArchivedTask')
+    return {
+        ...state,
+        archivedTasks:state.archivedTasks.filter(archived => archived.key !== task.key),
+        boards:state.boards.map(sboard => {
+            if(sboard.key === board.key){
+                return {
+                    ...board,
+                    tasks:[
+                        ...board.tasks, 
+                        {
+                            ...task,
+                            boardKey: board.key
+                        }
+                    ]
+                }
+            }
+            return sboard
+        }),
+        taskCount: state.taskCount + 1
+    }
+}

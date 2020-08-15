@@ -94,7 +94,7 @@ export function _deleteRow(state, action){
 export function _archiveRow(state, action){
     const {archivedRow} = action;
     let updatedRows = state.rows.filter(row => row.key !== archivedRow.key);
-    let updatedBoards = state.boards.filter(board => !archivedRow.boards.includes(board.key));
+    let updatedBoards = state.boards.filter(board => !archivedRow.boards.includes(board.key)).map((board, index) => ({...board, position:index}));
     let archivedTasksCount = state.boards.filter(board => archivedRow.boards.includes(board.key)).map(board => board.tasks).reduce((acc, currentVal) => acc.length + currentVal.length);
 
     return {
@@ -108,5 +108,29 @@ export function _archiveRow(state, action){
         rowCount:updatedRows.length,
         boardCount:updatedBoards.length,
         taskCount: state.taskCount - archivedTasksCount
+    }
+}
+
+export function _restoreArchivedRow(state, action){
+    const row = {
+        ...action.row,
+        boards:action.row.boards.map(board => board.key),
+        position: state.rows.length
+    }
+    return {
+        ...state,
+        archivedRows:state.archivedRows.filter(row => action.row.key !== row.key),
+        archivedBoards:state.archivedBoards.filter(board => !row.boards.includes(board.key)),
+        rows:[
+            ...state.rows, 
+            row
+        ],
+        boards:[
+            ...state.boards,
+            ...action.row.boards
+        ],
+        rowCount:state.rowCount + 1,
+        boardCount: state.boardCount + action.row.boards.length,
+        taskCount: state.taskCount + action.row.boards.map(board => board.tasks).reduce((acc, currentVal) => acc.length + currentVal.length)
     }
 }

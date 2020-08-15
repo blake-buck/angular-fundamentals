@@ -4,6 +4,8 @@ import { Store } from '@ngrx/store';
 
 import { selectRows, selectIsDataSaved, selectBoardCount, selectTaskCount, selectRowCount } from '../store/app.selector';
 import { getState, addRow } from '../store/app.actions';
+import { MatDialog } from '@angular/material';
+import { ArchivedItemsComponent } from '../archived-items/archived-items.component';
 
 @Component({
     selector:'row-holder',
@@ -21,7 +23,7 @@ export class RowHolderComponent{
 
     dataSaved$:Observable<boolean>
 
-    constructor(private store:Store<any>){
+    constructor(private store:Store<any>, private dialog:MatDialog){
         this.row$ = this.store.select(selectRows)
         this.dataSaved$ = this.store.select(selectIsDataSaved);
         this.rowCount$ = this.store.select(selectRowCount);
@@ -35,5 +37,9 @@ export class RowHolderComponent{
 
     addRow(){
         this.store.dispatch(addRow())
+    }
+
+    openArchivedItemsDialog(){
+        this.dialog.open(ArchivedItemsComponent);
     }
 }

@@ -165,3 +165,18 @@ export const shiftRowDown = createAction(
     'SHIFT_ROW_DOWN',
     props<{position:number}>()
 )
+
+export const restoreArchivedRow = createAction(
+    'RESTORE_ARCHIVED_ROW',
+    props<{row:any}>()
+)
+
+export const restoreArchivedBoard = createAction(
+    'RESTORE_ARCHIVED_BOARD',
+    props<{board:any, row:any}>()
+)
+
+export const restoreArchivedTask = createAction(
+    'RESTORE_ARCHIVED_TASK',
+    props<{board:any, task:any}>()
+)

@@ -1,0 +1,31 @@
+<h2>Transfer Task</h2>
+<form>
+    <mat-form-field>
+        <mat-label>Row</mat-label>
+
+        <mat-select [(value)]="selectedRow">
+            <mat-option *ngFor='let row of rows$ | async' [value]='row'>
+                {{row.title}}
+            </mat-option>
+        </mat-select>
+
+    </mat-form-field>
+
+    <mat-form-field>
+        <mat-label>Board</mat-label>
+        
+        <mat-select [(value)]="selectedBoard">
+            <div *ngFor='let board of boards$ | async'>
+                <mat-option *ngIf='selectedRow && board.rowKey === selectedRow.key' [value]='board'>
+                    {{board.title}}
+                </mat-option>
+            </div>
+        </mat-select>
+        
+    </mat-form-field>
+</form>
+
+<mat-dialog-actions class='dialog-actions'>
+    <button mat-button (click)='closeDialog()'>Cancel</button>
+    <button color='primary' mat-button (click)='restoreTask()'>Restore</button>
+</mat-dialog-actions>

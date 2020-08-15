@@ -1,0 +1,40 @@
+div.wrapper{
+    width:400px;
+    header{
+        display:flex;
+        justify-content: flex-end;
+    }
+}
+.dialog-action{
+    display:flex;
+    justify-content: flex-end;
+}
+
+form{
+    display:flex;
+    flex-direction: column;
+}
+
+.restore-row{
+    display:flex;
+    align-items:center;
+}
+.row{
+    max-height:350px;
+}
+.board{
+    background-color: rgb(0, 0, 0, .1);
+    padding:5px;
+    margin:5px;
+    max-height:150px;
+    overflow:auto;
+}
+.task{
+    background:white;
+    width: 80%;
+    border-radius: 5px;
+    padding:10px;
+    margin:5px;
+    margin-left:auto;
+    margin-right:auto;
+}

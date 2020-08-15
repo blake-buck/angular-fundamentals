@@ -52,6 +52,31 @@ export function _transferBoard(state, action){
     }
 }
 
+export function _restoreArchivedBoard(state, action){
+    const rowKey = action.row.key;
+    return {
+        ...state,
+        archivedBoards:state.archivedBoards.filter(board => board.key !== action.board.key),
+        rows:state.rows.map(row => {
+            if(row.key === rowKey){
+                return {
+                    ...row,
+                    boards:[...row.boards, action.board.key]
+                }
+            }
+            return row;
+        }),
+        boards:[
+            ...state.boards,
+            {
+                ...action.board,
+                rowKey
+            }
+        ],
+        boardCount: state.boardCount + 1,
+        taskCount: state.taskCount + action.board.tasks.length
+    }
+}
 export function _editBoardTitle(state, action){
     return{
         ...state,
@@ -78,6 +103,12 @@ export function _archiveBoard(state, action){
     return {
         ...state,
         isDataSaved:false,
+        rows:state.rows.map(row => {
+            if(row.boards.includes(modifiedBoard.key)){
+                return {...row, boards: row.boards.filter(boardKey => modifiedBoard.key !== boardKey)}
+            }
+            return row
+        }),
         archivedBoards:[...state.archivedBoards, modifiedBoard],
         boards:newBoards,
         boardCount:newBoards.length,
@@ -92,6 +123,12 @@ export function _deleteBoard(state, action){
     return {
         ...state,
         isDataSaved:false,
+        rows:state.rows.map(row => {
+            if(row.boards.includes(deletedBoard.key)){
+                return {...row, boards: row.boards.filter(boardKey => deletedBoard.key !== boardKey)}
+            }
+            return row
+        }),
         boards:newBoards,
         boardCount:state.boardCount -1,
         taskCount: state.taskCount - deletedBoard.tasks.length

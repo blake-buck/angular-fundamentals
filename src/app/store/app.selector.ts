@@ -42,3 +42,15 @@ export const selectSelectedTask = createSelector(selectAppState, state => state.
 export const selectRowCount = createSelector(selectAppState, state => state.rowCount);
 export const selectBoardCount = createSelector(selectAppState, state => state.boardCount);
 export const selectTaskCount = createSelector(selectAppState, state => state.taskCount);
+
+export const selectArchivedRows = createSelector(selectAppState, state => { 
+    return state.archivedRows.map(row => ({
+        ...row,
+        boards:state.archivedBoards.filter(board => row.boards.includes(board.key))
+    }));
+});
+export const selectArchivedBoards = createSelector(selectAppState, state => {
+    const allRows:any = [...state.rows, ...state.archivedRows];
+    return state.archivedBoards.filter(board => !allRows.map(row => row.boards).flat().includes(board.key));
+});
+export const selectArchivedTasks = createSelector(selectAppState, state => state.archivedTasks);

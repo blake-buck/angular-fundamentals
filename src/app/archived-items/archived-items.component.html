@@ -1,0 +1,48 @@
+<div class='wrapper'>
+    <header>
+        <button mat-icon-button (click)='closeDialog()'><mat-icon>clear</mat-icon></button>
+    </header>
+    <div style='max-height:30vh; overflow:auto;'>
+        <h3>Archived Rows</h3>
+        <p *ngIf='(archivedRows$ | async).length === 0'>No archived rows.</p>
+        <div *ngFor='let row of archivedRows$ | async' class='row'>
+            <div class='restore-row'>
+                <button matTooltip='Restore item' mat-icon-button (click)='restoreRow(row)'><mat-icon>add</mat-icon></button>
+                <span>{{row.title}}</span>
+            </div>
+            <div *ngFor='let board of row.boards' class='board' style='margin-left:5px'>
+                {{board.title}}
+                <div *ngFor='let task of board.tasks' class='task' style='margin-left:10px;'>
+                    {{task.body}}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div style='max-height:30vh; overflow:auto;'>
+        <h3>Archived Boards</h3>
+        <p *ngIf='(archivedBoards$ | async).length === 0'>No archived boards.</p>
+        <div *ngFor='let board of archivedBoards$ | async'>
+            <div class='board'>
+                <div class='restore-row '>
+                    <button matTooltip='Restore item' mat-icon-button (click)='restoreBoard(board)'><mat-icon>add</mat-icon></button>
+                    <span>{{board.title}}</span>
+                </div>
+                <div *ngFor='let task of board.tasks' class='task' style='margin-left:10px'>
+                    {{task.body}}
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div style='max-height:30vh; overflow:auto;'>
+        <h3>Archived Tasks</h3>
+        <p *ngIf='(archivedTasks$ | async).length === 0'>No archived tasks.</p>
+        <div *ngFor='let task of archivedTasks$ | async'>
+            <div class='restore-row'>
+                <button matTooltip='Restore item' mat-icon-button (click)='restoreTask(task)'><mat-icon>add</mat-icon></button>
+                <span>{{task.body}}</span>
+            </div>
+        </div>
+    </div>
+</div>

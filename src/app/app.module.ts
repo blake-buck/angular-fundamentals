@@ -56,6 +56,9 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppEffects } from './store/app.effects';
 import { EffectsModule } from '@ngrx/effects';
 import { AppErrorHandler } from './error-handler.service';
+import { ArchivedItemsComponent } from './archived-items/archived-items.component';
+import { RestoreBoardDialogComponent } from './archived-items/restore-board-dialog/restore-board-dialog.component';
+import { RestoreTaskDialogComponent } from './archived-items/restore-task-dialog/restore-task-dialog.component';
 
 
 
@@ -81,7 +84,10 @@ import { AppErrorHandler } from './error-handler.service';
     LinkTaskDialogComponent,
 
     RowHolderComponent,
-    LoginComponent
+    LoginComponent,
+    ArchivedItemsComponent,
+    RestoreBoardDialogComponent,
+    RestoreTaskDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -116,6 +122,20 @@ import { AppErrorHandler } from './error-handler.service';
     {provide: ErrorHandler, useClass:AppErrorHandler}
   ],
   bootstrap: [AppComponent],
-  entryComponents : [TaskDialogComponent, DeleteDialogComponent, DatePickDialogComponent, PhotoDialogComponent, AttachmentDialogComponent, DeleteBoardDialogComponent, TransferTaskDialogComponent, TransferBoardDialogComponent, PreviewAttachmentDialogComponent, LinkTaskDialogComponent]
+  entryComponents : [
+    TaskDialogComponent, 
+    DeleteDialogComponent, 
+    DatePickDialogComponent, 
+    PhotoDialogComponent, 
+    AttachmentDialogComponent, 
+    DeleteBoardDialogComponent, 
+    TransferTaskDialogComponent, 
+    TransferBoardDialogComponent, 
+    PreviewAttachmentDialogComponent, 
+    LinkTaskDialogComponent, 
+    ArchivedItemsComponent,
+    RestoreBoardDialogComponent,
+    RestoreTaskDialogComponent
+  ]
 })
 export class AppModule { }
