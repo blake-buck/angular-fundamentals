@@ -9,6 +9,8 @@ export const isNull = (prop) => typeof prop === OBJECT && !prop;
 export const isObject = (prop) => typeof prop === OBJECT && prop;
 export const isArray = (prop) => isObject(prop) && Array.isArray(prop);
 
+
+
 export const isBoolean = (prop) => typeof prop === BOOLEAN;
 export const isString = (prop) => typeof prop === STRING;
 export const isNumber = (prop) => typeof prop === NUMBER;
@@ -26,6 +28,30 @@ export const isOneOf = (...verifiers) => {
     return false;
   }
 };
+
+// used for verifying the structure of an object
+export const hasShape = (typeObj) => {
+  return (prop) => {
+    if(!isObject(prop)){
+      return false;
+    }
+    return createVerificationObject(typeObj, prop);
+  }
+}
+
+export const isArrayOf = (verifier) => {
+  return (prop) => {
+    if(!isArray(prop)){
+      return false
+    }
+    // if array has elements in it, return an array of verificationResults
+    if(prop.length > 0){
+      return prop.map(val => verifier(val))
+    }
+    // if the array is empty, assume everything is good to go
+    return true
+  }
+}
 
 export function createVerificationObject(typeObj, verifyObj){
   let typeCheckObj = {};
@@ -45,12 +71,7 @@ export function createVerificationObject(typeObj, verifyObj){
     
     const prop = verifyObj[key];
     
-    if(isObject(typeVerifier) && isObject(prop)){
-      typeCheckObj[key] = createVerificationObject(typeVerifier, prop);
-    }
-    else{
-      typeCheckObj[key] = typeVerifier(prop);
-    }
+    typeCheckObj[key] = typeVerifier(prop);
   }
 
   return {
@@ -61,20 +82,31 @@ export function createVerificationObject(typeObj, verifyObj){
 }
 
 export const validateStrict = (verificationObject) => {
-  if(verificationObject.missingTypeObjKeys.length > 0 || verificationObject.missingVerifyObjKeys.length > 0){
-    console.log(verificationObject.missingTypeObjKeys, verificationObject.missingVerifyObjKeys)
-    throw new Error('Passed Object and Type Object properties do not match');
+  // dont like how arrays of boolean values are handled, but it works for the moment
+  if(isArray(verificationObject)){
+    verificationObject.forEach(val => validateStrict(val));
+  }
+  else if(isObject(verificationObject)){
+    if(verificationObject.missingTypeObjKeys.length > 0 || verificationObject.missingVerifyObjKeys.length > 0){
+      console.log(verificationObject.missingTypeObjKeys, verificationObject.missingVerifyObjKeys)
+      throw new Error('Passed Object and Type Object properties do not match');
+    }
+  
+    for(let prop in verificationObject.typeCheckObj){
+      let typeCheckValue = verificationObject.typeCheckObj[prop];
+      
+      if(isObject(typeCheckValue)){
+          validateStrict(typeCheckValue);
+      }
+      if(!typeCheckValue){
+        throw new Error(`Type validation failed on property ${prop}.`);
+      }
+    }  
+  }
+  else if(isBoolean(verificationObject) && !verificationObject){
+    throw new Error('Type validation failed.')
   }
 
-  for(let prop in verificationObject.typeCheckObj){
-    let typeCheckValue = verificationObject.typeCheckObj[prop];
-    if(isObject(typeCheckValue)){
-        validateStrict(typeCheckValue);
-    }
-    if(!typeCheckValue){
-      throw new Error(`Type validation failed on property ${prop}.`);
-    }
-  }
-
+  
   return true;
 }

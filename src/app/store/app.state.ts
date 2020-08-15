@@ -1,5 +1,5 @@
 import { Moment } from 'moment';
-import { isNumber, createVerificationObject, isString, isBoolean, isArray, isNull, isOneOf, isObject } from './verification/verification';
+import { isNumber, createVerificationObject, isString, isBoolean, isArray, isNull, isOneOf, isObject, hasShape, isArrayOf } from './verification/verification';
 export namespace App{
     export interface AppState{
         partitionKey:string;
@@ -109,21 +109,43 @@ export namespace App{
     }
 }
 
-const rowTypes = {
-    key: isNumber,
-    title: isString,
-    description: isString,
-    boards: isArray,
-    expanded: isBoolean,
-    position: isNumber
+
+
+
+const taskComment = {
+    content: isString,
+    date: isString
 }
-const boardTypes = {
-    rowKey: isNumber,
+const taskLinkedTaskTypes = {
+    taskKey: isNumber,
+    boardKey: isNumber
+}
+const taskLabelTypes = {
+    background: isString,
+    fontColor: isString,
+    text: isString
+}
+const taskChecklistItemTypes = {
     key: isNumber,
-    title: isString,
-    hideCompleteTasks: isBoolean,
-    isArchived: isBoolean,
-    tasks: isArray
+    checklistKey: isNumber,
+    content: isString,
+    checked: isBoolean,
+    isEditing: isBoolean
+}
+const taskChecklistTypes ={
+    title: hasShape({
+        content:isString, 
+        isEditing:isBoolean
+    }),
+    key: isNumber,
+    color: isString,
+    currentKey: isNumber,
+    completedTasks: isNumber,
+    content: isArrayOf(hasShape(taskChecklistItemTypes))
+}
+const attachedFilesTypes = {
+    name:isString,
+    link:isString
 }
 const taskTypes = {
     key: isNumber,
@@ -146,50 +168,33 @@ const taskTypes = {
     work: isBoolean,
     travel: isBoolean,
 
-    comments: isArray,
-    checklists: isArray,
-    displayImageUrls: isArray,
-    attachedFiles: isArray,
-    labels: isArray,
-    linkedTasks: isArray,
+    comments: isArrayOf(hasShape(taskComment)),
+    checklists: isArrayOf(hasShape(taskChecklistTypes)),
+    displayImageUrls: isArrayOf(isString),
+    attachedFiles: isArrayOf(hasShape(attachedFilesTypes)),
+    labels: isArrayOf(hasShape(taskLabelTypes)),
+    linkedTasks: isArrayOf(hasShape(taskLinkedTaskTypes)),
 
     dueDate: isOneOf(isString, isNull),
     dateCreated: isString,
     lastEdited: isString,
 }
 
-const taskChecklistItemTypes = {
+const boardTypes = {
+    rowKey: isNumber,
     key: isNumber,
-    checklistKey: isNumber,
-    content: isString,
-    checked: isBoolean,
-    isEditing: isBoolean
+    title: isString,
+    hideCompleteTasks: isBoolean,
+    isArchived: isBoolean,
+    tasks: isArrayOf(hasShape(taskTypes))
 }
-const taskLabelTypes = {
-    background: isString,
-    fontColor: isString,
-    text: isString
-}
-const taskLinkedTaskTypes = {
-    taskKey: isNumber,
-    boardKey: isNumber
-}
-
-const taskChecklistTypes ={
-    title: {
-        content:isString, 
-        isEditing:isBoolean
-    },
+const rowTypes = {
     key: isNumber,
-    color: isString,
-    currentKey: isNumber,
-    completedTasks: isNumber,
-    content: isArray
-}
-
-const taskComment = {
-    content: isString,
-    date: isString
+    title: isString,
+    description: isString,
+    boards: isArrayOf(isNumber),
+    expanded: isBoolean,
+    position: isNumber
 }
 
 export const appStateTypes = {
@@ -197,15 +202,17 @@ export const appStateTypes = {
     currentTaskKey: isNumber,
     currentBoardKey: isNumber,
     currentRowKey: isNumber,
-    archivedRows: isArray,
-    rows: isArray,
-    archivedBoards: isArray,
-    archivedTasks: isArray,
-    boards: isArray,
+
+    archivedRows: isArrayOf(hasShape(rowTypes)),
+    rows: isArrayOf(hasShape(rowTypes)),
+
+    archivedBoards: isArrayOf(hasShape(boardTypes)),
+    archivedTasks: isArrayOf(hasShape(taskTypes)),
+    boards: isArrayOf(hasShape(boardTypes)),
     isDataSaved: isBoolean,
     isDataSaving: isBoolean,
     isTaskDialogOpen: isBoolean,
-    selectedTask: isOneOf(isNull, isObject),
+    selectedTask: isOneOf(isNull, hasShape(taskTypes)),
     rowCount:isNumber,
     boardCount:isNumber,
     taskCount:isNumber
