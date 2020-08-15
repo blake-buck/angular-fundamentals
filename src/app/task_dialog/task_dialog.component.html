@@ -52,7 +52,7 @@
 
         <div class='dialog-description-title'>
             <h3>Description</h3>
-            <button mat-icon-button (click)='toggleEditDescription(data)'>
+            <button mat-icon-button (click)='toggleInput("isEditingDescription", "isEditingDescriptionFocused", $event, data)'>
                 <mat-icon>edit</mat-icon>
             </button>
         </div>
@@ -139,38 +139,38 @@
 
     <div class='dialog-actions'>
         <div class='dialog-actions-button-wrapper'>                
-            <button mat-raised-button (click)='changeTaskProperty("isComplete", !data.isComplete, data)'><mat-icon>check_circle</mat-icon>Complete</button>
+            <button mat-raised-button (click)='changeTaskProperty("isComplete", !data.isComplete, false, data)'><mat-icon>check_circle</mat-icon>Complete</button>
             <button mat-raised-button (click)='openDialog("delete-dialog", data)'><mat-icon>delete</mat-icon>Delete</button>
         </div>
         <div class='dialog-actions-button-wrapper'>
 
             <mat-menu #iconMenu='matMenu'>
-                <button mat-menu-item (click)='changeTaskProperty("important", !data.important, data)'><mat-icon aria-hidden="false">visibility</mat-icon>Important</button>
-                <button mat-menu-item (click)='changeTaskProperty("warning", !data.warning, data)'><mat-icon aria-hidden="false">warning</mat-icon>Warning</button>
-                <button mat-menu-item (click)='changeTaskProperty("payment", !data.payment, data)'><mat-icon aria-hidden="false">payment</mat-icon>Payment</button>
-                <button mat-menu-item (click)='changeTaskProperty("vacation", !data.vacation, data)'><mat-icon aria-hidden="false">weekend</mat-icon>Vacation</button>
-                <button mat-menu-item (click)='changeTaskProperty("social", !data.social, data)'><mat-icon aria-hidden="false">group</mat-icon>Social</button>
-                <button mat-menu-item (click)='changeTaskProperty("work", !data.work, data)'><mat-icon aria-hidden='false'>work</mat-icon>Work</button>
-                <button mat-menu-item (click)='changeTaskProperty("travel", !data.travel, data)'><mat-icon aria-hidden='false'>local_airport</mat-icon>Travel</button>
+                <button mat-menu-item (click)='changeTaskProperty("important", !data.important, false, data)'><mat-icon aria-hidden="false">visibility</mat-icon>Important</button>
+                <button mat-menu-item (click)='changeTaskProperty("warning", !data.warning, false, data)'><mat-icon aria-hidden="false">warning</mat-icon>Warning</button>
+                <button mat-menu-item (click)='changeTaskProperty("payment", !data.payment, false, data)'><mat-icon aria-hidden="false">payment</mat-icon>Payment</button>
+                <button mat-menu-item (click)='changeTaskProperty("vacation", !data.vacation, false, data)'><mat-icon aria-hidden="false">weekend</mat-icon>Vacation</button>
+                <button mat-menu-item (click)='changeTaskProperty("social", !data.social, false, data)'><mat-icon aria-hidden="false">group</mat-icon>Social</button>
+                <button mat-menu-item (click)='changeTaskProperty("work", !data.work, false, data)'><mat-icon aria-hidden='false'>work</mat-icon>Work</button>
+                <button mat-menu-item (click)='changeTaskProperty("travel", !data.travel, false, data)'><mat-icon aria-hidden='false'>local_airport</mat-icon>Travel</button>
             </mat-menu>
 
             <mat-menu #colorMenu='matMenu'>
-                <button mat-menu-item (click)='changeTaskProperty("cardColor", "red", data)'><mat-icon  style='color:red'>label</mat-icon>Red</button>
-                <button mat-menu-item (click)='changeTaskProperty("cardColor", "yellow", data)'><mat-icon  style='color:yellow'>label</mat-icon>Yellow</button>
-                <button mat-menu-item (click)='changeTaskProperty("cardColor", "blue", data)'><mat-icon  style='color:blue'>label</mat-icon>Blue</button>
-                <button mat-menu-item (click)='changeTaskProperty("cardColor", "green", data)'><mat-icon  style='color:green'>label</mat-icon>Green</button>
-                <button mat-menu-item (click)='changeTaskProperty("cardColor", "purple", data)'><mat-icon  style='color:purple'>label</mat-icon>Purple</button>
-                <button mat-menu-item (click)='changeTaskProperty("cardColor", "orange", data)'><mat-icon  style='color:orange'>label</mat-icon>Orange</button>
-                <button mat-menu-item (click)='changeTaskProperty("cardColor", "", data)'>NONE</button>
+                <button mat-menu-item (click)='changeTaskProperty("cardColor", "red", false, data)'><mat-icon  style='color:red'>label</mat-icon>Red</button>
+                <button mat-menu-item (click)='changeTaskProperty("cardColor", "yellow", false, data)'><mat-icon  style='color:yellow'>label</mat-icon>Yellow</button>
+                <button mat-menu-item (click)='changeTaskProperty("cardColor", "blue",  false, data)'><mat-icon  style='color:blue'>label</mat-icon>Blue</button>
+                <button mat-menu-item (click)='changeTaskProperty("cardColor", "green", false, data)'><mat-icon  style='color:green'>label</mat-icon>Green</button>
+                <button mat-menu-item (click)='changeTaskProperty("cardColor", "purple", false, data)'><mat-icon  style='color:purple'>label</mat-icon>Purple</button>
+                <button mat-menu-item (click)='changeTaskProperty("cardColor", "orange", false, data)'><mat-icon  style='color:orange'>label</mat-icon>Orange</button>
+                <button mat-menu-item (click)='changeTaskProperty("cardColor", "", false, data)'>NONE</button>
             </mat-menu>
 
             <mat-menu #fontColorMenu='matMenu'>
-                <button mat-menu-item (click)='changeTaskProperty("fontColor", "black", data)' style='color:black'>Black</button>
-                <button mat-menu-item (click)='changeTaskProperty("fontColor", "firebrick", data)' style='color:firebrick'>Firebrick</button>
-                <button mat-menu-item (click)='changeTaskProperty("fontColor", "goldenrod", data)' style='color:goldenrod'>Gold</button>
-                <button mat-menu-item (click)='changeTaskProperty("fontColor", "steelblue", data)' style='color:steelblue'>Steel Blue</button>
-                <button mat-menu-item (click)='changeTaskProperty("fontColor", "seagreen", data)' style='color:seagreen'>Sea Green</button>
-                <button mat-menu-item (click)='changeTaskProperty("fontColor", "plum", data)' style='color:plum'>Plum</button>
+                <button mat-menu-item (click)='changeTaskProperty("fontColor", "black", false, data)' style='color:black'>Black</button>
+                <button mat-menu-item (click)='changeTaskProperty("fontColor", "firebrick", false, data)' style='color:firebrick'>Firebrick</button>
+                <button mat-menu-item (click)='changeTaskProperty("fontColor", "goldenrod", false, data)' style='color:goldenrod'>Gold</button>
+                <button mat-menu-item (click)='changeTaskProperty("fontColor", "steelblue", false, data)' style='color:steelblue'>Steel Blue</button>
+                <button mat-menu-item (click)='changeTaskProperty("fontColor", "seagreen",  false, data)' style='color:seagreen'>Sea Green</button>
+                <button mat-menu-item (click)='changeTaskProperty("fontColor", "plum", false, data)' style='color:plum'>Plum</button>
             </mat-menu>
 
             <mat-menu #labelMenu='matMenu'>

@@ -28,8 +28,8 @@ export function _addTask(state, action){
                             
                             linkedTasks:[],
                             
-                            dateCreated:moment(),
-                            lastEdited:moment(),
+                            dateCreated:moment().format(),
+                            lastEdited:moment().format(),
 
                             dialogOpen:false
                         }
@@ -52,7 +52,10 @@ export function _editTask(state, action){
                     ...board,
                     tasks:board.tasks.map(task => {
                         if(task.key === action.task.key){
-                            return action.task
+                            return {
+                                ...action.task,
+                                lastEdited:moment().format()
+                            }
                         }
                         return task
                     })
@@ -60,7 +63,10 @@ export function _editTask(state, action){
             }
             return board
         }),
-        selectedTask:action.task
+        selectedTask:{
+            ...action.task,
+            lastEdited:moment().format()
+        }
     }
 }
 
