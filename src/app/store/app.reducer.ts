@@ -4,7 +4,7 @@ import { _addTask, _editTask, _deleteTask, _transferTaskEmpty, _transferTask, _l
 import { _addBoard, _transferBoard, _editBoardTitle, _archiveBoard, _deleteBoard, _reorderBoardTasks, _toggleHideCompleteTasks, _restoreArchivedBoard } from './reducer-helpers/board.helpers';
 import { _addRow, _editRowDescription, _editRowExpanded, _shiftRowUp, _shiftRowDown, _deleteRow, _archiveRow, _restoreArchivedRow } from './reducer-helpers/row.helpers';
 
-export function simpleReducer(state=initialState, action){
+export function appReducer(state=initialState, action){
     switch(action.type){
 
         case getState.type:

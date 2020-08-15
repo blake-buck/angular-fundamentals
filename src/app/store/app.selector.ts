@@ -1,10 +1,10 @@
 import { createSelector } from "@ngrx/store";
 
 export interface ApplicationState{
-    simpleReducer: any;
+    appReducer: any;
 }
 
-export const selectAppState = (state: ApplicationState) => state.simpleReducer;
+export const selectAppState = (state: ApplicationState) => state.appReducer;
 
 export const selectAppStateWithProps = createSelector(selectAppState, (state, props) =>{
     return {state, props}

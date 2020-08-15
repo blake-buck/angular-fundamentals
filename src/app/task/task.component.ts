@@ -4,7 +4,7 @@ import { MatDialog} from '@angular/material';
 
 import {addCompletionStyling, onDrop, labelLength, cyclePhoto} from './task.logic';
 export interface AppState{
-    simpleReducer:any
+    appReducer:any
 }
 
 import {TaskDialogComponent} from '../task_dialog/task_dialog.component';

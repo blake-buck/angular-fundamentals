@@ -10,7 +10,7 @@ import { selectSpecificBoards } from '../store/app.selector';
 import { Actions } from '@ngrx/effects';
 
 export interface AppState{
-    simpleReducer:any
+    appReducer:any
 }
 
 @Component({

@@ -2,7 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { StoreModule } from '@ngrx/store';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
 
-import {simpleReducer} from './store/simple.reducer'
+import {appReducer} from './store/app.reducer'
 
 import { HttpClientModule } from '@angular/common/http';
 
@@ -37,7 +37,7 @@ import { RowComponent } from './row/row.component';
 import { BoardComponent } from './board/board.component';
 import { TransferBoardDialogComponent } from './board/transfer-board-dialog/transfer-board-dialog.component';
 import { DeleteBoardDialogComponent } from './board/delete-board-dialog/delete-board-dialog.component';
-import { ExportButtonComponent } from './board/export-button/export-button.component';
+import { ExportButtonComponent } from './row-holder/export-button/export-button.component';
 
 import { TaskComponent } from './task/task.component';
 
@@ -100,7 +100,7 @@ import { RestoreTaskDialogComponent } from './archived-items/restore-task-dialog
     MatButtonModule,
     MatDialogModule,
     MatGridListModule,
-    StoreModule.forRoot({simpleReducer}),
+    StoreModule.forRoot({appReducer}),
     EffectsModule.forRoot([AppEffects, RowComponent]),
     MatSelectModule,
     MatMenuModule,
