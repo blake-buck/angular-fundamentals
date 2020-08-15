@@ -34,16 +34,12 @@ export class BoardComponent{
 
     isEditingBoardTitle = false;
     isEditingBoardTitleFocused = false;
-
-    exportData = null;
-    beginDataExport = false;
     
-
     tasks$:Observable<any>
     board$:Observable<any>
 
 
-    constructor(private store:Store<any>, public dialog:MatDialog, private sanitization:DomSanitizer){}
+    constructor(private store:Store<any>, public dialog:MatDialog){}
 
    ngOnInit(){
        this.board$ = this.store.select(selectBoardFromBoardKey, this.boardKey)
@@ -150,29 +146,6 @@ export class BoardComponent{
                 data
             }
         );
-    }
-
-    
-    exportBoard(board){
-        let file = new File([JSON.stringify(board)], board.title);
-        
-        let fileReader = new FileReader();
-
-        fileReader.onloadend = (e) => {
-            let untrustedLink:any = fileReader.result;
-            this.exportData = this.sanitization.bypassSecurityTrustUrl(untrustedLink);
-            this.beginDataExport = true;
-        }
-        if(file){
-            fileReader.readAsDataURL(file);
-        }
-    }
-
-    downloadLinkLoads(){
-        // this seems very hacky, should probably find another way to prevent ExpressionChangedAfter error message
-        setTimeout(() => {
-            this.beginDataExport = false
-        }, 0)
     }
 
     orderTasksBy(orderBy, tasks, key){

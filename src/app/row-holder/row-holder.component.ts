@@ -6,6 +6,8 @@ import { selectRows, selectIsDataSaved, selectBoardCount, selectTaskCount, selec
 import { getState, addRow } from '../store/app.actions';
 import { MatDialog } from '@angular/material';
 import { ArchivedItemsComponent } from '../archived-items/archived-items.component';
+import { DomSanitizer } from '@angular/platform-browser';
+import { first } from 'rxjs/operators';
 
 @Component({
     selector:'row-holder',
@@ -23,7 +25,7 @@ export class RowHolderComponent{
 
     dataSaved$:Observable<boolean>
 
-    constructor(private store:Store<any>, private dialog:MatDialog){
+    constructor(private store:Store<any>, private dialog:MatDialog, private sanitization:DomSanitizer){
         this.row$ = this.store.select(selectRows)
         this.dataSaved$ = this.store.select(selectIsDataSaved);
         this.rowCount$ = this.store.select(selectRowCount);
@@ -42,4 +44,36 @@ export class RowHolderComponent{
     openArchivedItemsDialog(){
         this.dialog.open(ArchivedItemsComponent);
     }
+
+
+    beginDataExport = false;
+    exportData = null;
+    
+    exportAppState(){
+        this.store
+            .select(state => state)
+            .pipe(first())
+            .subscribe(state => {
+                let file = new File([JSON.stringify(state)], 'app_state');
+        
+                let fileReader = new FileReader();
+
+                fileReader.onloadend = (e) => {
+                    let untrustedLink:any = fileReader.result;
+                    this.exportData = this.sanitization.bypassSecurityTrustUrl(untrustedLink);
+                    this.beginDataExport = true;
+                }
+                if(file){
+                    fileReader.readAsDataURL(file);
+                }
+            })
+    }
+
+    downloadLinkLoads(){
+        // this seems very hacky, should probably find another way to prevent ExpressionChangedAfter error message
+        setTimeout(() => {
+            this.beginDataExport = false
+        }, 0)
+    }
+
 }

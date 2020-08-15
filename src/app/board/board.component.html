@@ -1,7 +1,5 @@
 <mat-card class='task-board' *ngIf='board$ | async; let board'  [draggable]='!isEditingBoardTitle' (dragstart)='onDragStart($event, board)' (drag)='onDrag($event)'  (dragover)='onDragOver($event, board)' (drop)='onDrop($event, board)' (taskTransfer)='onTaskTransfer($event)'>
     
-    <export-button *ngIf='beginDataExport' [exportData]='exportData' [title]='board.title' (linkHasBegunDownload)='downloadLinkLoads()'></export-button>
-
     <div class='card-title' >
         <h3 (click)='toggleEditBoardTitle(board)' *ngIf='!isEditingBoardTitle && board.title'>{{board.title}}</h3>
         <h3 (click)='toggleEditBoardTitle(board)' *ngIf='!isEditingBoardTitle && !board.title' class='placeholderTitle' >Board Title...</h3>
