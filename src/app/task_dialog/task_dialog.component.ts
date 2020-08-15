@@ -202,12 +202,13 @@ export class TaskDialogComponent {
         setTimeout(() => this.checklistInput.nativeElement.focus(), 0)
     }
     
-    changeChecklistItem(e, checklistKey, index, data){
+    changeChecklistItem(e, checklistKey, index, data, item){
 
         if(e.code === 'Delete'){ 
             this.store.dispatch(editTask({task:deleteChecklistItem(checklistKey, index, data)}))          
         }
-        else if(e.code === 'Enter'){
+        else if(e.code === 'Enter' && e.target.value !== ''){
+            this.toggleEditChecklistItem(e, checklistKey, item, data)
             this.addChecklistItem(checklistKey, data)
         }
         else{

@@ -107,7 +107,7 @@
                     draggable="true" (dragstart)='onChecklistItemDragStart($event, item, data)' (dragover)='onChecklistItemDragOver($event, data)' (drop)='onChecklistDrop($event, item, data)'>
                         <div class='dialog-checklist-item-content' (click)='toggleEditChecklistItem($event, checklist.key, item, data)'>{{item.content}}</div>
                 </mat-checkbox>
-                <mat-checkbox *ngIf='item.isEditing' [checked]='item.checked' (change)='toggleChecklistItem($event, checklist.key, item, data)'><input #checklistInput (mouseenter)='focusChecklistInput($event)' class='dialog-checklist-item-input'  (focusout)='toggleEditChecklistItem($event, checklist.key, item, data)' (keyup)='changeChecklistItem($event, checklist.key, i, data)' [value]='item.content' /></mat-checkbox>
+                <mat-checkbox *ngIf='item.isEditing' [checked]='item.checked' (change)='toggleChecklistItem($event, checklist.key, item, data)'><input #checklistInput (mouseenter)='focusChecklistInput($event)' class='dialog-checklist-item-input'  (focusout)='toggleEditChecklistItem($event, checklist.key, item, data)' (keyup)='changeChecklistItem($event, checklist.key, i, data, item)' [value]='item.content' /></mat-checkbox>
             </div>
             <button mat-flat-button *ngIf='checklist.title.content && !checklist.title.isEditing' (click)='addChecklistItem(checklist.key, data)'>Add Item</button>
         </div>
