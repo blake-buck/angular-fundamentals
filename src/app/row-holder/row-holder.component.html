@@ -7,6 +7,7 @@
     <button mat-button (click)='accordion.openAll()'>Open All</button>
     <button mat-button (click)='openArchivedItemsDialog()'>Archived Items</button>
     <button mat-flat-button (click)='exportAppState()'>Export App State</button>
+    <button mat-flat-button (click)='beginAppStateImport()'>Import App State</button>
   </mat-toolbar-row>
 </mat-toolbar>
 
@@ -25,3 +26,5 @@
     <span>Tasks: {{taskCount$ | async}}</span>
   </span>
 </footer>
+
+<input id='importAppState' type='file' style='display:none;' (change)='importAppState($event)' />

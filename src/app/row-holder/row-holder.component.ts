@@ -3,7 +3,7 @@ import { Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
 
 import { selectRows, selectIsDataSaved, selectBoardCount, selectTaskCount, selectRowCount } from '../store/app.selector';
-import { getState, addRow } from '../store/app.actions';
+import { getState, addRow, setState } from '../store/app.actions';
 import { MatDialog } from '@angular/material';
 import { ArchivedItemsComponent } from '../archived-items/archived-items.component';
 import { DomSanitizer } from '@angular/platform-browser';
@@ -76,4 +76,22 @@ export class RowHolderComponent{
         }, 0)
     }
 
+    beginAppStateImport(){
+        const el:any = document.querySelector('#importAppState');
+        el.click();
+    }
+    importAppState(e){
+        let file = e.target.files[0];
+        let fileReader = new FileReader();
+        fileReader.onloadend = (e) => {
+            let result:any = fileReader.result;
+            console.log(JSON.parse(result));
+            this.store.dispatch(setState({state:JSON.parse(result)}));
+        }
+        if(file){
+            fileReader.readAsText(file)
+        }
+    }
+
 }
+

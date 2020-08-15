@@ -1,6 +1,10 @@
 import { createAction, props } from "@ngrx/store";
 
 export const getState = createAction('GET_STATE');
+export const setState = createAction(
+    'SET_STATE',
+    props<{state:any}>()
+);
 
 export const addRow = createAction('ADD_ROW');
 
