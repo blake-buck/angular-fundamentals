@@ -8,6 +8,8 @@ import { MatDialog } from '@angular/material';
 import { ArchivedItemsComponent } from '../archived-items/archived-items.component';
 import { DomSanitizer } from '@angular/platform-browser';
 import { first } from 'rxjs/operators';
+import { createVerificationObject, validateStrict } from '../store/verification/verification';
+import { appStateTypes } from '../store/app.state';
 
 @Component({
     selector:'row-holder',
@@ -85,8 +87,9 @@ export class RowHolderComponent{
         let fileReader = new FileReader();
         fileReader.onloadend = (e) => {
             let result:any = fileReader.result;
-            console.log(JSON.parse(result));
-            this.store.dispatch(setState({state:JSON.parse(result)}));
+            result = JSON.parse(result);
+            validateStrict(createVerificationObject(appStateTypes, result.appReducer));
+            this.store.dispatch(setState({state:result}));
         }
         if(file){
             fileReader.readAsText(file)

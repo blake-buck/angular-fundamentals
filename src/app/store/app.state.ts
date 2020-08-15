@@ -1,4 +1,5 @@
 import { Moment } from 'moment';
+import { isNumber, createVerificationObject, isString, isBoolean, isArray, isNull, isOneOf, isObject } from './verification/verification';
 export namespace App{
     export interface AppState{
         partitionKey:string;
@@ -36,7 +37,7 @@ export namespace App{
         isArchived:boolean,
         tasks:Task[]
     }
-    
+
     export interface Task{
         key:number,
         boardKey:number,
@@ -72,7 +73,6 @@ export namespace App{
         lastEdited:Moment,
 
         dialogOpen:boolean
-    
     }
     
     export interface TaskComment{
@@ -109,6 +109,107 @@ export namespace App{
     }
 }
 
+const rowTypes = {
+    key: isNumber,
+    title: isString,
+    description: isString,
+    boards: isArray,
+    expanded: isBoolean,
+    position: isNumber
+}
+const boardTypes = {
+    rowKey: isNumber,
+    key: isNumber,
+    title: isString,
+    hideCompleteTasks: isBoolean,
+    isArchived: isBoolean,
+    tasks: isArray
+}
+const taskTypes = {
+    key: isNumber,
+    boardKey: isNumber,
+    currentChecklistKey: isNumber,
+
+    body: isString,
+    description: isString,
+    cardColor: isString,
+    fontColor: isString,
+
+    isEditing: isBoolean,
+    isComplete: isBoolean,
+    dialogOpen: isBoolean,
+    important: isBoolean,
+    warning: isBoolean,
+    payment: isBoolean,
+    vacation: isBoolean,
+    social: isBoolean,
+    work: isBoolean,
+    travel: isBoolean,
+
+    comments: isArray,
+    checklists: isArray,
+    displayImageUrls: isArray,
+    attachedFiles: isArray,
+    labels: isArray,
+    linkedTasks: isArray,
+
+    dueDate: isOneOf(isString, isNull),
+    dateCreated: isString,
+    lastEdited: isString,
+}
+
+const taskChecklistItemTypes = {
+    key: isNumber,
+    checklistKey: isNumber,
+    content: isString,
+    checked: isBoolean,
+    isEditing: isBoolean
+}
+const taskLabelTypes = {
+    background: isString,
+    fontColor: isString,
+    text: isString
+}
+const taskLinkedTaskTypes = {
+    taskKey: isNumber,
+    boardKey: isNumber
+}
+
+const taskChecklistTypes ={
+    title: {
+        content:isString, 
+        isEditing:isBoolean
+    },
+    key: isNumber,
+    color: isString,
+    currentKey: isNumber,
+    completedTasks: isNumber,
+    content: isArray
+}
+
+const taskComment = {
+    content: isString,
+    date: isString
+}
+
+export const appStateTypes = {
+    partitionKey: isString,
+    currentTaskKey: isNumber,
+    currentBoardKey: isNumber,
+    currentRowKey: isNumber,
+    archivedRows: isArray,
+    rows: isArray,
+    archivedBoards: isArray,
+    archivedTasks: isArray,
+    boards: isArray,
+    isDataSaved: isBoolean,
+    isDataSaving: isBoolean,
+    isTaskDialogOpen: isBoolean,
+    selectedTask: isOneOf(isNull, isObject),
+    rowCount:isNumber,
+    boardCount:isNumber,
+    taskCount:isNumber
+}
 
 export const initialState:App.AppState = {
     partitionKey:'state',

@@ -61,7 +61,6 @@ import { RestoreBoardDialogComponent } from './archived-items/restore-board-dial
 import { RestoreTaskDialogComponent } from './archived-items/restore-task-dialog/restore-task-dialog.component';
 
 
-
 @NgModule({
   declarations: [
     AppComponent,
